@@ -264,7 +264,11 @@ export class IssuesService extends PaginationStatefulService<IssuesState> {
     this.setState({
       directHit: undefined,
       errors: [],
-      pagination: { ...state.pagination, loading: true },
+      pagination: {
+        ...state.pagination,
+        initialLoadComplete: false,
+        loading: true,
+      },
     });
   }
 

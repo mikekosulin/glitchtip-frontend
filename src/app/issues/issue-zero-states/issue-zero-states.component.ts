@@ -26,11 +26,20 @@ export class IssueZeroStatesComponent implements OnInit {
   loading$ = combineLatest([
     this.issuesService.loading$,
     this.projectsService.loading$,
-  ]).pipe(map((loads) => loads.every((load) => !!load)));
+  ]).pipe(map((loads) => !loads.every((load) => !load)));
   initialLoadComplete$ = combineLatest([
     this.issuesService.initialLoadComplete$,
     this.projectsService.initialLoadComplete$,
   ]).pipe(map((loads) => loads.every((load) => !!load)));
+  displayZeroStates$ = combineLatest([
+    this.loading$,
+    this.initialLoadComplete$,
+  ]).pipe(
+    map(
+      ([loading, initialLoadComplete]) =>
+        !loading && initialLoadComplete
+    )
+  );
   orgHasAProject$ = this.organizationsService.orgHasAProject$;
   projectsFromParams$ = this.activatedRoute.queryParams.pipe(
     map((params) => normalizeProjectParams(params.project))
