@@ -86,8 +86,8 @@
     "@typescript-eslint/parser": "^6.13.1",
     "babel-loader": "^8.0.6",
     "concurrently": "^6.0.0",
-    "cypress": "^12.16.0",
-    "cypress-localstorage-commands": "^2.2.3",
+    "cypress": "^13.7.1",
+    "cypress-localstorage-commands": "^2.2.5",
     "eslint": "^8.53.0",
     "eslint-plugin-storybook": "^0.6.12",
     "jasmine-core": "^5.0.0",
@@ -106,6 +106,6 @@
     "typescript": "~5.2.2",
     "wait-on": "^5.3.0",
     "webpack-bundle-analyzer": "^4.10.1",
-    "xliff": "^6.2.0"
+    "xliff": "^6.2.1"
   }
 }
