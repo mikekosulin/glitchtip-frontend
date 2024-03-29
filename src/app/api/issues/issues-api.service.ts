@@ -146,7 +146,7 @@ export class IssuesAPIService extends APIBaseService {
     return this.http.get<IssueTags[]>(url, { params });
   }
 
-  orgIssuesUrl(orgSlug: string, issueId: number | undefined = undefined) {
+  orgIssuesUrl(orgSlug: string, issueId?: number) {
     let url = `${baseUrl}/organizations/${orgSlug}/issues/`;
     return issueId ? url + issueId + "/" : url;
   }

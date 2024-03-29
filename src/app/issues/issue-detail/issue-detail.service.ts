@@ -4,11 +4,11 @@ import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { combineLatest, EMPTY, lastValueFrom } from "rxjs";
 import {
+  catchError,
   filter,
+  map,
   take,
   tap,
-  map,
-  catchError,
   withLatestFrom,
 } from "rxjs/operators";
 import {

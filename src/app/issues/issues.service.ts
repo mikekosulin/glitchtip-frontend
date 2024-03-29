@@ -198,7 +198,7 @@ export class IssuesService extends PaginationStatefulService<IssuesState> {
   ) {
     lastValueFrom(
       this.issuesAPIService
-        .bulkUpdate(status, orgSlug, undefined, projectIds, query, start, end, environment)
+        .bulkUpdate(status, orgSlug, [], projectIds, query, start, end, environment)
         .pipe(
           tap((resp) => {
             this.setBulkUpdateComplete(resp.status);
