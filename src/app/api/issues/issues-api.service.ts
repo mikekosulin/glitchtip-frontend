@@ -33,7 +33,7 @@ export class IssuesAPIService extends APIBaseService {
     environment?: string | null
   ) {
     const url = organizationSlug
-      ? `${baseUrl}/organizations/${organizationSlug}/issues/`
+      ? this.orgIssuesUrl(organizationSlug)
       : this.url;
     let httpParams = new HttpParams();
     if (cursor) {
@@ -83,30 +83,28 @@ export class IssuesAPIService extends APIBaseService {
     );
   }
 
-  update(status: IssueStatus, ids: number[]) {
-    let params = new HttpParams();
-    ids.forEach((id) => {
-      params = params.append("id", id);
+  update(status: IssueStatus, orgSlug: string, id: number) {
+    return this.http.put<UpdateStatusResponse>(this.orgIssuesUrl(orgSlug, id), {
+      status,
     });
-    return this.http.put<UpdateStatusResponse>(
-      this.url,
-      { status },
-      { params }
-    );
   }
 
   bulkUpdate(
     status: IssueStatus,
     orgSlug: string,
-    projectIds: number[],
+    issueIds: number[] = [],
+    projectIds: number[] = [],
     query?: string | null,
     start?: string | null,
     end?: string | null,
     environment?: string | null
   ) {
-    let url = `${baseUrl}/organizations/${orgSlug}/issues/`;
+    let url = this.orgIssuesUrl(orgSlug);
     let params = new HttpParams();
 
+    issueIds.forEach((id) => {
+      params = params.append("id", id);
+    });
     projectIds.forEach((id) => {
       params = params.append("project", id);
     });
@@ -146,5 +144,10 @@ export class IssuesAPIService extends APIBaseService {
       params = params.append("query", query);
     }
     return this.http.get<IssueTags[]>(url, { params });
+  }
+
+  orgIssuesUrl(orgSlug: string, issueId: number | undefined = undefined) {
+    let url = `${baseUrl}/organizations/${orgSlug}/issues/`;
+    return issueId ? url + issueId + "/" : url;
   }
 }
