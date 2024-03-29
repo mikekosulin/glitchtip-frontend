@@ -3,7 +3,14 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { combineLatest, EMPTY, lastValueFrom } from "rxjs";
-import { tap, map, catchError, withLatestFrom } from "rxjs/operators";
+import {
+  catchError,
+  filter,
+  map,
+  take,
+  tap,
+  withLatestFrom,
+} from "rxjs/operators";
 import {
   IssueDetail,
   EventDetail,
@@ -201,9 +208,19 @@ export class IssueDetailService extends StatefulService<IssueDetailState> {
     const issue = this.state.getValue().issue;
     if (issue) {
       lastValueFrom(
-        this.issuesAPIService
-          .update(status, [issue.id])
-          .pipe(tap((resp) => this.setIssueStatus(resp.status)))
+        this.organization.activeOrganizationSlug$.pipe(
+          filter((slug) => !!slug),
+          take(1),
+          tap((slug) => {
+            if (slug) {
+              lastValueFrom(
+                this.issuesAPIService
+                  .update(status, slug, issue.id)
+                  .pipe(tap((resp) => this.setIssueStatus(resp.status)))
+              );
+            }
+          })
+        )
       );
     }
   }

@@ -354,8 +354,8 @@ export class IssuesPageComponent implements OnInit, OnDestroy {
       combineLatest([this.allResultsSelected$, this.currentQueryParams$]).pipe(
         take(1),
         tap(([allResultsSelected, params]) => {
-          if (allResultsSelected) {
-            if (params.orgSlug) {
+          if (params.orgSlug) {
+            if (allResultsSelected) {
               this.service.bulkUpdateStatus(
                 status,
                 params.orgSlug,
@@ -365,9 +365,9 @@ export class IssuesPageComponent implements OnInit, OnDestroy {
                 params.end,
                 params.environment
               );
+            } else {
+              this.service.updateStatusByIssueId(params.orgSlug, status);
             }
-          } else {
-            this.service.updateStatusByIssueId(status);
           }
         })
       )
