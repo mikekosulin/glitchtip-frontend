@@ -1,11 +1,14 @@
-import { User } from "../user/user.interfaces";
-
 export interface Comment {
   id: number;
   data: {
     text: string;
   };
-  user: User | null;
+  user: CommentUser;
   dateCreated: string;
   type: string;
+}
+
+export interface CommentUser {
+  id: string;
+  email: string;
 }
