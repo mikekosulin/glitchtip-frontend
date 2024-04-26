@@ -31,6 +31,8 @@ export class FrameExpandedComponent {
   }
 
   getCodeBlock(): null | string {
+    const trailingNewLine = /(\\n)$/gm;
+
     if (
       this.eventPlatform &&
       this.context &&
@@ -40,7 +42,16 @@ export class FrameExpandedComponent {
       const firstNumber = this.context[0][0];
       if (typeof firstNumber == "number") {
         this.firstLineNumber = firstNumber;
-        return this.context.map((tuple) => tuple[1]).join("\r\n");
+        return this.context
+          .flatMap((tuple) => {
+            if (tuple[1] === null) {
+              return [];
+            }
+            return typeof tuple[1] === "string"
+              ? [tuple[1].replace(trailingNewLine, "")]
+              : [tuple[1].toString()];
+          })
+          .join("\r\n");
       }
     }
     return null;
