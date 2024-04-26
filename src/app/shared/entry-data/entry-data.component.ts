@@ -10,4 +10,10 @@ import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 export class EntryDataComponent {
   @Input() key?: string;
   @Input() value: unknown;
+
+  get displayValue() {
+    return typeof this.value === "object"
+      ? JSON.stringify(this.value)
+      : this.value;
+  }
 }

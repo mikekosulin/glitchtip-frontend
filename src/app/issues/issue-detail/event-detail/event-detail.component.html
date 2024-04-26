@@ -109,7 +109,7 @@
       <gt-entry-data
         *ngFor="let context of event.context | keyvalue"
         [key]="context.key"
-        [value]="context.value | json"
+        [value]="context.value"
       >
       </gt-entry-data>
     </dl>
