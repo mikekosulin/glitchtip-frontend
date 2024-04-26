@@ -2,8 +2,6 @@ $font-path: "../fonts";
 @use "sass:meta";
 @use "@angular/material" as mat;
 @use "src/assets/styles/collect-themes";
-@import "prismjs/plugins/line-numbers/prism-line-numbers.css";
-@import "prismjs/plugins/line-highlight/prism-line-highlight.css";
 @import "./assets/styles/variables";
 @import "./assets/styles/font-files";
 @import "./assets/styles/resets";
@@ -41,6 +39,11 @@ $font-path: "../fonts";
   @include theme-extension($candy-app-theme-dark);
   @include meta.load-css("prismjs/themes/prism-twilight.css");
   @include collect-themes.generate-dark-rules($candy-app-theme-dark);
+}
+
+.light, .dark {
+  @include meta.load-css("prismjs/plugins/line-numbers/prism-line-numbers.css");
+  @include meta.load-css("prismjs/plugins/line-highlight/prism-line-highlight.css");
 }
 
 // Responsive type maybe?
