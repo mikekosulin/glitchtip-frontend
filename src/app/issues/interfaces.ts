@@ -305,11 +305,16 @@ export interface Frame {
   symbolAddr: string | null;
   trust: string | null;
   inApp: boolean;
-  context: (string | number)[][] | null;
+  context: FrameContextTuple[] | null;
   vars: { [key: string]: Json } | null;
   errors?: string | null;
   lineNo: number | null;
   colNo: number | null;
+}
+
+export interface FrameContextTuple extends Array<string | number> {
+  0: number;
+  1: string;
 }
 
 interface GroupingConfig {

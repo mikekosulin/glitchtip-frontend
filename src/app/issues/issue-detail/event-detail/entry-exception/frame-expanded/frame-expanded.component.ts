@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
-import { JsonArrayOrObject, Json } from "src/app/interface-primitives";
-import { PRISM_ALL_SUPPORTED_GRAMMER } from "src/app/prismjs/constants";
-import { MatDividerModule } from "@angular/material/divider";
-import { PrismDirective } from "../../../../../prismjs/prism.directive";
 import { NgIf, NgFor, KeyValuePipe } from "@angular/common";
+import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
+import { MatDividerModule } from "@angular/material/divider";
+import { JsonArrayOrObject, Json } from "src/app/interface-primitives";
+import { FrameContextTuple } from "src/app/issues/interfaces";
+import { PRISM_ALL_SUPPORTED_GRAMMAR } from "src/app/prismjs/constants";
+import { PrismDirective } from "src/app/prismjs/prism.directive";
 
 @Component({
   selector: "gt-frame-expanded",
@@ -15,10 +16,9 @@ import { NgIf, NgFor, KeyValuePipe } from "@angular/common";
 })
 export class FrameExpandedComponent {
   @Input() lineNo?: string | number | null;
-  @Input() context?: (string | number)[][];
+  @Input() context?: FrameContextTuple[];
   @Input() vars?: { [key: string]: Json } | null;
   @Input() eventPlatform?: string;
-  firstLineNumber?: number;
 
   checkType(value: JsonArrayOrObject | Json): string {
     if (value === null) {
@@ -30,30 +30,33 @@ export class FrameExpandedComponent {
     }
   }
 
-  getCodeBlock(): null | string {
-    const trailingNewLine = /(\\n)$/gm;
-
-    if (
+  get shouldDisplayPrismCode() {
+    return (
       this.eventPlatform &&
       this.context &&
       this.context[0] &&
-      PRISM_ALL_SUPPORTED_GRAMMER.includes(this.eventPlatform)
-    ) {
-      const firstNumber = this.context[0][0];
-      if (typeof firstNumber == "number") {
-        this.firstLineNumber = firstNumber;
-        return this.context
-          .flatMap((tuple) => {
-            if (tuple[1] === null) {
-              return [];
-            }
-            return typeof tuple[1] === "string"
-              ? [tuple[1].replace(trailingNewLine, "")]
-              : [tuple[1].toString()];
-          })
-          .join("\r\n");
-      }
+      PRISM_ALL_SUPPORTED_GRAMMAR.includes(this.eventPlatform)
+    );
+  }
+
+  get firstLineNumber() {
+    return this.context ? this.context[0][0] : null;
+  }
+
+  get highlightLine() {
+    if (this.context && this.lineNo) {
+      return this.context[0][0] === 0 ? +this.lineNo + 1 : this.lineNo;
     }
     return null;
+  }
+
+  get codeBlock(): null | string {
+    const trailingNewLine = /[\n]$/;
+
+    return this.context?.length
+      ? this.context
+          .map((tuple) => tuple[1].toString().replace(trailingNewLine, ""))
+          .join("\r\n")
+      : null;
   }
 }
