@@ -12,7 +12,7 @@ import {
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
   MatSnackBarModule,
 } from "@angular/material/snack-bar";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { routes, TemplatePageTitleStrategy } from "./app/app.routes";
 import { bootstrapApplication } from "@angular/platform-browser";
 import { LessAnnoyingErrorStateMatcher } from "./app/shared/less-annoying-error-state-matcher";
@@ -86,7 +86,7 @@ const bootstrap = () =>
         provide: ErrorStateMatcher,
         useClass: LessAnnoyingErrorStateMatcher,
       },
-      provideAnimations(),
+      provideAnimationsAsync(),
       provideHttpClient(
         withXsrfConfiguration({
           cookieName: "csrftoken",
