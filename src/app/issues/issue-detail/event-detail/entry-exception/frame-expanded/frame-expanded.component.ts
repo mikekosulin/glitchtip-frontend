@@ -53,9 +53,15 @@ export class FrameExpandedComponent {
   get codeBlock(): null | string {
     const trailingNewLine = /[\n]$/;
 
+    // TODO: Null tuple values are now replaced with strings on event ingest
+    // see: https://gitlab.com/glitchtip/glitchtip-backend/-/merge_requests/887
+    // But there will likely still be events in the DB that have null values here.
+    // Ternary statement below can be simplified when that is no longer an issue.
     return this.context?.length
       ? this.context
-          .map((tuple) => tuple[1].toString().replace(trailingNewLine, ""))
+          .map((tuple) =>
+            tuple[1] ? tuple[1].toString().replace(trailingNewLine, "") : ""
+          )
           .join("\r\n")
       : null;
   }
