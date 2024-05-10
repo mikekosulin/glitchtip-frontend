@@ -251,7 +251,11 @@ export class IssuesService extends PaginationStatefulService<IssuesState> {
       selectedIssues: [],
       allResultsSelected: false,
       errors: [],
-      pagination: { ...state.pagination, loading: true },
+      pagination: {
+        ...state.pagination,
+        initialLoadComplete: false,
+        loading: true,
+      },
     });
   }
 

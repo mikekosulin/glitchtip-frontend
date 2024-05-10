@@ -1,10 +1,6 @@
 <div class="empty-states">
   <!-- Don't show any of this until loading state is resolved -->
-  <ng-container
-    *ngIf="
-      (initialLoadComplete$ | async) === true && (loading$ | async) === false
-    "
-  >
+  <ng-container *ngIf="displayZeroStates$ | async">
     <!-- If there are errors, only show the error -->
     <ng-container *ngIf="(errors$ | async)?.length; else emptyState">
       <ng-container *ngIf="(errors$ | async)?.length === 1; else multipleErrors"
