@@ -8,7 +8,7 @@
   gt-subscription {
     .visualization {
       .error {
-        color: mat.get-color-from-palette($primary);
+        color: mat.m2-get-color-from-palette($primary);
       }
 
       .uptime {
@@ -24,7 +24,7 @@
       background-color: #f4c6cd;
       
       .error-event {
-        background-color: mat.get-color-from-palette($primary);
+        background-color: mat.m2-get-color-from-palette($primary);
       }
 
       .transaction-event {
