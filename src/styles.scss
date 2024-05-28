@@ -2,6 +2,7 @@ $font-path: "../fonts";
 @use "sass:meta";
 @use "@angular/material" as mat;
 @use "src/assets/styles/collect-themes";
+@use "src/assets/styles/themes";
 @import "./assets/styles/variables";
 @import "./assets/styles/font-files";
 @import "./assets/styles/resets";
@@ -19,26 +20,26 @@ $font-path: "../fonts";
 // Don't include this anywhere else!
 
 @include mat.core();
-@include mat.all-component-typographies($custom-typography);
-@include mat.card-typography($custom-card-typography);
-@include mat.table-typography($custom-table-typography);
+@include mat.all-component-typographies(themes.$custom-typography);
+@include mat.card-typography(themes.$custom-card-typography);
+@include mat.table-typography(themes.$custom-table-typography);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($candy-app-theme);
-@include theme-extension($candy-app-theme);
+@include mat.all-component-themes(themes.$candy-app-theme);
+@include themes.theme-extension(themes.$candy-app-theme);
 
 .light {
   @include meta.load-css("prismjs/themes/prism.css");
-  @include collect-themes.generate-light-rules($candy-app-theme);
+  @include collect-themes.generate-light-rules(themes.$candy-app-theme);
 }
 
 .dark {
-  @include mat.all-component-colors($candy-app-theme-dark);
-  @include theme-extension($candy-app-theme-dark);
+  @include mat.all-component-colors(themes.$candy-app-theme-dark);
+  @include themes.theme-extension(themes.$candy-app-theme-dark);
   @include meta.load-css("prismjs/themes/prism-twilight.css");
-  @include collect-themes.generate-dark-rules($candy-app-theme-dark);
+  @include collect-themes.generate-dark-rules(themes.$candy-app-theme-dark);
 }
 
 .light, .dark {
@@ -48,9 +49,9 @@ $font-path: "../fonts";
 
 // Responsive type maybe?
 @media screen and (max-width: 767px) {
-  @include mat.all-component-typographies($mobile-typography);
-  @include mat.card-typography($custom-card-typography);
-  @include mat.table-typography($custom-mobile-table-typography);
+  @include mat.all-component-typographies(themes.$mobile-typography);
+  @include mat.card-typography(themes.$custom-card-typography);
+  @include mat.table-typography(themes.$custom-mobile-table-typography);
 }
 
 mat-card-content {
