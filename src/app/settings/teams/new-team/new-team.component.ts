@@ -1,7 +1,7 @@
 import { Component, Inject } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
+  FormGroup,
+  FormControl,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
@@ -11,13 +11,15 @@ import {
   MatDialogModule,
 } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { OrganizationsService } from "src/app/api/organizations/organizations.service";
 import { MatButtonModule } from "@angular/material/button";
-import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
-import { SlugifyDirective } from "./slugify.directive";
 import { MatInputModule } from "@angular/material/input";
 import { NgFor, NgIf } from "@angular/common";
 import { MatFormFieldModule } from "@angular/material/form-field";
+
+import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
+import { OrganizationsService } from "src/app/api/organizations/organizations.service";
+import { SlugifyDirective } from "./slugify.directive";
+import { slugRegex } from "src/app/shared/validators";
 
 @Component({
   selector: "gt-new-team",
@@ -39,8 +41,8 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 export class NewTeamComponent {
   loading = false;
   errors: string[] = [];
-  form = new UntypedFormGroup({
-    slug: new UntypedFormControl("", [Validators.required]),
+  form = new FormGroup({
+    slug: new FormControl("", [Validators.required, Validators.pattern(slugRegex)]),
   });
   orgSlug?: string;
 
@@ -63,7 +65,7 @@ export class NewTeamComponent {
     if (this.form.valid) {
       this.loading = true;
       this.organizationsService
-        .createTeam(this.form.value.slug, this.data.orgSlug)
+        .createTeam(this.form.value.slug!, this.data.orgSlug)
         .subscribe(
           (team) => {
             this.loading = false;

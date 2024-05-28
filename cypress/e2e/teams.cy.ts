@@ -23,7 +23,7 @@ describe("Create New Team", () => {
       newTeam.slug + " invalid ch@r@cter$"
     );
     cy.get("#create-team-submit").click();
-    cy.contains("consisting of letters, numbers, underscores or hyphens.");
+    cy.contains("Use only letters, numbers, underscores");
   });
 });
 

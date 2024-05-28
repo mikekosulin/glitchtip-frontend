@@ -14,6 +14,9 @@
       <mat-error *ngIf="slug?.errors?.required">
         <span i18n>Enter a valid slug to create a team</span>
       </mat-error>
+      <mat-error *ngIf="slug?.errors?.pattern">
+        <span i18n>Use only letters, numbers, underscores and/or hyphens</span>
+      </mat-error>
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
