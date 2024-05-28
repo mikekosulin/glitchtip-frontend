@@ -1,4 +1,4 @@
-image: node:18
+image: node:20
 
 variables:
   CHROME_BIN: chromium-browser
@@ -24,7 +24,7 @@ stages:
 
 test:
   stage: test
-  image: node:18-alpine
+  image: node:20-alpine
   script:
     - npm ci --force
     - npm run lint
@@ -40,7 +40,7 @@ test-e2e:
       alias: backend
       command: ["./bin/run-migrate-and-runserver.sh"]
   image:
-    name: cypress/included:12.10.0
+    name: cypress/included:13.10.0
     entrypoint: [""]
   script:
     - npm ci --force
@@ -109,7 +109,7 @@ upload-sourcemaps:
 deploy-staging:
   stage: deploy
   image:
-    name: alpine/helm:3.11.2
+    name: alpine/helm:3.15.1
     entrypoint: [""]
   # needs: ["build-docker", "test-e2e"]
   script:

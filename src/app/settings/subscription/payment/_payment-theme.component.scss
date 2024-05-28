@@ -12,8 +12,8 @@
         @media (min-width: $large) {
           border-right: 1px solid if(
             $is-dark-theme,
-            mat.get-color-from-palette(mat.$gray-palette, 800),
-            mat.get-color-from-palette(mat.$gray-palette, 300)
+            mat.m2-get-color-from-palette(mat.$m2-gray-palette, 800),
+            mat.m2-get-color-from-palette(mat.$m2-gray-palette, 300)
           );
         }
       }

@@ -16,6 +16,7 @@
 @use "src/app/issues/issue-detail/event-detail/_event-detail-theme.component";
 @use "src/app/issues/comments/comments-theme.component";
 @use "src/app/list-elements/project-filter-bar/project-filter-bar-theme.component";
+@use "src/app/profile/notifications/_notifications-theme.component.scss";
 
 @mixin generate-rules($theme) {
   @include global-theme.theme($theme);
@@ -36,6 +37,7 @@
   @include event-detail-theme.theme($theme);
   @include comments-theme.theme($theme);
   @include project-filter-bar-theme.theme($theme);
+  @include notifications-theme.theme($theme);
 }
 
 @mixin generate-light-rules($light-theme) {

@@ -11,16 +11,16 @@
         border-bottom: 1px solid rgba(0, 0, 0, 0.12);
         background-color: if(
           $is-dark-theme,
-          mat.get-color-from-palette(mat.$gray-palette, 900),
-          mat.get-color-from-palette(mat.$gray-palette, 50)
+          mat.m2-get-color-from-palette(mat.$m2-gray-palette, 900),
+          mat.m2-get-color-from-palette(mat.$m2-gray-palette, 50)
         );
       }
 
       &__text {
         color: if(
           $is-dark-theme,
-          mat.get-color-from-palette(mat.$gray-palette, 50),
-          mat.get-color-from-palette(mat.$gray-palette, 900)
+          mat.m2-get-color-from-palette(mat.$m2-gray-palette, 50),
+          mat.m2-get-color-from-palette(mat.$m2-gray-palette, 900)
         );
       }
     }
@@ -28,16 +28,16 @@
     .resolved {
       background: if(
         $is-dark-theme,
-        mat.get-color-from-palette(mat.$gray-palette, 800),
-        mat.get-color-from-palette(mat.$gray-palette, 100)
+        mat.m2-get-color-from-palette(mat.$m2-gray-palette, 800),
+        mat.m2-get-color-from-palette(mat.$m2-gray-palette, 100)
       );
     }
 
     .ignored {
       background: if(
         $is-dark-theme,
-        mat.get-color-from-palette(mat.$gray-palette, 800),
-        mat.get-color-from-palette(mat.$gray-palette, 100)
+        mat.m2-get-color-from-palette(mat.$m2-gray-palette, 800),
+        mat.m2-get-color-from-palette(mat.$m2-gray-palette, 100)
       );
     }
 
@@ -45,16 +45,16 @@
       &--sample:after {
         background-color: if(
           $is-dark-theme,
-          mat.get-color-from-palette(mat.$gray-palette, 400),
-          mat.get-color-from-palette(mat.$gray-palette, 100)
+          mat.m2-get-color-from-palette(mat.$m2-gray-palette, 400),
+          mat.m2-get-color-from-palette(mat.$m2-gray-palette, 100)
         );
       }
 
       &--debug:after {
         background-color: if(
           $is-dark-theme,
-          mat.get-color-from-palette(mat.$gray-palette, 600),
-          mat.get-color-from-palette(mat.$gray-palette, 300)
+          mat.m2-get-color-from-palette(mat.$m2-gray-palette, 600),
+          mat.m2-get-color-from-palette(mat.$m2-gray-palette, 300)
         );
       }
 
@@ -67,14 +67,14 @@
       }
 
       &--error:after {
-        background-color: mat.get-color-from-palette($primary);
+        background-color: mat.m2-get-color-from-palette($primary);
       }
 
       &--fatal:after {
         background-image: repeating-linear-gradient(
           -60deg,
-          mat.get-color-from-palette($primary),
-          mat.get-color-from-palette($primary) 5px,
+          mat.m2-get-color-from-palette($primary),
+          mat.m2-get-color-from-palette($primary) 5px,
           white 5px,
           white 10px
         );
