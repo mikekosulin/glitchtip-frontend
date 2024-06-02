@@ -15,7 +15,7 @@ export class UserAPIService {
   }
 
   update(user: Partial<User>) {
-    return this.http.patch<User>(this.url, user);
+    return this.http.put<User>(this.url, user);
   }
 
   destroy() {
