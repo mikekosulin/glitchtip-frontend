@@ -44,7 +44,7 @@
             <div class="socialaccount-wrapper">
               <button
                 mat-stroked-button
-                (click)="disconnect(socialAccount.id)"
+                (click)="disconnect(socialAccount.id, socialAccount.uid, socialAccount.provider)"
                 [disabled]="(disconnectLoading$ | async) === socialAccount.id"
               >
                 <gt-auth-svg

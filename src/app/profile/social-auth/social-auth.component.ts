@@ -74,7 +74,7 @@ export class SocialAuthComponent implements OnInit {
     this.oauthService.initOAuthLogin(socialApp);
   }
 
-  disconnect(socialAccountId: number) {
-    this.userService.disconnectSocialAccount(socialAccountId);
+  disconnect(id: number, account: string, provider: string) {
+    this.userService.disconnectSocialAccount(id, account, provider);
   }
 }
