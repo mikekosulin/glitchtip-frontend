@@ -37,7 +37,7 @@
       },
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/glitchtip-frontend",
             "index": "src/index.html",
@@ -70,7 +70,7 @@
             ],
             "styles": ["src/styles.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": ["./src/assets/styles"]
+              "includePaths": ["./src/assets/styles", ""]
             },
             "scripts": []
           },
@@ -129,7 +129,6 @@
             "development": {
               "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
