@@ -5,10 +5,13 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class SocialAuthAPIService {
-  readonly url = `/api/socialaccounts/`;
   constructor(protected http: HttpClient) {}
 
-  disconnect(accountId: number) {
-    return this.http.post(`${this.url}${accountId}/disconnect/`, {});
+  disconnect(account: string, provider: string) {
+    return this.http.request(
+      "delete",
+      "/_allauth/browser/v1/account/providers",
+      { body: { account, provider } }
+    );
   }
 }

@@ -106,10 +106,10 @@ export class UserService extends StatefulService<UserState> {
     );
   }
 
-  disconnectSocialAccount(accountId: number) {
-    this.setDisconnectLoadingStart(accountId);
+  disconnectSocialAccount(id: number, account: string, provider: string) {
+    this.setDisconnectLoadingStart(id);
     lastValueFrom(
-      this.socialAuthAPIService.disconnect(accountId).pipe(
+      this.socialAuthAPIService.disconnect(account, provider).pipe(
         tap(() => {
           this.setDisconnectLoadingEnd();
           this.getUserDetails();
