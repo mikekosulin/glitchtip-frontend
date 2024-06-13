@@ -36,7 +36,9 @@ describe("Change Password", () => {
       .clear()
       .type(emailForOtherAccount);
     cy.get("#add-email-form").submit();
-    cy.get("gt-manage-emails").contains("is already associated with another");
+    cy.get("gt-manage-emails").contains(
+      "This email address is already being used."
+    );
 
     // Delete email
     const emailToDelete = "cypress-email-to-delete@example.com";
