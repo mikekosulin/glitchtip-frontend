@@ -11,7 +11,8 @@ export class ProjectEnvironmentsAPIService {
 
   list(organizationSlug: string, projectSlug: string) {
     return this.http.get<ProjectEnvironment[]>(
-      this.projectEnvironmentsURL(organizationSlug, projectSlug)
+      this.projectEnvironmentsURL(organizationSlug, projectSlug) +
+        `?visibility=all`
     );
   }
 
