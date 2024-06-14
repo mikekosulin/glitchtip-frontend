@@ -1,12 +1,12 @@
 export interface NewProjectAlert {
-  timespan_minutes: number | null;
+  timespanMinutes: number | null;
   quantity: number | null;
   uptime: boolean;
   alertRecipients: NewAlertRecipient[];
 }
 
 export interface PartialProjectAlert extends NewProjectAlert {
-  pk: number;
+  id: number;
   alertRecipients: AlertRecipient[];
 }
 export interface ProjectAlert extends PartialProjectAlert {
@@ -19,7 +19,7 @@ export interface NewAlertRecipient {
 }
 
 export interface AlertRecipient extends NewAlertRecipient {
-  pk: number;
+  id: number;
 }
 
 export type RecipientType = "email" | "webhook" | "discord" | "googlechat";

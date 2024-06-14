@@ -91,26 +91,26 @@ export class ProjectAlertsComponent implements OnInit, OnDestroy {
     this.alertsService.closeNewAlert();
   }
 
-  removeAlert(pk: number) {
+  removeAlert(id: number) {
     if (window.confirm("Are you sure you want to remove this notification?")) {
-      this.alertsService.deleteProjectAlert(pk);
+      this.alertsService.deleteProjectAlert(id);
     }
   }
 
   updateProperties(
     event: {
-      timespan_minutes: number;
+      timespanMinutes: number;
       quantity: number;
       uptime: boolean;
     },
     alert: ProjectAlert
   ): void {
-    if (alert.pk) {
+    if (alert.id) {
       this.alertsService.updateAlertProperties(
-        event.timespan_minutes,
+        event.timespanMinutes,
         event.quantity,
         event.uptime,
-        alert.pk,
+        alert.id,
         alert.alertRecipients
       );
     }
@@ -121,7 +121,7 @@ export class ProjectAlertsComponent implements OnInit, OnDestroy {
   }
 
   newAlertProperties(event: {
-    timespan_minutes: number;
+    timespanMinutes: number;
     quantity: number;
     uptime: boolean;
   }) {

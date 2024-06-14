@@ -62,7 +62,7 @@ export class AlertFormComponent implements OnInit {
   @Input() uptime: boolean | null = false;
   @Input() errorAlert: boolean = true;
   @Output() alertSubmit = new EventEmitter<{
-    timespan_minutes: number;
+    timespanMinutes: number;
     quantity: number;
     uptime: boolean;
   }>();
@@ -82,12 +82,12 @@ export class AlertFormComponent implements OnInit {
       },
       selectionRequiredValidator
     ),
-    timespan_minutes: new UntypedFormControl(""),
+    timespanMinutes: new UntypedFormControl(""),
     quantity: new UntypedFormControl(""),
   });
 
   projectFormTimespan = this.projectAlertForm.get(
-    "timespan_minutes"
+    "timespanMinutes"
   ) as UntypedFormControl;
   projectFormQuantity = this.projectAlertForm.get(
     "quantity"
@@ -109,7 +109,7 @@ export class AlertFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectAlertForm.setValue({
-      timespan_minutes: this.timespan,
+      timespanMinutes: this.timespan,
       quantity: this.quantity,
       optionsGroup: {
         uptime: this.uptime,
@@ -161,7 +161,7 @@ export class AlertFormComponent implements OnInit {
   onSubmit(): void {
     if (this.projectAlertForm.valid) {
       this.alertSubmit.emit({
-        timespan_minutes: this.projectFormErrorAlert.value
+        timespanMinutes: this.projectFormErrorAlert.value
           ? this.projectFormTimespan.value
           : null,
         quantity: this.projectFormErrorAlert.value
