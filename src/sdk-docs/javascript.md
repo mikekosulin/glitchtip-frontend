@@ -19,7 +19,7 @@ Consider checking the Sentry GitHub repository for the latest available version 
 If you prefer using NPM for managing dependencies, you can install the Sentry SDK like this:
 
 ```bash
-npm install @browser/sentry
+npm install @sentry/browser
 ```
 
 ## Step 2: Initialize the SDK
