@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
+  FormGroup,
+  FormControl,
   Validators,
   FormGroupDirective,
   ReactiveFormsModule,
@@ -64,12 +64,12 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
   updatePlatformLoading = false;
   updatePlatformError = "";
 
-  nameForm = new UntypedFormGroup({
-    name: new UntypedFormControl("", [Validators.required]),
+  nameForm = new FormGroup({
+    name: new FormControl("", [Validators.required, Validators.maxLength(64)]),
   });
 
-  platformForm = new UntypedFormGroup({
-    platform: new UntypedFormControl(""),
+  platformForm = new FormGroup({
+    platform: new FormControl(""),
   });
 
   constructor(
@@ -154,12 +154,12 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
 
   updateName() {
     this.updateNameLoading = true;
-    if (this.orgSlug && this.projectSlug) {
+    if (this.nameForm.valid && this.orgSlug && this.projectSlug) {
       this.projectsService
         .updateProjectName(
           this.orgSlug,
           this.projectSlug,
-          this.nameForm.value.name
+          this.nameForm.value.name!
         )
         .subscribe(
           (resp: ProjectDetail) => {
@@ -185,7 +185,7 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
         .updateProjectPlatform(
           this.orgSlug,
           this.projectSlug,
-          this.platformForm.value.platform,
+          this.platformForm.value.platform ?? "",
           projectName
         )
         .subscribe(
