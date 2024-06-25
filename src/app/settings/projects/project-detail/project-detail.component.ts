@@ -180,12 +180,12 @@ export class ProjectDetailComponent implements OnInit, OnDestroy {
 
   updatePlatform(projectName: string) {
     this.updatePlatformLoading = true;
-    if (this.platformForm.valid && this.orgSlug && this.projectSlug) {
+    if (this.orgSlug && this.projectSlug) {
       this.projectsService
         .updateProjectPlatform(
           this.orgSlug,
           this.projectSlug,
-          this.platformForm.value.platform!,
+          this.platformForm.value.platform ?? "",
           projectName
         )
         .subscribe(
