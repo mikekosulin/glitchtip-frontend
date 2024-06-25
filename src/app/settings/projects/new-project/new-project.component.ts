@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
+  FormGroup,
+  FormControl,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
@@ -54,10 +54,10 @@ export class NewProjectComponent implements OnInit {
   loading = false;
   error?: string;
   orgSlug?: string;
-  form = new UntypedFormGroup({
-    name: new UntypedFormControl("", [Validators.required]),
-    platform: new UntypedFormControl(""),
-    team: new UntypedFormControl("", [Validators.required]),
+  form = new FormGroup({
+    name: new FormControl("", [Validators.required, Validators.maxLength(64)]),
+    platform: new FormControl(""),
+    team: new FormControl("", [Validators.required]),
   });
 
   constructor(
@@ -113,10 +113,10 @@ export class NewProjectComponent implements OnInit {
       this.projectsService
         .createProject(
           {
-            name: this.form.value.name,
-            platform: this.form.value.platform,
+            name: this.form.value.name!,
+            platform: this.form.value.platform ?? "",
           },
-          this.form.value.team,
+          this.form.value.team!,
           this.orgSlug
         )
         .pipe(
