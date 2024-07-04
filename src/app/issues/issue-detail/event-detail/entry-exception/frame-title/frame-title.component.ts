@@ -47,7 +47,7 @@ export class FrameTitleComponent {
 
   isUrl(str: string | null): boolean {
     if (str) {
-      return str.startsWith("http") ? true : false;
+      return /^https?:/.test(str);
     } else {
       return false;
     }
