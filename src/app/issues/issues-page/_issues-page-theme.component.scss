@@ -60,19 +60,19 @@
       }
 
       &--info:after {
-        background-color: $event-level-info-color;
+        background-color: $event-level-info-color-light;
       }
 
       &--warning:after {
-        background-color: $event-level-warning-color;
+        background-color: $event-level-warning-color-light;
       }
 
       &--error:after {
-        background-color: $event-level-error-color;
+        background-color: $event-level-error-color-light;
       }
 
       &--fatal:after {
-        background-image: $event-level-fatal-color;
+        background-image: $event-level-fatal-color-light;
       }
     }
   }

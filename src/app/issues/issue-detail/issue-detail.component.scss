@@ -36,22 +36,22 @@ dl {
 .event-level-error,
 .event-level-fatal {
   padding-left: 10px;
-  border-color: $event-level-default-color;
+  border-color: $event-level-default-color-light;
   border-left: 5px;
   border-left-style: solid;
 }
 
 div.event-level-info {
-  border-color: $event-level-info-color;
+  border-color: $event-level-info-color-light;
 }
 div.event-level-warning {
-  border-color: $event-level-warning-color;
+  border-color: $event-level-warning-color-light;
 }
 div.event-level-error {
-  border-color: $event-level-error-color;
+  border-color: $event-level-error-color-light;
 }
 div.event-level-fatal {
-  border-color: $event-level-fatal-color;
+  border-color: $event-level-fatal-color-light;
 }
 
 .event-detail-card {
