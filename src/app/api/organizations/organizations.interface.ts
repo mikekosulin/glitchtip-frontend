@@ -69,15 +69,20 @@ export interface MemberRoleDetail {
   scopes: string[];
 }
 
-export interface OrganizationMembersRequest {
-  email: string;
-  role: MemberRole;
-  teams: string[];
+export interface TeamRole {
+  teamSlug: string;
+  role: string;
 }
 
-export interface MemberUpdateData {
-  role?: MemberRole;
-  teams?: string[];
+export interface OrgMemberUpdate {
+  orgRole: MemberRole;
+  teamRoles: TeamRole[];
+}
+
+export interface OrgMemberIn extends OrgMemberUpdate {
+  email: string;
+  sendInvite?: boolean;
+  reinvite?: boolean;
 }
 
 export interface OrganizationLoading {

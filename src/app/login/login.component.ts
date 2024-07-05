@@ -76,7 +76,7 @@ export class LoginComponent implements OnInit {
       .pipe(
         tap((acceptInfo) => {
           if (acceptInfo) {
-            this.form.patchValue({ email: acceptInfo.org_user.email });
+            this.form.patchValue({ email: acceptInfo.orgUser.email });
           }
         })
       )
