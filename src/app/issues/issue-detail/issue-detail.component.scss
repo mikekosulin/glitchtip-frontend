@@ -30,6 +30,34 @@ dl {
   }
 }
 
+.event-level-info,
+.event-level-warning,
+.event-level-error,
+.event-level-fatal {
+  padding-left: 10px;
+  border-left: 5px;
+  border-left-style: solid;
+}
+
+div.event-level-info {
+  border-color: #4b60b4;
+}
+div.event-level-warning {
+  border-color: #e9b949;
+}
+div.event-level-error {
+  border-color: red;
+}
+div.event-level-fatal {
+  border-color: repeating-linear-gradient(
+      -60deg,
+      orange,
+      black 5px,
+      white 5px,
+      white 10px
+  );
+}
+
 .event-detail-card {
   margin-right: 16px;
 
