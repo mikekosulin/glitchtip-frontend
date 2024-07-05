@@ -2,11 +2,11 @@
 @use "@angular/material" as mat;
 @import "variables";
 
-// These are the light theme colors fixed into this .scss
-// @TODO Use theme variables and light/dark prefs here.
-$event-level-default-color-light: #f5f5f5;
-$event-level-debug-color-light: #e0e0e0;
-$event-level-sample-color-light: #f5f5f5;
+// @TODO Improve use of theme variables, naming, light/dark usage ...
+// Sourced from src/app/issues/issues-page/_issues-page-theme.component.scss
+$event-level-default-color-light: mat.m2-get-color-from-palette(mat.$m2-gray-palette, 100);
+$event-level-debug-color-light: mat.m2-get-color-from-palette(mat.$m2-gray-palette, 600);
+$event-level-sample-color-light: mat.m2-get-color-from-palette(mat.$m2-gray-palette, 100);
 $event-level-info-color-light: #4b60b4;
 $event-level-warning-color-light: #e9b949;
 $event-level-error-color-light: #e22a46;
