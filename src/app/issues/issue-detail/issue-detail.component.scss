@@ -1,4 +1,5 @@
 @import "variables";
+@import "../../scss/event-levels";
 
 .issue-404 {
   h1 {
@@ -35,27 +36,22 @@ dl {
 .event-level-error,
 .event-level-fatal {
   padding-left: 10px;
+  border-color: $event-level-default-color;
   border-left: 5px;
   border-left-style: solid;
 }
 
 div.event-level-info {
-  border-color: #4b60b4;
+  border-color: $event-level-info-color;
 }
 div.event-level-warning {
-  border-color: #e9b949;
+  border-color: $event-level-warning-color;
 }
 div.event-level-error {
-  border-color: red;
+  border-color: $event-level-error-color;
 }
 div.event-level-fatal {
-  border-color: repeating-linear-gradient(
-      -60deg,
-      orange,
-      black 5px,
-      white 5px,
-      white 10px
-  );
+  border-color: $event-level-fatal-color;
 }
 
 .event-detail-card {

@@ -1,0 +1,13 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@import "variables";
+
+// These are the light theme colors fixed into this .scss
+// @TODO Use theme variables and light/dark prefs here.
+$event-level-default-color: #f5f5f5;
+$event-level-debug-color: #e0e0e0;
+$event-level-sample-color: #f5f5f5;
+$event-level-info-color: #4b60b4;
+$event-level-warning-color: #e9b949;
+$event-level-error-color: #e22a46;
+$event-level-fatal-color: repeating-linear-gradient(-60deg,#e22a46,#e22a46 5px,#fff 5px 10px);;

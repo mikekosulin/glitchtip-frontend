@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "@angular/material" as mat;
+@import "../../scss/event-levels";
 
 @mixin theme($theme) {
   $primary: map.get($theme, primary);
@@ -59,25 +60,19 @@
       }
 
       &--info:after {
-        background-color: #4b60b4;
+        background-color: $event-level-info-color;
       }
 
       &--warning:after {
-        background-color: #e9b949;
+        background-color: $event-level-warning-color;
       }
 
       &--error:after {
-        background-color: mat.m2-get-color-from-palette($primary);
+        background-color: $event-level-error-color;
       }
 
       &--fatal:after {
-        background-image: repeating-linear-gradient(
-          -60deg,
-          mat.m2-get-color-from-palette($primary),
-          mat.m2-get-color-from-palette($primary) 5px,
-          white 5px,
-          white 10px
-        );
+        background-image: $event-level-fatal-color;
       }
     }
   }
