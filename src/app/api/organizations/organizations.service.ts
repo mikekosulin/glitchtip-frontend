@@ -414,8 +414,10 @@ export class OrganizationsService extends StatefulService<OrganizationsState> {
   ) {
     const data = {
       email: emailInput,
-      role: roleInput,
-      teams: teamsInput,
+      orgRole: roleInput,
+      teamRoles: teamsInput.map((teamSlug) => {
+        return { teamSlug, role: "" };
+      }),
     };
     return this.activeOrganizationSlug$
       .pipe(

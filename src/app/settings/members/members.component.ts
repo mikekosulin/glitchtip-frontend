@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterLink } from "@angular/router";
 import { map, filter } from "rxjs/operators";
 import { OrganizationsService } from "src/app/api/organizations/organizations.service";
 import { MembersService } from "src/app/api/organizations/members.service";
-import { MemberSelector } from "src/app/api/organizations/organizations.interface";
+import { Member, MemberSelector } from "src/app/api/organizations/organizations.interface";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
 import { MatChipsModule } from "@angular/material/chips";
@@ -53,8 +53,8 @@ export class MembersComponent implements OnInit {
       });
   }
 
-  resendInvite(memberId: number) {
-    this.membersService.resendInvite(memberId);
+  resendInvite(member: Member) {
+    this.membersService.resendInvite(member);
   }
 
   removeMember(member: MemberSelector) {

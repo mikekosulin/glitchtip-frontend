@@ -68,15 +68,21 @@ export class MembersService {
   ) {}
 
   /** Send another invite to already invited org member */
-  resendInvite(memberId: number) {
-    this.setLoadingResendInvite(memberId);
+  resendInvite(member: Member) {
+    this.setLoadingResendInvite(member.id);
+    const data = {
+      email: member.email,
+      orgRole: member.role,
+      teamRoles: [],
+      reinvite: true,
+    }
     lastValueFrom(
       this.organizationsService.activeOrganizationSlug$.pipe(
         take(1),
         mergeMap((orgSlug) =>
-          this.membersAPIService.resendInvite(orgSlug!, memberId)
+          this.membersAPIService.inviteUser(orgSlug!, data)
         ),
-        tap(() => this.setResendInviteSuccess(memberId)),
+        tap(() => this.setResendInviteSuccess(member.id)),
         catchError(() => {
           this.clearLoadingResendInvite();
           return EMPTY;

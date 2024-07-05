@@ -4,8 +4,8 @@ import { baseUrl } from "../../constants";
 import {
   Member,
   MemberDetail,
-  MemberUpdateData,
-  OrganizationMembersRequest,
+  OrgMemberUpdate,
+  OrgMemberIn,
 } from "./organizations.interface";
 
 @Injectable({
@@ -23,11 +23,7 @@ export class MembersAPIService {
     return this.http.get<MemberDetail>(this.detailURL(orgSlug, memberId));
   }
 
-  update(
-    orgSlug: string,
-    memberId: number,
-    memberUpdateData: MemberUpdateData
-  ) {
+  update(orgSlug: string, memberId: number, memberUpdateData: OrgMemberUpdate) {
     return this.http.put<Member>(
       this.detailURL(orgSlug, memberId),
       memberUpdateData
@@ -45,14 +41,8 @@ export class MembersAPIService {
     );
   }
 
-  inviteUser(orgSlug: string, data: OrganizationMembersRequest) {
+  inviteUser(orgSlug: string, data: OrgMemberIn) {
     return this.http.post<Member>(this.listURL(orgSlug), data);
-  }
-
-  resendInvite(orgSlug: string, memberId: number) {
-    return this.http.put<Member>(this.detailURL(orgSlug, memberId), {
-      reinvite: 1,
-    });
   }
 
   private listURL(organizationSlug: string) {

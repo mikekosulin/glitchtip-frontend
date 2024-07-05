@@ -72,7 +72,8 @@ export class MemberDetailService extends StatefulService<MemberDetailState> {
         take(1),
         exhaustMap(([orgSlug, memberDetail]) => {
           const data = {
-            role: updatedRole,
+            orgRole: updatedRole,
+            teamRoles: []
           };
           return this.membersAPIService
             .update(orgSlug!, memberDetail!.id, data)
