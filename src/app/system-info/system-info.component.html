@@ -1,0 +1,34 @@
+<section class="l-body">
+  <header class="page-header">
+    <h2 class="mat-headline-4" i18n>System Info</h2>
+  </header>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title i18n>Settings</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Server timezone: {{ serverTimeZone$ | async }}</p>
+      <p>Billing enabled: {{ billingEnabled$ | async }}</p>
+      <p>User registration: {{ enableUserRegistration$ | async }}</p>
+      <p>Organization creation: {{ enableOrganizationCreation$ | async }}</p>
+      <p>Paid for GlitchTip: {{ paidForGlitchTip$ | async }}</p>
+      <p>Social Apps: {{ socialApps$ | async }}</p>
+      <p>Stripe Public Key: {{ stripePublicKey$ | async }}</p>
+      <p>Initial load: {{ initialLoad$ | async }}</p>
+    </mat-card-content>
+  </mat-card>
+  <mat-divider></mat-divider>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title i18n>Instance info</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container *ngIf="version$ | async as version ; else noVersion">
+        <p>Version: {{ version }}</p>
+      </ng-container>
+      <ng-template #noVersion>
+        <p>Unable to retrieve version data.</p>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</section>

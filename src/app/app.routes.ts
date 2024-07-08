@@ -92,6 +92,14 @@ export const routes: Routes = [
         },
       },
       {
+        path: "system-info",
+        loadChildren: () => import("./system-info/routes"),
+        title: "System info",
+        data: {
+          preload: true,
+        },
+      },
+      {
         path: ":org-slug",
         canActivate: [
           (next: ActivatedRouteSnapshot) =>
