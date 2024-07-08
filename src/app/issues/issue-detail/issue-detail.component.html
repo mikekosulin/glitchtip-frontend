@@ -146,9 +146,9 @@
               <dt class="mat-caption">Events</dt>
               <dd class="mat-body-1">{{ issue?.count }}</dd>
             </div>
-            <div class="event-level-{{ issue.level }}">
+            <div>
               <dt class="mat-caption">Level</dt>
-              <dd class="mat-body-1">{{ issue.level | uppercase }}</dd>
+              <dd class="mat-body-1">{{ issue.level | titlecase }}</dd>
             </div>
             <div>
               <dt class="mat-caption">First Seen</dt>
