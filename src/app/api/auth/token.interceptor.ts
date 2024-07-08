@@ -9,8 +9,8 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (
-        error.status === 403 &&
-        error.error.detail === "Authentication credentials were not provided."
+        error.status === 401 &&
+        error.error.detail === "Unauthorized"
       ) {
         auth.expireAuth();
         return EMPTY;
