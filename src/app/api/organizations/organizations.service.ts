@@ -435,10 +435,16 @@ export class OrganizationsService extends StatefulService<OrganizationsState> {
           this.router.navigate([orgSlug, "settings", "members"]);
         }),
         catchError((error: HttpErrorResponse) => {
-          if (error.error?.detail) {
+          if (error.status === 403) {
+            this.setAddMemberError(
+              "Only organization members with a role of manager or owner can invite new members."
+            );
+          } else if (error.error?.detail) {
             this.setAddMemberError(error.error?.detail);
           } else {
-            this.setAddMemberError(`${error.statusText}: ${error.status}`);
+            this.setAddMemberError(
+              "There was an error processing this request."
+            );
           }
           return EMPTY;
         })
