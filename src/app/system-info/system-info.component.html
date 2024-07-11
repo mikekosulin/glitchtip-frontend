@@ -4,31 +4,91 @@
   </header>
   <mat-card>
     <mat-card-header>
-      <mat-card-title i18n>Settings</mat-card-title>
+      <mat-card-title i18n>Backend configuration</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p>Server timezone: {{ serverTimeZone$ | async }}</p>
-      <p>Billing enabled: {{ billingEnabled$ | async }}</p>
-      <p>User registration: {{ enableUserRegistration$ | async }}</p>
-      <p>Organization creation: {{ enableOrganizationCreation$ | async }}</p>
-      <p>Paid for GlitchTip: {{ paidForGlitchTip$ | async }}</p>
-      <p>Social Apps: {{ socialApps$ | async }}</p>
-      <p>Stripe Public Key: {{ stripePublicKey$ | async }}</p>
-      <p>Initial load: {{ initialLoad$ | async }}</p>
+      <table>
+        <thead>
+        <tr>
+          <th>Setting</th>
+          <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>Server timezone</td>
+          <td>{{ serverTimeZone$ | async }}</td>
+        </tr>
+        <tr>
+          <td>Billing</td>
+          <td>{{ (billingEnabled$ | async) ? 'Enabled' : 'Disabled' }}</td>
+        </tr>
+        <tr>
+          <td>Organization creation</td>
+          <td>{{ (enableOrganizationCreation$ | async) ? 'Enabled' : 'Disabled' }}</td>
+        </tr>
+        <tr>
+          <td>User registration</td>
+          <td>{{ (enableUserRegistration$ | async) ? 'Enabled' : 'Disabled' }}</td>
+        </tr>
+        <tr>
+          <td>Social Apps</td>
+          <td>{{ (socialApps$ | async)?.length ? 'Configured' : 'Not configured' }}</td>
+        </tr>
+        <tr>
+          <td>Stripe Public Key</td>
+          <td>{{ (stripePublicKey$ | async) ? 'Configured' : 'Not configured' }}</td>
+        </tr>
+        <tr>
+          <td>I paid for GlitchTip</td>
+          <td>{{ (paidForGlitchTip$ | async) ? 'Yes' : 'No' }}</td>
+        </tr>
+        </tbody>
+      </table>
     </mat-card-content>
   </mat-card>
   <mat-divider></mat-divider>
   <mat-card>
     <mat-card-header>
-      <mat-card-title i18n>Instance info</mat-card-title>
+      <mat-card-title i18n>Server info</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <ng-container *ngIf="version$ | async as version ; else noVersion">
-        <p>Version: {{ version }}</p>
-      </ng-container>
-      <ng-template #noVersion>
-        <p>Unable to retrieve version data.</p>
-      </ng-template>
+      <table>
+        <thead>
+        <tr>
+          <th>Data</th>
+          <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>Version</td>
+          <td>
+            <ng-container *ngIf="version$ | async as version ; else noVersion">
+              {{ version }}
+            </ng-container>
+            <ng-template #noVersion>
+              Unable to retrieve version data.
+            </ng-template>
+          </td>
+        </tr>
+        <tr>
+          <td>Organizations</td>
+          <td>{{ (organizations$ | async)?.length }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <mat-divider></mat-divider>
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title i18n>Documentation</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-hint>See <a href="https://glitchtip.com/documentation/install">GlitchTip installation and configuration
+        docs</a>.
+      </mat-hint>
     </mat-card-content>
   </mat-card>
 </section>
