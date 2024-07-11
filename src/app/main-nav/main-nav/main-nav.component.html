@@ -177,14 +177,6 @@
         >Profile</a
       >
       <a
-        data-test-settings
-        mat-list-item
-        [routerLink]="['/system-info']"
-        routerLinkActive="active-route"
-        i18n
-      >System Info</a
-      >
-      <a
         mat-list-item
         [routerLink]="['/profile']"
         routerLinkActive="active-route"
@@ -260,6 +252,14 @@
         </ul>
       </mat-card-content>
     </mat-card>
+    <div class="mat-typography version">
+      <a
+        [routerLink]="['/system-info']"
+        routerLinkActive="active-route"
+        i18n
+      >GlitchTip {{ version$ | async }}</a
+      >
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content>
