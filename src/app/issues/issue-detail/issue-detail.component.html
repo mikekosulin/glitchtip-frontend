@@ -147,6 +147,10 @@
               <dd class="mat-body-1">{{ issue?.count }}</dd>
             </div>
             <div>
+              <dt class="mat-caption">Level</dt>
+              <dd class="mat-body-1">{{ issue.level | titlecase }}</dd>
+            </div>
+            <div>
               <dt class="mat-caption">First Seen</dt>
               <dd class="mat-body-1">{{ issue.firstSeen | daysAgo }}</dd>
               <dd class="mat-caption">
