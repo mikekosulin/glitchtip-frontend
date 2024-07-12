@@ -21,7 +21,6 @@ import { MatButtonModule } from "@angular/material/button";
 import { map, Observable, of, startWith } from "rxjs";
 import { MonitorDetail, MonitorInput, MonitorType } from "../uptime.interfaces";
 import { intRegex, urlRegex } from "src/app/shared/validators";
-import { timedeltaToMS } from "src/app/shared/shared.utils";
 import { OrganizationsService } from "src/app/api/organizations/organizations.service";
 import { SubscriptionsService } from "src/app/api/subscriptions/subscriptions.service";
 import { EventInfoComponent } from "src/app/shared/event-info/event-info.component";
@@ -147,9 +146,7 @@ export class MonitorFormComponent implements OnInit {
     this.intervalPerMonth$ =
       this.monitorForm.controls.interval.valueChanges.pipe(
         startWith(
-          this.monitorSettings
-            ? Math.round(timedeltaToMS(this.monitorSettings.interval) / 1000)
-            : defaultInterval
+          this.monitorSettings?.interval ?? defaultInterval
         ),
         map((interval) => Math.floor(2592000 / interval))
       );
@@ -166,9 +163,7 @@ export class MonitorFormComponent implements OnInit {
           : defaultExpectedStatus
       );
       this.formExpectedBody.patchValue(this.monitorSettings.expectedBody);
-      this.formInterval.patchValue(
-        Math.round(timedeltaToMS(this.monitorSettings.interval) / 1000)
-      );
+      this.formInterval.patchValue(this.monitorSettings.interval);
       this.formTimeout.patchValue(this.monitorSettings.timeout);
       this.formProject.patchValue(this.monitorSettings.project);
     }
@@ -211,7 +206,7 @@ export class MonitorFormComponent implements OnInit {
       this.formSubmitted.emit({
         ...this.monitorForm.value,
         name: this.formName.value!,
-        interval: this.formInterval.value!.toString(),
+        interval: this.formInterval.value,
         monitorType: this.formMonitorType.value!,
         expectedStatus: this.formExpectedStatus.enabled
           ? this.formExpectedStatus.value

@@ -13,7 +13,7 @@ export enum DownReason {
 interface MonitorBase {
   monitorType: MonitorType;
   name: string;
-  interval: string;
+  interval: number;
   expectedStatus: number | null;
   expectedBody: string;
   url: string;
