@@ -32,7 +32,6 @@ import { EntryDataComponent } from "../shared/entry-data/entry-data.component";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemInfoComponent {
-  initialLoad$ = this.settingsService.initialLoad$;
   backendConfiguration$ = combineLatest([
     this.settingsService.enableOrganizationCreation$,
     this.settingsService.enableUserRegistration$,
