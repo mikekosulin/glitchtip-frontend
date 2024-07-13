@@ -1,23 +1,22 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { SystemInfoComponent } from './system-info.component';
+import { SystemInfoComponent } from "./system-info.component";
 
-describe('SystemInfoComponent', () => {
+describe("SystemInfoComponent", () => {
   let component: SystemInfoComponent;
   let fixture: ComponentFixture<SystemInfoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SystemInfoComponent]
-    })
-    .compileComponents();
-    
+      imports: [SystemInfoComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SystemInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

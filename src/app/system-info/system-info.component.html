@@ -2,82 +2,25 @@
   <header class="page-header">
     <h2 class="mat-headline-4" i18n>System Info</h2>
   </header>
-  <mat-card>
+  <mat-card *ngIf="backendConfiguration$ | async as backendConfiguration">
     <mat-card-header>
       <mat-card-title i18n>Backend configuration</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <table>
-        <thead>
-        <tr>
-          <th>Setting</th>
-          <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>Server timezone</td>
-          <td>{{ serverTimeZone$ | async }}</td>
-        </tr>
-        <tr>
-          <td>Billing</td>
-          <td>{{ (billingEnabled$ | async) ? 'Enabled' : 'Disabled' }}</td>
-        </tr>
-        <tr>
-          <td>Organization creation</td>
-          <td>{{ (enableOrganizationCreation$ | async) ? 'Enabled' : 'Disabled' }}</td>
-        </tr>
-        <tr>
-          <td>User registration</td>
-          <td>{{ (enableUserRegistration$ | async) ? 'Enabled' : 'Disabled' }}</td>
-        </tr>
-        <tr>
-          <td>Social Apps</td>
-          <td>{{ (socialApps$ | async)?.length ? 'Configured' : 'Not configured' }}</td>
-        </tr>
-        <tr>
-          <td>Stripe Public Key</td>
-          <td>{{ (stripePublicKey$ | async) ? 'Configured' : 'Not configured' }}</td>
-        </tr>
-        <tr>
-          <td>I paid for GlitchTip</td>
-          <td>{{ (paidForGlitchTip$ | async) ? 'Yes' : 'No' }}</td>
-        </tr>
-        </tbody>
-      </table>
-    </mat-card-content>
-  </mat-card>
-  <mat-divider></mat-divider>
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title i18n>Server info</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <table>
-        <thead>
-        <tr>
-          <th>Data</th>
-          <th>Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <td>Version</td>
-          <td>
-            <ng-container *ngIf="version$ | async as version ; else noVersion">
-              {{ version }}
-            </ng-container>
-            <ng-template #noVersion>
-              Unable to retrieve version data.
-            </ng-template>
-          </td>
-        </tr>
-        <tr>
-          <td>Organizations</td>
-          <td>{{ (organizations$ | async)?.length }}</td>
-        </tr>
-        </tbody>
-      </table>
+      <dl>
+        <dt class="mat-body-strong">Server timezone</dt>
+        <dd>{{ backendConfiguration.serverTimeZone }}</dd>
+        <dt class="mat-body-strong">Organization creation</dt>
+        <dd>{{
+          backendConfiguration.enableUserRegistration ? "Enabled" : "Disabled"
+        }}</dd>
+        <dt class="mat-body-strong">User registration</dt>
+        <dd>{{ backendConfiguration.serverTimeZone }}</dd>
+        <dt class="mat-body-strong">I paid for GlitchTip</dt>
+        <dd>{{ backendConfiguration.paidForGlitchTip ? "Yes" : "No" }}</dd>
+        <dt class="mat-body-strong">Backend version</dt>
+        <dd>{{ backendConfiguration.version }}</dd>
+      </dl>
     </mat-card-content>
   </mat-card>
   <mat-divider></mat-divider>
