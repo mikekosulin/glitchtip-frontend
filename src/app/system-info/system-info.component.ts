@@ -29,7 +29,6 @@ import { EntryDataComponent } from "../shared/entry-data/entry-data.component";
     KeyValuePipe,
   ],
   templateUrl: "./system-info.component.html",
-  styleUrl: "./system-info.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemInfoComponent {
