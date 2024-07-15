@@ -42,7 +42,7 @@ export interface MonitorCheck {
   isUp: boolean;
   startCheck: string;
   reason: DownReason | null;
-  responseTime: string | null;
+  responseTime: number | null;
 }
 
 export interface ResponseTimeDataItem extends Omit<DataItem, "name"> {

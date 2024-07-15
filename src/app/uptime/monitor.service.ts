@@ -16,7 +16,6 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { ProjectAlertsAPIService } from "../api/projects/project-alerts/project-alerts.service";
 import { SettingsService } from "../api/settings.service";
 import { SubscriptionsService } from "../api/subscriptions/subscriptions.service";
-import { timedeltaToMS } from "src/app/shared/shared.utils";
 import { ServerError } from "../shared/django.interfaces";
 
 export interface MonitorState {
@@ -258,7 +257,7 @@ export class MonitorService extends StatefulService<MonitorState> {
   private formatData(check: MonitorCheck) {
     return {
       name: new Date(check.startCheck),
-      value: check.responseTime ? timedeltaToMS(check.responseTime) : 0,
+      value: check.responseTime ?? 0,
     };
   }
 

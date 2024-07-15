@@ -145,9 +145,7 @@ export class MonitorFormComponent implements OnInit {
     this.monitorService.callSubscriptionDetails();
     this.intervalPerMonth$ =
       this.monitorForm.controls.interval.valueChanges.pipe(
-        startWith(
-          this.monitorSettings?.interval ?? defaultInterval
-        ),
+        startWith(this.monitorSettings?.interval ?? defaultInterval),
         map((interval) => Math.floor(2592000 / interval))
       );
 
@@ -208,6 +206,7 @@ export class MonitorFormComponent implements OnInit {
         name: this.formName.value!,
         interval: this.formInterval.value,
         monitorType: this.formMonitorType.value!,
+        project: this.formProject.value ? this.formProject.value : null,
         expectedStatus: this.formExpectedStatus.enabled
           ? this.formExpectedStatus.value
           : null,
