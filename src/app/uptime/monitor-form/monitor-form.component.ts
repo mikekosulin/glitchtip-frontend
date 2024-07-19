@@ -212,6 +212,7 @@ export class MonitorFormComponent implements OnInit {
           : null,
         expectedBody: this.formExpectedBody.value!,
         url: this.formUrl.enabled ? this.formUrl.value : "",
+        timeout: this.formTimeout.value,
       });
     }
   }
