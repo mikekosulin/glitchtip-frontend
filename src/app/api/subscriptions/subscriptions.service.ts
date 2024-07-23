@@ -228,7 +228,7 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
         { defaultValue: null },
       );
     } else {
-      this.stripe.redirectToSubscriptionCheckout(organization.id, price.id);
+      this.stripe.redirectToSubscriptionCheckout(organization.slug, price.id);
     }
   }
 
@@ -248,7 +248,7 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
       lastValueFrom(
         this.subscriptionsAPIService.retrieve(orgSlug).pipe(
           tap((subscription) => {
-            if (subscription.status === null) {
+            if (subscription === null) {
               this.router.navigate(subscriptionRoute);
             }
           }),
