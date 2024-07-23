@@ -40,7 +40,7 @@ const initialState: SubscriptionsState = {
 })
 export class SubscriptionsService extends StatefulService<SubscriptionsState> {
   readonly subscription$ = this.getState$.pipe(
-    map((state) => state.subscription)
+    map((state) => state.subscription),
   );
   readonly formattedSubscription$ = this.subscription$.pipe(
     map((subscription) => {
@@ -59,16 +59,16 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
       } else {
         return null;
       }
-    })
+    }),
   );
   readonly subscriptionLoading$ = this.getState$.pipe(
-    map((state) => state.subscriptionLoading)
+    map((state) => state.subscriptionLoading),
   );
   readonly subscriptionLoadingTimeout$ = this.getState$.pipe(
-    map((state) => state.subscriptionLoadingTimeout)
+    map((state) => state.subscriptionLoadingTimeout),
   );
   readonly subscriptionCreationLoadingId$ = this.getState$.pipe(
-    map((state) => state.subscriptionCreationLoadingId)
+    map((state) => state.subscriptionCreationLoadingId),
   );
   readonly fromStripe$ = this.getState$.pipe(map((state) => state.fromStripe));
 
@@ -89,19 +89,19 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
       } else {
         return state.eventsCount;
       }
-    })
+    }),
   );
 
   readonly totalEventsAllowed$ = this.subscription$.pipe(
     map((subscription) =>
       subscription && subscription.items[0]
         ? parseInt(subscription.items[0].price.product.metadata.events, 10)
-        : null
-    )
+        : null,
+    ),
   );
 
   readonly productOptions$ = this.getState$.pipe(
-    map((state) => state.products)
+    map((state) => state.products),
   );
   readonly formattedProductOptions = this.productOptions$.pipe(
     map((products) => {
@@ -112,7 +112,7 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
           : product.name,
         mainUnitPrice: product.prices[0].unit_amount / 100,
       }));
-    })
+    }),
   );
 
   constructor(
@@ -120,7 +120,7 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
     private subscriptionsAPIService: SubscriptionsAPIService,
     private stripe: StripeService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {
     super(initialState);
   }
@@ -139,9 +139,9 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
         catchError(() => {
           this.setSubscriptionLoadingError();
           return EMPTY;
-        })
+        }),
       ),
-      { defaultValue: null }
+      { defaultValue: null },
     );
   }
 
@@ -167,9 +167,9 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
           this.setSubscriptionLoadingError();
           return EMPTY;
         }),
-        takeUntil(this.subscriptionRetryTimer())
+        takeUntil(this.subscriptionRetryTimer()),
       ),
-      { defaultValue: null }
+      { defaultValue: null },
     );
   }
 
@@ -183,9 +183,9 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
         tap((count) => this.setSubscriptionCount(count)),
         catchError((error) => {
           return EMPTY;
-        })
+        }),
       ),
-      { defaultValue: null }
+      { defaultValue: null },
     );
   }
 
@@ -198,11 +198,11 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
       this.productsAPIService.list().pipe(
         tap((products) => {
           const productAmountSorted = products.sort(
-            (a, b) => a.prices[0].unit_amount - b.prices[0].unit_amount
+            (a, b) => a.prices[0].unit_amount - b.prices[0].unit_amount,
           );
           this.setProducts(productAmountSorted);
-        })
-      )
+        }),
+      ),
     );
   }
 
@@ -219,13 +219,13 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
             if (err.status === 409) {
               this.setSubscriptionCreationError();
               this.snackBar.open(
-                "This organization already has a subscription. Please reload page for latest details."
+                "This organization already has a subscription. Please reload page for latest details.",
               );
             }
             return EMPTY;
-          })
+          }),
         ),
-        { defaultValue: null }
+        { defaultValue: null },
       );
     } else {
       this.stripe.redirectToSubscriptionCheckout(organization.id, price.id);
@@ -251,8 +251,8 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
             if (subscription.status === null) {
               this.router.navigate(subscriptionRoute);
             }
-          })
-        )
+          }),
+        ),
       );
     }
   }
@@ -261,7 +261,7 @@ export class SubscriptionsService extends StatefulService<SubscriptionsState> {
     return timer(60000).pipe(
       tap(() => {
         this.setSubscriptionLoadingTimeout();
-      })
+      }),
     );
   }
 

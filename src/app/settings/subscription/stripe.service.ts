@@ -29,7 +29,7 @@ export class StripeService extends StatefulService<StripeState> {
   readonly error$ = this.getState$.pipe(map((state) => state.error));
   constructor(
     private http: HttpClient,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
   ) {
     super(initialState);
   }
@@ -41,14 +41,14 @@ export class StripeService extends StatefulService<StripeState> {
         exhaustMap(([resp, stripePublicKey]) => {
           if (stripePublicKey) {
             return loadStripe(stripePublicKey).then((stripe) =>
-              stripe?.redirectToCheckout({ sessionId: resp.id })
+              stripe?.redirectToCheckout({ sessionId: resp.id }),
             );
           } else {
             return EMPTY;
           }
-        })
+        }),
       ),
-      { defaultValue: null }
+      { defaultValue: null },
     );
   }
 
@@ -56,9 +56,9 @@ export class StripeService extends StatefulService<StripeState> {
    * Redirect the user to Stripe's self service billing portal
    * https://stripe.com/docs/billing/subscriptions/integrating-self-serve-portal
    */
-  redirectToBillingPortal(organizationId: number) {
+  redirectToBillingPortal(organizationSlug: string) {
     lastValueFrom(
-      this.createBillingPortal(organizationId).pipe(
+      this.createBillingPortal(organizationSlug).pipe(
         tap((resp) => (window.location.href = resp.url)),
         catchError((err) => {
           if (err instanceof HttpErrorResponse) {
@@ -74,9 +74,9 @@ export class StripeService extends StatefulService<StripeState> {
             this.setState({ error: "Unknown Error" });
           }
           return EMPTY;
-        })
+        }),
       ),
-      { defaultValue: null }
+      { defaultValue: null },
     );
   }
 
@@ -93,11 +93,9 @@ export class StripeService extends StatefulService<StripeState> {
     return this.http.post<StripeCheckoutSession>(url, data);
   }
 
-  private createBillingPortal(organizationId: number) {
-    const url = baseUrl + "/create-billing-portal/";
-    const data = {
-      organization: organizationId,
-    };
-    return this.http.post<StripeBillingPortalSession>(url, data);
+  private createBillingPortal(organizationSlug: string) {
+    const url =
+      baseUrl + `/organizations/${organizationSlug}/create-billing-portal/`;
+    return this.http.post<StripeBillingPortalSession>(url, {});
   }
 }
