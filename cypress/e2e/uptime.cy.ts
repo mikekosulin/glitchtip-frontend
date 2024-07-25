@@ -29,10 +29,11 @@ describe("List, add, update and delete uptime Monitors", () => {
     cy.get("#monitor-settings").click();
     cy.on("window:confirm", (text) => {
       expect(text).to.contains(
-        "Are you sure you want delete this monitor? You will permanently lose all associated uptime data."
+        "Are you sure you want delete this monitor?"
       );
     });
     cy.get("#delete-monitor").click();
+    cy.url().then(url => {expect(url.endsWith(`/${organization.slug}/uptime-monitors`)).to.be.true})
     cy.contains("cytestmonitor").should("not.exist");
   });
 

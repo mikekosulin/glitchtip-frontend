@@ -35,7 +35,7 @@
         <gt-monitor-chart [data]="monitor.checks"></gt-monitor-chart>
         <div class="mat-caption interval" i18n>
           Uptime check interval:
-          {{ monitor.interval | humanizeDuration : true }}
+          {{ monitor.interval | number }} seconds
         </div>
         <div>
           <div class="url-display">

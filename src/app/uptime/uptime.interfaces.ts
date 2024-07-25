@@ -13,7 +13,7 @@ export enum DownReason {
 interface MonitorBase {
   monitorType: MonitorType;
   name: string;
-  interval: string;
+  interval: number;
   expectedStatus: number | null;
   expectedBody: string;
   url: string;
@@ -42,7 +42,7 @@ export interface MonitorCheck {
   isUp: boolean;
   startCheck: string;
   reason: DownReason | null;
-  responseTime: string | null;
+  responseTime: number | null;
 }
 
 export interface ResponseTimeDataItem extends Omit<DataItem, "name"> {
