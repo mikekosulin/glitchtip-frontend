@@ -12,13 +12,24 @@ interface AllAuthUser {
   email: string;
 }
 
-export interface AllAuthSessionResponse {
+interface AllAuthResponse {
   status: number;
+}
+
+export interface AllAuthSessionResponse extends AllAuthResponse {
   data: {
     user?: AllAuthUser;
     methods?: any;
     flows?: any;
   };
+  meta: {
+    is_authenticated: boolean;
+  };
+}
+
+export interface AllAuthLoginRespones extends AllAuthResponse {
+  user?: AllAuthUser;
+  methods?: any;
   meta: {
     is_authenticated: boolean;
   };
