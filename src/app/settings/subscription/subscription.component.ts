@@ -68,7 +68,7 @@ export class SubscriptionComponent implements OnDestroy {
       } else {
         return false;
       }
-    })
+    }),
   );
   routerSubscription: Subscription;
   billingEmail = environment.billingEmail;
@@ -87,7 +87,7 @@ export class SubscriptionComponent implements OnDestroy {
         uptimeEvents: (events?.uptimeCheckEventCount! / eventsAllowed!) * 100,
         fileSize: (events?.fileSizeMB! / eventsAllowed!) * 100,
       };
-    })
+    }),
   );
 
   constructor(
@@ -95,7 +95,7 @@ export class SubscriptionComponent implements OnDestroy {
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private stripe: StripeService,
-    private orgService: OrganizationsService
+    private orgService: OrganizationsService,
   ) {
     this.routerSubscription = combineLatest([
       this.route.params,
@@ -108,7 +108,7 @@ export class SubscriptionComponent implements OnDestroy {
           return { slug, sessionId };
         }),
         filter((routerData) => !!routerData.slug),
-        take(1)
+        take(1),
       )
       .subscribe((routerData) => {
         if (routerData.sessionId) {
@@ -130,9 +130,9 @@ export class SubscriptionComponent implements OnDestroy {
     lastValueFrom(
       this.activeOrganization$.pipe(
         filter((org) => !!org),
-        tap((org) => this.stripe.redirectToBillingPortal(org!.id)),
-        take(1)
-      )
+        tap((org) => this.stripe.redirectToBillingPortal(org!.slug)),
+        take(1),
+      ),
     );
   }
 
