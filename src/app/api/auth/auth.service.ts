@@ -35,7 +35,6 @@ export class AuthService extends StatefulService<AuthState> {
         redirectUrl: auth.redirectUrl,
       });
     }
-    lastValueFrom(this.checkServerAuthStatus());
   }
 
   checkServerAuthStatus() {

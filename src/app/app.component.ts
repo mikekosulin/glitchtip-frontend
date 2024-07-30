@@ -5,6 +5,8 @@ import {
   Router,
   RouterOutlet,
 } from "@angular/router";
+import { lastValueFrom } from "rxjs";
+import { AuthService } from "./api/auth/auth.service";
 import { SettingsService } from "./api/settings.service";
 import { UserService } from "./api/user/user.service";
 import { setTheme } from "./shared/shared.utils";
@@ -20,6 +22,7 @@ export class AppComponent implements OnInit {
     private settings: SettingsService,
     private route: ActivatedRoute,
     private router: Router,
+    private authService: AuthService,
     private userService: UserService,
   ) {}
 
@@ -43,5 +46,7 @@ export class AppComponent implements OnInit {
       });
       s.unsubscribe();
     });
+
+    lastValueFrom(this.authService.checkServerAuthStatus());
   }
 }
