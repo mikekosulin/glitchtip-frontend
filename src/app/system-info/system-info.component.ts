@@ -29,13 +29,13 @@ import { EntryDataComponent } from "../shared/entry-data/entry-data.component";
     KeyValuePipe,
   ],
   templateUrl: "./system-info.component.html",
+  styleUrls: ["./system-info.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemInfoComponent {
   backendConfiguration$ = combineLatest([
     this.settingsService.enableOrganizationCreation$,
     this.settingsService.enableUserRegistration$,
-    this.settingsService.paidForGlitchTip$,
     this.settingsService.serverTimeZone$,
     this.settingsService.version$,
   ]).pipe(
@@ -43,14 +43,12 @@ export class SystemInfoComponent {
       ([
         enableOrganizationCreation,
         enableUserRegistration,
-        paidForGlitchTip,
         serverTimeZone,
         version,
       ]) => {
         return {
           enableOrganizationCreation,
           enableUserRegistration,
-          paidForGlitchTip,
           serverTimeZone,
           version,
         };

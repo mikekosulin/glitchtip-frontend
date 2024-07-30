@@ -6,6 +6,7 @@
     <mat-card-header>
       <mat-card-title i18n>Backend configuration</mat-card-title>
     </mat-card-header>
+    <mat-divider></mat-divider>
     <mat-card-content>
       <dl>
         <dt class="mat-body-strong">Server timezone</dt>
@@ -18,22 +19,20 @@
         <dd>{{
           backendConfiguration.enableUserRegistration ? "Enabled" : "Disabled"
         }}</dd>
-        <dt class="mat-body-strong">I paid for GlitchTip</dt>
-        <dd>{{ backendConfiguration.paidForGlitchTip ? "Yes" : "No" }}</dd>
-        <dt class="mat-body-strong">Backend version</dt>
+        <dt class="mat-body-strong">GlitchTip version</dt>
         <dd>{{ backendConfiguration.version }}</dd>
       </dl>
     </mat-card-content>
   </mat-card>
-  <mat-divider></mat-divider>
-  <mat-card>
+
+  <mat-card class="documentation-card">
     <mat-card-header>
       <mat-card-title i18n>Documentation</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <mat-hint
         >See
-        <a href="https://glitchtip.com/documentation/install"
+        <a href="https://glitchtip.com/documentation/install" target="_blank"
           >GlitchTip installation and configuration docs</a
         >.
       </mat-hint>
