@@ -252,6 +252,14 @@
         </ul>
       </mat-card-content>
     </mat-card>
+    <div class="mat-typography version">
+      <a
+        [routerLink]="['/system-info']"
+        routerLinkActive="active-route"
+        i18n
+      >GlitchTip {{ version$ | async }}</a
+      >
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content>

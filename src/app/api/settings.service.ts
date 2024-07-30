@@ -63,6 +63,9 @@ export class SettingsService {
   );
   serverTimeZone$ = this.state.pipe(map((settings) => settings.serverTimeZone));
   initialLoad$ = this.state.pipe(map((settings) => settings.initialLoad));
+  version$ = this.state.pipe(
+    map((settings) => settings.version)
+  );
   private readonly url = "/api/settings/";
 
   constructor(
