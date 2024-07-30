@@ -23,6 +23,7 @@ interface SettingsState {
   version: string | null;
   serverTimeZone: string | null;
   initialLoad: boolean;
+  useNewSocialCallbacks: boolean;
 }
 
 const initialState: SettingsState = {
@@ -40,6 +41,7 @@ const initialState: SettingsState = {
   version: null,
   serverTimeZone: null,
   initialLoad: false,
+  useNewSocialCallbacks: false,
 };
 
 @Injectable({
@@ -50,27 +52,29 @@ export class SettingsService {
   socialApps$ = this.state.pipe(map((settings) => settings.socialApps));
   billingEnabled$ = this.state.pipe(map((settings) => settings.billingEnabled));
   paidForGlitchTip$ = this.state.pipe(
-    map((settings) => settings.iPaidForGlitchTip)
+    map((settings) => settings.iPaidForGlitchTip),
   );
   stripePublicKey$ = this.state.pipe(
-    map((settings) => settings.stripePublicKey)
+    map((settings) => settings.stripePublicKey),
   );
   enableUserRegistration$ = this.state.pipe(
-    map((settings) => settings.enableUserRegistration)
+    map((settings) => settings.enableUserRegistration),
   );
   enableOrganizationCreation$ = this.state.pipe(
-    map((settings) => settings.enableOrganizationCreation)
+    map((settings) => settings.enableOrganizationCreation),
   );
   serverTimeZone$ = this.state.pipe(map((settings) => settings.serverTimeZone));
   initialLoad$ = this.state.pipe(map((settings) => settings.initialLoad));
-  version$ = this.state.pipe(
-    map((settings) => settings.version)
+  useNewSocialCallbacks$ = this.state.pipe(
+    map((settings) => settings.useNewSocialCallbacks),
   );
+  version$ = this.state.pipe(map((settings) => settings.version));
+  
   private readonly url = "/api/settings/";
 
   constructor(
     private http: HttpClient,
-    private microSentry: MicroSentryService
+    private microSentry: MicroSentryService,
   ) {}
 
   /** Get and set conf settings from backend. Typically run on application start */
@@ -155,7 +159,7 @@ export class SettingsService {
             };
           })(document, "script");
         }
-      })
+      }),
     );
   }
 

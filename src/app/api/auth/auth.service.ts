@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Router, RouterStateSnapshot } from "@angular/router";
-import { map, tap } from "rxjs/operators";
+import { catchError, map, tap } from "rxjs/operators";
 import { StatefulService } from "src/app/shared/stateful-service/stateful-service";
-import { lastValueFrom } from "rxjs";
+import { lastValueFrom, of, throwError } from "rxjs";
+import { AllAuthSessionResponse } from "./auth.interfaces";
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -34,6 +35,17 @@ export class AuthService extends StatefulService<AuthState> {
         redirectUrl: auth.redirectUrl,
       });
     }
+    lastValueFrom(this.checkServerAuthStatus());
+  }
+
+  checkServerAuthStatus() {
+    return this.http
+      .get<AllAuthSessionResponse>("/_allauth/browser/v1/auth/session")
+      .pipe(
+        tap((resp) => {
+          this.setState({ isLoggedIn: resp.meta.is_authenticated });
+        }),
+      );
   }
 
   loginCheck(state: RouterStateSnapshot) {
@@ -71,11 +83,16 @@ export class AuthService extends StatefulService<AuthState> {
 
   /** Log out user from the backend  */
   logout() {
-    this.http
-      .post("/rest-auth/logout/", null)
-      // .delete("/_allauth/browser/v1/auth/session")
-      .pipe(tap(() => this.removeAuth()))
-      .toPromise();
+    lastValueFrom(
+      this.http.delete("/_allauth/browser/v1/auth/session").pipe(
+        catchError((err: HttpErrorResponse) => {
+          if (err.status === 401) {
+            return of(this.removeAuth());
+          }
+          return throwError(() => new Error("Unable to log out"));
+        }),
+      ),
+    );
   }
 
   passwordReset(email: string) {
