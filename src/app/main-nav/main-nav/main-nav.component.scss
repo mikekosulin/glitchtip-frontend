@@ -121,3 +121,15 @@ mat-sidenav {
     font-size: 20px;
   }
 }
+
+.version {
+  text-align: center;
+
+  a {
+    color: mat.m2-get-color-from-palette(mat.$m2-gray-palette, 700);
+    font-weight: 300;
+    font-size: small;
+    text-decoration: none;
+  }
+}
+

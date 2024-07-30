@@ -53,6 +53,7 @@ export class MainNavComponent {
   billingEnabled$ = this.settingsService.billingEnabled$;
   paidForGlitchTip$ = this.settingsService.paidForGlitchTip$;
   mobileNav$ = this.mainNav.mobileNav$;
+  version$ = this.settingsService.version$;
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined = undefined;
 
   contextLoaded$ = combineLatest([

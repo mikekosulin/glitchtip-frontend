@@ -68,6 +68,8 @@ export class SettingsService {
   useNewSocialCallbacks$ = this.state.pipe(
     map((settings) => settings.useNewSocialCallbacks),
   );
+  version$ = this.state.pipe(map((settings) => settings.version));
+  
   private readonly url = "/api/settings/";
 
   constructor(
