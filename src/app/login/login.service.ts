@@ -12,9 +12,8 @@ import { encode, decode } from "cborg";
 import { StatefulService } from "../shared/stateful-service/stateful-service";
 import { ServerError } from "../shared/django.interfaces";
 import { AuthService } from "../api/auth/auth.service";
-import { LoginResponse, ValidAuth } from "../api/auth/auth.interfaces";
-
-const baseUrl = "/rest-auth";
+import { AllAuthLoginRespones, ValidAuth } from "../api/auth/auth.interfaces";
+import { allauthBase } from "../constants";
 
 interface LoginState {
   loading: boolean;
@@ -58,19 +57,20 @@ export class LoginService extends StatefulService<LoginState> {
   }
 
   login(email: string, password: string) {
-    const url = baseUrl + "/login/";
+    const url = allauthBase + "/auth/login";
     const data = {
       email,
       password,
     };
     this.setState({ loading: true, error: null });
-    return this.http.post<LoginResponse | null>(url, data).pipe(
+    return this.http.post<AllAuthLoginRespones>(url, data).pipe(
       tap((resp) => {
-        if (resp?.requires_mfa) {
-          this.promptForMFA(resp.valid_auth);
-        } else {
-          this.authService.afterLogin();
-        }
+        this.authService.afterLogin();
+        // if (resp?.requires_mfa) {
+        //   this.promptForMFA(resp.valid_auth);
+        // } else {
+        //   this.authService.afterLogin();
+        // }
       }),
       catchError((err) => {
         let error: ServerError | null = null;

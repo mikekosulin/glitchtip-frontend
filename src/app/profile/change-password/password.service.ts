@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { allauthBase } from "src/app/constants";
 
 interface ChangePassword {
   old_password: string;
@@ -7,7 +8,7 @@ interface ChangePassword {
   new_password2: string;
 }
 
-const baseUrl = "/rest-auth/password";
+const url = allauthBase + "/account/password/change";
 
 @Injectable({
   providedIn: "root",
@@ -19,9 +20,8 @@ export class PasswordService {
     // tslint:disable: variable-name
     old_password: string,
     new_password1: string,
-    new_password2: string
+    new_password2: string,
   ) {
-    const url = baseUrl + "/change/";
     const data: ChangePassword = {
       old_password,
       new_password1,

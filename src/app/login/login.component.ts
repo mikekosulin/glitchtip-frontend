@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
   Validators,
   ReactiveFormsModule,
+  FormGroup,
+  FormControl,
 } from "@angular/forms";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { tap } from "rxjs/operators";
@@ -50,9 +50,9 @@ export class LoginComponent implements OnInit {
   requiresMFA$ = this.loginService.requiresMFA$;
   hasFido2$ = this.loginService.hasFIDO2$;
   useTOTP$ = this.loginService.useTOTP$;
-  form = new UntypedFormGroup({
-    email: new UntypedFormControl("", [Validators.required, Validators.email]),
-    password: new UntypedFormControl("", [
+  form = new FormGroup({
+    email: new FormControl("", [Validators.required, Validators.email]),
+    password: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
     private settings: SettingsService,
     private acceptService: AcceptInviteService,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
           if (acceptInfo) {
             this.form.patchValue({ email: acceptInfo.orgUser.email });
           }
-        })
+        }),
       )
       .subscribe();
     this.error$.subscribe((error) => {
@@ -109,7 +109,7 @@ export class LoginComponent implements OnInit {
         this.authService.setRedirectUrl(nextUrl);
       }
       this.loginService
-        .login(this.form.value.email, this.form.value.password)
+        .login(this.form.value.email!, this.form.value.password!)
         .subscribe();
     }
   }
