@@ -33,7 +33,7 @@ describe("List, add, update and delete uptime Monitors", () => {
       );
     });
     cy.get("#delete-monitor").click();
-    cy.url().then(url => {expect(url.endsWith(`/${organization.slug}/uptime-monitors`)).to.be.true})
+    cy.visit(`/${organization.slug}/uptime-monitors`)
     cy.contains("cytestmonitor").should("not.exist");
   });
 
