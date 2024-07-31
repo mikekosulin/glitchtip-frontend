@@ -42,7 +42,10 @@ export class AuthService extends StatefulService<AuthState> {
       .get<AllAuthSessionResponse>("/_allauth/browser/v1/auth/session")
       .pipe(
         tap((resp) => {
-          this.setState({ isLoggedIn: resp.meta.is_authenticated });
+          this.setAuth({
+            ...this.state.getValue(),
+            isLoggedIn: resp.meta.is_authenticated,
+          });
         }),
       );
   }
