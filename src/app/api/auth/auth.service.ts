@@ -4,7 +4,6 @@ import { Router, RouterStateSnapshot } from "@angular/router";
 import { catchError, map, tap } from "rxjs/operators";
 import { StatefulService } from "src/app/shared/stateful-service/stateful-service";
 import { lastValueFrom, of, throwError } from "rxjs";
-import { AllAuthSessionResponse } from "./auth.interfaces";
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -35,19 +34,6 @@ export class AuthService extends StatefulService<AuthState> {
         redirectUrl: auth.redirectUrl,
       });
     }
-  }
-
-  checkServerAuthStatus() {
-    return this.http
-      .get<AllAuthSessionResponse>("/_allauth/browser/v1/auth/session")
-      .pipe(
-        tap((resp) => {
-          this.setAuth({
-            ...this.state.getValue(),
-            isLoggedIn: resp.meta.is_authenticated,
-          });
-        }),
-      );
   }
 
   loginCheck(state: RouterStateSnapshot) {
