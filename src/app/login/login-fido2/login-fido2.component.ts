@@ -35,11 +35,11 @@ export class LoginFido2Component implements OnInit {
   }
 
   ngOnInit() {
-    this.loginService.authenticateFIDO2().subscribe();
+    // this.loginService.authenticateFIDO2().subscribe();
   }
 
   retryAuth() {
-    this.loginService.authenticateFIDO2().subscribe();
+    // this.loginService.authenticateFIDO2().subscribe();
   }
 
   toggleRemember(event: boolean) {

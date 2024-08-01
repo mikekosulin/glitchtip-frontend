@@ -56,15 +56,15 @@ export class LoginTotpComponent implements OnInit, AfterViewInit {
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private loginService: LoginService
+    private loginService: LoginService,
   ) {}
 
   ngOnInit() {
-    this.error$.subscribe((error) => {
-      if (error?.code) {
-        this.code?.setErrors({ serverError: error.code });
-      }
-    });
+    // this.error$.subscribe((error) => {
+    //   if (error?.code) {
+    //     this.code?.setErrors({ serverError: error.code });
+    //   }
+    // });
   }
 
   ngAfterViewInit() {
@@ -81,15 +81,15 @@ export class LoginTotpComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    if (this.form.valid && this.code) {
-      const code = this.code.value!;
-      if (code.length === 6) {
-        this.loginService
-          .authenticateTOTP(code, this.form.value.remember === true)
-          .subscribe();
-      } else {
-        this.loginService.authenticateBackupCode(code).subscribe();
-      }
-    }
+    // if (this.form.valid && this.code) {
+    //   const code = this.code.value!;
+    //   if (code.length === 6) {
+    //     this.loginService
+    //       .authenticateTOTP(code, this.form.value.remember === true)
+    //       .subscribe();
+    //   } else {
+    //     this.loginService.authenticateBackupCode(code).subscribe();
+    //   }
+    // }
   }
 }

@@ -3,7 +3,6 @@ import { MatMenuTrigger, MatMenuModule } from "@angular/material/menu";
 import { combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
 import { OrganizationsService } from "../../api/organizations/organizations.service";
-import { AuthService } from "src/app/api/auth/auth.service";
 import { MainNavService } from "../main-nav.service";
 import { SettingsService } from "src/app/api/settings.service";
 import { UserService } from "src/app/api/user/user.service";
@@ -16,6 +15,8 @@ import { RouterLink, RouterLinkActive } from "@angular/router";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgIf, NgFor, AsyncPipe } from "@angular/common";
 import { MatSidenavModule } from "@angular/material/sidenav";
+import { AuthService } from "src/app/auth.service";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "gt-main-nav",
@@ -48,7 +49,7 @@ export class MainNavComponent {
     this.organizationsService.activeOrganizationDetail$;
   organizations$ = this.organizationsService.organizations$;
   organizationsInitialLoad$ = this.organizationsService.initialLoad$;
-  isLoggedIn$ = this.auth.isLoggedIn;
+  isLoggedIn$ = toObservable(this.auth.isAuthenticated);
   navOpen$ = this.mainNav.navOpen$;
   billingEnabled$ = this.settingsService.billingEnabled$;
   paidForGlitchTip$ = this.settingsService.paidForGlitchTip$;
@@ -63,7 +64,7 @@ export class MainNavComponent {
   ]).pipe(
     map(([settingsLoaded, orgsLoaded, user]) => {
       return settingsLoaded && orgsLoaded && !!user;
-    })
+    }),
   );
 
   canCreateOrg$ = combineLatest([
@@ -73,7 +74,7 @@ export class MainNavComponent {
   ]).pipe(
     map(([user, orgCount, enableOrgCreation]) => {
       return enableOrgCreation || user?.isSuperuser || orgCount === 0;
-    })
+    }),
   );
 
   constructor(
@@ -81,14 +82,14 @@ export class MainNavComponent {
     private organizationsService: OrganizationsService,
     private auth: AuthService,
     private settingsService: SettingsService,
-    private userService: UserService
+    private userService: UserService,
   ) {
     this.organizationsService.activeOrganizationLoaded$.subscribe(
-      (loaded) => (this.activeOrganizationLoaded = loaded)
+      (loaded) => (this.activeOrganizationLoaded = loaded),
     );
     this.activeOrganizationDetail$.subscribe(
       (organization) =>
-        (this.activeOrganizationSlug = organization ? organization.slug : "")
+        (this.activeOrganizationSlug = organization ? organization.slug : ""),
     );
   }
 

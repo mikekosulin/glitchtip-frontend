@@ -6,11 +6,10 @@ import {
   createUrlTreeFromSnapshot,
 } from "@angular/router";
 import { Injectable, inject } from "@angular/core";
-import { map } from "rxjs";
 import { LoggedInComponent } from "./logged-in.component";
 import { alreadyLoggedInGuard } from "./guards/already-logged-in.guard";
-import { AuthService } from "./api/auth/auth.service";
 import { OrganizationsService } from "./api/organizations/organizations.service";
+import { AuthService } from "./auth.service";
 
 export const routes: Routes = [
   {
@@ -47,7 +46,7 @@ export const routes: Routes = [
   {
     path: "orgredirect/organizations/:orgslug/settings/auth-tokens",
     redirectTo: "/profile/auth-tokens",
-    pathMatch: "full"
+    pathMatch: "full",
   },
   {
     path: "account/settings/wizard/:hash",
@@ -59,15 +58,9 @@ export const routes: Routes = [
     component: LoggedInComponent,
     canActivate: [
       (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
-        inject(AuthService)
-          .loginCheck(state)
-          .pipe(
-            map((isLoggedIn) =>
-              isLoggedIn
-                ? true
-                : createUrlTreeFromSnapshot(next, ["/", "login"])
-            )
-          ),
+        inject(AuthService).isAuthenticated()
+          ? true
+          : createUrlTreeFromSnapshot(next, ["/", "login"]),
     ],
     children: [
       {

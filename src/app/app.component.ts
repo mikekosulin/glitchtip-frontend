@@ -6,10 +6,10 @@ import {
   RouterOutlet,
 } from "@angular/router";
 import { lastValueFrom } from "rxjs";
-import { AuthService } from "./api/auth/auth.service";
 import { SettingsService } from "./api/settings.service";
 import { UserService } from "./api/user/user.service";
 import { setTheme } from "./shared/shared.utils";
+import { AuthService } from "./auth.service";
 
 @Component({
   selector: "gt-root",

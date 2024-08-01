@@ -5,10 +5,8 @@ import {
   FormGroup,
   FormControl,
 } from "@angular/forms";
-import { ActivatedRoute, RouterLink } from "@angular/router";
-import { tap } from "rxjs/operators";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { LoginService } from "./login.service";
-import { AuthService } from "../api/auth/auth.service";
 import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
 import { SettingsService } from "../api/settings.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
@@ -22,6 +20,7 @@ import { LoginFido2Component } from "./login-fido2/login-fido2.component";
 import { LoginTotpComponent } from "./login-totp/login-totp.component";
 import { NgIf, NgFor, AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
+import { lastValueFrom, tap } from "rxjs";
 
 @Component({
   selector: "gt-login",
@@ -67,27 +66,27 @@ export class LoginComponent implements OnInit {
     private oauthService: GlitchTipOAuthService,
     private settings: SettingsService,
     private acceptService: AcceptInviteService,
-    private authService: AuthService,
+    private router: Router,
     private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
-    this.acceptInfo$
-      .pipe(
-        tap((acceptInfo) => {
-          if (acceptInfo) {
-            this.form.patchValue({ email: acceptInfo.orgUser.email });
-          }
-        }),
-      )
-      .subscribe();
-    this.error$.subscribe((error) => {
-      if (error?.email) {
-        this.email?.setErrors({ serverError: error.email });
-      } else if (error?.password) {
-        this.password?.setErrors({ serverError: error.password });
-      }
-    });
+    // this.acceptInfo$
+    //   .pipe(
+    //     tap((acceptInfo) => {
+    //       if (acceptInfo) {
+    //         this.form.patchValue({ email: acceptInfo.orgUser.email });
+    //       }
+    //     }),
+    //   )
+    //   .subscribe();
+    // this.error$.subscribe((error) => {
+    //   if (error?.email) {
+    //     this.email?.setErrors({ serverError: error.email });
+    //   } else if (error?.password) {
+    //     this.password?.setErrors({ serverError: error.password });
+    //   }
+    // });
   }
 
   get email() {
@@ -105,12 +104,24 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       const nextUrl = this.route.snapshot.queryParamMap.get("next");
-      if (nextUrl) {
-        this.authService.setRedirectUrl(nextUrl);
-      }
-      this.loginService
-        .login(this.form.value.email!, this.form.value.password!)
-        .subscribe();
+      // if (nextUrl) {
+      //   this.authService.setRedirectUrl(nextUrl);
+      // }
+      lastValueFrom(
+        this.loginService
+          .login(this.form.value.email!, this.form.value.password!)
+          .pipe(
+            tap((resp) => {
+              if (resp.meta.is_authenticated) {
+                if (nextUrl) {
+                  this.router.navigateByUrl(nextUrl);
+                } else {
+                  this.router.navigate(["/"]);
+                }
+              }
+            }),
+          ),
+      );
     }
   }
 }

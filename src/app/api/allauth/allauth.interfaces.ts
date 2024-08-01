@@ -23,6 +23,19 @@ interface Flow {
   is_pending?: true;
 }
 
+interface Provider {
+  id: string;
+  name: string;
+  client_id?: string;
+  flows: string[];
+}
+
+interface ProviderAccount {
+  uid: string;
+  display: string;
+  provider: Provider;
+}
+
 interface AuthenticationMeta {
   is_authenticated: boolean;
 }
@@ -37,8 +50,17 @@ export interface AllAuthSessionResponse extends AllAuthResponse {
   meta: AuthenticationMeta;
 }
 
-export interface AllAuthLoginRespones extends AllAuthResponse {
+export interface AllAuthLoginResponse extends AllAuthResponse {
   user?: AllAuthUser;
   methods?: any;
   meta: AuthenticationMeta;
+}
+
+export interface AllAuthProvidersResponse extends AllAuthLoginResponse {
+  data: ProviderAccount[];
+}
+
+export interface AllAuthGetEmailVerificationResponse extends AllAuthResponse {
+  data: any;
+  meta: any;
 }
