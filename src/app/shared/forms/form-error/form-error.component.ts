@@ -1,7 +1,11 @@
-import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
+import {
+  Component,
+  ChangeDetectionStrategy,
+  input,
+  Input,
+} from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { MatInputModule } from "@angular/material/input";
-import { ServerError } from "../../django.interfaces";
 
 @Component({
   standalone: true,
@@ -11,5 +15,6 @@ import { ServerError } from "../../django.interfaces";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormErrorComponent {
-  @Input() error: ServerError | null | undefined = null;
+  errors = input<string[]>();
+  @Input() error: any; // Do not use
 }

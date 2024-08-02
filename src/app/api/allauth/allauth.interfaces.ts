@@ -67,7 +67,7 @@ export interface AllAuthGetEmailVerificationResponse extends AllAuthResponse {
   meta: any;
 }
 
-interface AllAuthError {
+export interface AllAuthError {
   code: string;
   param?: string;
   message: string;

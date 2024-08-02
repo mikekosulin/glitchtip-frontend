@@ -25,7 +25,7 @@ import { NgIf, AsyncPipe } from "@angular/common";
 })
 export class LoginFido2Component implements OnInit {
   useTOTP$ = this.loginService.useTOTP$;
-  error$ = this.loginService.error$;
+  // error$ = this.loginService.error$;
   authInProg$ = this.loginService.authInProg$;
 
   constructor(private loginService: LoginService) {}

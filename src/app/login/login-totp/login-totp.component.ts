@@ -43,7 +43,7 @@ import { FormErrorComponent } from "../../shared/forms/form-error/form-error.com
 })
 export class LoginTotpComponent implements OnInit, AfterViewInit {
   @ViewChild("input") input!: ElementRef;
-  error$ = this.loginService.error$;
+  // error$ = this.loginService.error$;
   hasFIDO2$ = this.loginService.hasFIDO2$;
   form = new FormGroup({
     code: new FormControl("", [

@@ -18,9 +18,10 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
 import { LoginFido2Component } from "./login-fido2/login-fido2.component";
 import { LoginTotpComponent } from "./login-totp/login-totp.component";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { CommonModule } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { lastValueFrom, tap } from "rxjs";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "gt-login",
@@ -28,8 +29,8 @@ import { lastValueFrom, tap } from "rxjs";
   styleUrls: ["./login.component.scss"],
   standalone: true,
   imports: [
+    CommonModule,
     MatCardModule,
-    NgIf,
     LoginTotpComponent,
     LoginFido2Component,
     ReactiveFormsModule,
@@ -37,16 +38,13 @@ import { lastValueFrom, tap } from "rxjs";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    NgFor,
     AuthSvgComponent,
     RouterLink,
-    AsyncPipe,
   ],
 })
 export class LoginComponent implements OnInit {
   loading$ = this.loginService.loading$;
-  error$ = this.loginService.error$;
-  errors = this.loginService.errors;
+  formErrors = this.loginService.formErrors;
   requiresMFA$ = this.loginService.requiresMFA$;
   hasFido2$ = this.loginService.hasFIDO2$;
   useTOTP$ = this.loginService.useTOTP$;
@@ -69,7 +67,16 @@ export class LoginComponent implements OnInit {
     private acceptService: AcceptInviteService,
     private router: Router,
     private route: ActivatedRoute,
-  ) {}
+  ) {
+    toObservable(this.loginService.fieldErrors).subscribe((fieldErrors) => {
+      Object.keys(this.form.controls).forEach((field) => {
+        const control = this.form.get(field);
+        if (fieldErrors[field] && control) {
+          control.setErrors({ serverError: fieldErrors[field] });
+        }
+      });
+    });
+  }
 
   ngOnInit() {
     // this.acceptInfo$
@@ -81,13 +88,6 @@ export class LoginComponent implements OnInit {
     //     }),
     //   )
     //   .subscribe();
-    // this.error$.subscribe((error) => {
-    //   if (error?.email) {
-    //     this.email?.setErrors({ serverError: error.email });
-    //   } else if (error?.password) {
-    //     this.password?.setErrors({ serverError: error.password });
-    //   }
-    // });
   }
 
   get email() {

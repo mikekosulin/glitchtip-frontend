@@ -10,7 +10,6 @@
     </div>
   </ng-container>
   <ng-template #failed>
-    <gt-form-error [error]="error$ | async"></gt-form-error>
     <div class="auth-button">
       <button mat-flat-button color="primary" (click)="retryAuth()" i18n
         >Retry</button

@@ -5,11 +5,16 @@ import { APIState } from "../shared/shared.interfaces";
 import { AuthService } from "../auth.service";
 import {
   AllAuth400ErrorResponse,
+  AllAuthError,
   AllAuthHttpErrorResponse,
 } from "../api/allauth/allauth.interfaces";
+import {
+  messagesLookup,
+  reduceParamErrors,
+} from "../api/allauth/errorMessages";
 
 interface LoginState extends APIState {
-  errors: string[] | null;
+  errors: AllAuthError[];
   validAuth: ValidAuth[] | null;
   useTOTP: boolean;
   authInProg: boolean;
@@ -18,7 +23,7 @@ interface LoginState extends APIState {
 
 const initialState: LoginState = {
   loading: false,
-  errors: null,
+  errors: [],
   validAuth: null,
   useTOTP: false,
   authInProg: false,
@@ -36,22 +41,33 @@ export class LoginService {
   hasFIDO2$ = of(false);
   requiresMFA$ = of(false);
   loading$ = of(false);
-  error$: any = of({});
-  errors = computed(() => this.state().errors);
+  formErrors = computed(() =>
+    messagesLookup(
+      this.state().errors.filter(
+        (err) => err.code === "email_password_mismatch",
+      ),
+    ),
+  );
+  fieldErrors = computed(() =>
+    reduceParamErrors(
+      this.state().errors.filter(
+        (err) => err.param && err.code !== "email_password_mismatch",
+      ),
+    ),
+  );
 
   constructor(private authService: AuthService) {}
 
   login(email: string, password: string) {
-    this.state.set({ ...this.state(), loading: true, errors: null });
+    this.state.set({ ...this.state(), loading: true, errors: [] });
     return this.authService.login(email, password).pipe(
       tap(() => this.state.set(initialState)),
       catchError((err: AllAuthHttpErrorResponse) => {
         if (err.status === 400) {
           const errResponse = err.error as AllAuth400ErrorResponse;
-          console.log("set it ");
           this.state.set({
             ...this.state(),
-            errors: [errResponse.errors[0].message],
+            errors: errResponse.errors,
           });
           return of(undefined);
         }

@@ -22,7 +22,7 @@
           <h3 i18n>Login</h3>
         </mat-card-title>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <gt-form-error [error]="error$ | async"></gt-form-error>
+          <gt-form-error [errors]="formErrors()"></gt-form-error>
           <mat-form-field class="full-width" appearance="outline">
             <mat-label>Email</mat-label>
             <input matInput autofocus type="email" formControlName="email" />
@@ -48,6 +48,9 @@
               <span *ngIf="password?.errors?.required" i18n
                 >Your password is required to log in</span
               >
+              <span *ngIf="password?.errors?.serverError">{{
+                password?.errors?.serverError
+              }}</span>
             </mat-error>
           </mat-form-field>
           <button
