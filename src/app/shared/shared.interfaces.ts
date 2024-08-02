@@ -1,5 +1,3 @@
-import { ServerError } from "./django.interfaces";
-
 export interface ProjectCardButton {
   link: string | unknown[];
   icon?: string;
@@ -13,5 +11,4 @@ export interface ProjectCardButtonWithQuery extends ProjectCardButton {
 /** Any API can be loading and may return an error */
 export interface APIState {
   loading: boolean;
-  error: ServerError | null;
 }

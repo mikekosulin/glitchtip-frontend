@@ -1,3 +1,5 @@
+import { HttpErrorResponse } from "@angular/common/http";
+
 interface AllAuthUser {
   id: number;
   display: string;
@@ -64,3 +66,22 @@ export interface AllAuthGetEmailVerificationResponse extends AllAuthResponse {
   data: any;
   meta: any;
 }
+
+interface AllAuthError {
+  code: string;
+  param?: string;
+  message: string;
+}
+
+export interface AllAuth400ErrorResponse {
+  status: 400;
+  errors: AllAuthError[];
+}
+
+export interface AllAuth400HttpErrorResponse extends HttpErrorResponse {
+  error: AllAuth400ErrorResponse;
+}
+
+export type AllAuthHttpErrorResponse =
+  | AllAuth400HttpErrorResponse
+  | HttpErrorResponse;

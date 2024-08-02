@@ -46,6 +46,7 @@ import { lastValueFrom, tap } from "rxjs";
 export class LoginComponent implements OnInit {
   loading$ = this.loginService.loading$;
   error$ = this.loginService.error$;
+  errors = this.loginService.errors;
   requiresMFA$ = this.loginService.requiresMFA$;
   hasFido2$ = this.loginService.hasFIDO2$;
   useTOTP$ = this.loginService.useTOTP$;
@@ -112,11 +113,13 @@ export class LoginComponent implements OnInit {
           .login(this.form.value.email!, this.form.value.password!)
           .pipe(
             tap((resp) => {
-              if (resp.meta.is_authenticated) {
-                if (nextUrl) {
-                  this.router.navigateByUrl(nextUrl);
-                } else {
-                  this.router.navigate(["/"]);
+              if (resp) {
+                if (resp.meta.is_authenticated) {
+                  if (nextUrl) {
+                    this.router.navigateByUrl(nextUrl);
+                  } else {
+                    this.router.navigate(["/"]);
+                  }
                 }
               }
             }),

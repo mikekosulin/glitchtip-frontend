@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from "@angular/core";
 import { MatMenuTrigger, MatMenuModule } from "@angular/material/menu";
-import { combineLatest } from "rxjs";
-import { map } from "rxjs/operators";
+import { combineLatest, firstValueFrom } from "rxjs";
+import { map, tap } from "rxjs/operators";
 import { OrganizationsService } from "../../api/organizations/organizations.service";
 import { MainNavService } from "../main-nav.service";
 import { SettingsService } from "src/app/api/settings.service";
@@ -11,7 +11,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatListModule } from "@angular/material/list";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
-import { RouterLink, RouterLinkActive } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { NgIf, NgFor, AsyncPipe } from "@angular/common";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -83,6 +83,7 @@ export class MainNavComponent {
     private auth: AuthService,
     private settingsService: SettingsService,
     private userService: UserService,
+    private router: Router,
   ) {
     this.organizationsService.activeOrganizationLoaded$.subscribe(
       (loaded) => (this.activeOrganizationLoaded = loaded),
@@ -94,7 +95,9 @@ export class MainNavComponent {
   }
 
   logout() {
-    this.auth.logout();
+    firstValueFrom(
+      this.auth.logout().pipe(tap(() => this.router.navigate(["/login"]))),
+    );
   }
 
   toggleSideNav() {

@@ -1,6 +1,6 @@
 import { Injectable, effect, signal } from "@angular/core";
 import { AuthenticationService } from "./api/allauth/authentication.service";
-import { catchError, of, tap, throwError } from "rxjs";
+import { EMPTY, catchError, of, tap, throwError } from "rxjs";
 import { HttpErrorResponse } from "@angular/common/http";
 
 const initialIsAuthenticated = localStorage.getItem("isAuthenticated");
@@ -36,12 +36,20 @@ export class AuthService {
     );
   }
 
+  login(email: string, password: string) {
+    return this.authenticationService
+      .login(email, password)
+      .pipe(
+        tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
+      );
+  }
+
   logout() {
     return this.authenticationService.logout().pipe(
       catchError((err: HttpErrorResponse) => {
         this.isAuthenticated.set(false);
         if (err.status === 401) {
-          return of();
+          return of(EMPTY);
         }
         return throwError(() => new Error("Unable to log out"));
       }),
