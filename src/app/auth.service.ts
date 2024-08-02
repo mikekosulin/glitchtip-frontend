@@ -1,7 +1,7 @@
 import { Injectable, effect, signal } from "@angular/core";
-import { AuthenticationService } from "./api/allauth/authentication.service";
-import { EMPTY, catchError, of, tap, throwError } from "rxjs";
 import { HttpErrorResponse } from "@angular/common/http";
+import { EMPTY, catchError, of, tap, throwError } from "rxjs";
+import { AuthenticationService } from "./api/allauth/authentication.service";
 
 const initialIsAuthenticated = localStorage.getItem("isAuthenticated");
 
@@ -39,6 +39,14 @@ export class AuthService {
   login(email: string, password: string) {
     return this.authenticationService
       .login(email, password)
+      .pipe(
+        tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
+      );
+  }
+
+  signup(email: string, password: string) {
+    return this.authenticationService
+      .signup(email, password)
       .pipe(
         tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
       );

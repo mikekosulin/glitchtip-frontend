@@ -1,25 +1,28 @@
 import { Component, OnInit } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
   Validators,
   ReactiveFormsModule,
+  FormGroup,
+  FormControl,
 } from "@angular/forms";
 import { Router, ActivatedRoute, RouterLink } from "@angular/router";
 import { tap } from "rxjs/operators";
+import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
+import { MatButtonModule } from "@angular/material/button";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { CommonModule } from "@angular/common";
+import { MatCardModule } from "@angular/material/card";
+import { lastValueFrom } from "rxjs";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { InputMatcherDirective } from "../shared/input-matcher.directive";
 import { RegisterService } from "./register.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
 import { SettingsService } from "../api/settings.service";
 import { SocialApp } from "../api/user/user.interfaces";
 import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
 import { getUTM, setStorageWithExpiry } from "../shared/shared.utils";
-import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
-import { MatButtonModule } from "@angular/material/button";
-import { InputMatcherDirective } from "../shared/input-matcher.directive";
-import { MatInputModule } from "@angular/material/input";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
-import { MatCardModule } from "@angular/material/card";
+import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
 
 @Component({
   selector: "gt-register",
@@ -27,35 +30,33 @@ import { MatCardModule } from "@angular/material/card";
   styleUrls: ["./register.component.scss"],
   standalone: true,
   imports: [
+    CommonModule,
     MatCardModule,
     ReactiveFormsModule,
-    NgIf,
     MatFormFieldModule,
     MatInputModule,
+    FormErrorComponent,
     InputMatcherDirective,
     MatButtonModule,
-    NgFor,
     AuthSvgComponent,
     RouterLink,
-    AsyncPipe,
   ],
 })
 export class RegisterComponent implements OnInit {
-  socialApps$ = this.settings.socialApps$;
-  loading = false;
-  error = "";
   tags = "";
-  form = new UntypedFormGroup({
-    email: new UntypedFormControl("", [Validators.required, Validators.email]),
-    password1: new UntypedFormControl("", [
+  socialApps$ = this.settings.socialApps$;
+  form = new FormGroup({
+    email: new FormControl("", [Validators.required, Validators.email]),
+    password1: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
-    password2: new UntypedFormControl("", [
+    password2: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
   });
+  formErrors = this.registerService.formErrors;
   acceptInfo$ = this.acceptService.acceptInfo$;
 
   constructor(
@@ -64,8 +65,17 @@ export class RegisterComponent implements OnInit {
     private route: ActivatedRoute,
     private acceptService: AcceptInviteService,
     private settings: SettingsService,
-    private oauthService: GlitchTipOAuthService
-  ) {}
+    private oauthService: GlitchTipOAuthService,
+  ) {
+    toObservable(this.registerService.fieldErrors).subscribe((fieldErrors) => {
+      Object.keys(this.form.controls).forEach((field) => {
+        const control = this.form.get(field);
+        if (fieldErrors[field] && control) {
+          control.setErrors({ serverError: fieldErrors[field] });
+        }
+      });
+    });
+  }
 
   ngOnInit() {
     this.tags = getUTM().toString();
@@ -76,7 +86,7 @@ export class RegisterComponent implements OnInit {
           if (acceptInfo) {
             this.form.patchValue({ email: acceptInfo.orgUser.email });
           }
-        })
+        }),
       )
       .subscribe();
   }
@@ -95,40 +105,22 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.loading = true;
-      this.error = "";
-      this.registerService
-        .register(
-          this.form.value.email,
-          this.form.value.password1,
-          this.form.value.password2,
-          this.tags
-        )
-        .subscribe(
-          () => {
-            const query = this.route.snapshot.queryParamMap;
-            const next = query.get("next");
-            if (next) {
-              this.router.navigateByUrl(next);
-            } else {
-              this.router.navigate(["organizations", "new"]);
-            }
-          },
-          (err) => {
-            this.loading = false;
-            if (err.status === 400 && err.error.non_field_errors) {
-              this.error = err.error.non_field_errors;
-            } else if (err.status === 400 && err.error.email) {
-              this.email?.setErrors({ serverError: err.error.email });
-            } else if (err.status === 400 && err.error.password1) {
-              this.password1?.setErrors({ serverError: err.error.password1 });
-            } else if (err.status === 400 && err.error.password2) {
-              this.password2?.setErrors({ serverError: err.error.password2 });
-            } else {
-              this.error = `${err.statusText}: ${err.status}`;
-            }
-          }
-        );
+      const nextUrl = this.route.snapshot.queryParamMap.get("next");
+      lastValueFrom(
+        this.registerService
+          .register(this.form.value.email!, this.form.value.password1!)
+          .pipe(
+            tap((resp) => {
+              if (resp?.meta.is_authenticated) {
+                if (nextUrl) {
+                  this.router.navigateByUrl(nextUrl);
+                } else {
+                  this.router.navigate(["organizations", "new"]);
+                }
+              }
+            }),
+          ),
+      );
     }
   }
 

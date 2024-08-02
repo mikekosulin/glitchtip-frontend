@@ -7,7 +7,7 @@
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <mat-error *ngIf="error">{{ error }}</mat-error>
+        <gt-form-error [errors]="formErrors()"></gt-form-error>
         <mat-form-field class="full-width" appearance="outline">
           <mat-label>Email</mat-label>
           <input matInput autofocus type="email" formControlName="email" />

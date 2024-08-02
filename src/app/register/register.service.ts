@@ -1,28 +1,59 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { tap } from "rxjs/operators";
-import { AuthService, AuthState } from "../api/auth/auth.service";
+import { Injectable, computed, signal } from "@angular/core";
+import { catchError, of, tap, throwError } from "rxjs";
+import { AuthService } from "../auth.service";
+import { APIState } from "../shared/shared.interfaces";
+import {
+  AllAuth400ErrorResponse,
+  AllAuthError,
+  AllAuthHttpErrorResponse,
+} from "../api/allauth/allauth.interfaces";
+import {
+  messagesLookup,
+  reduceParamErrors,
+} from "../api/allauth/errorMessages";
+import { ALLAUTH_SERVER_ERROR } from "../constants";
 
-const baseUrl = "/rest-auth";
+interface RegisterState extends APIState {
+  errors: AllAuthError[];
+}
+
+const initialState: RegisterState = {
+  loading: false,
+  errors: [],
+};
 
 @Injectable({
   providedIn: "root",
 })
 export class RegisterService {
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  state = signal(initialState);
+  formErrors = computed(() => messagesLookup(this.state().errors));
+  fieldErrors = computed(() =>
+    reduceParamErrors(this.state().errors.filter((err) => err.param)),
+  );
+  constructor(private authService: AuthService) {}
 
-  register(email: string, password1: string, password2: string, tags: string) {
-    const url = baseUrl + "/registration/";
-    const data = {
-      email,
-      password1,
-      password2,
-      tags,
-    };
-    return this.http.post<AuthState>(url, data).pipe(tap(() => this.setAuth()));
-  }
-
-  setAuth() {
-    this.authService.afterLogin();
+  register(email: string, password: string) {
+    this.state.set({ ...this.state(), loading: true, errors: [] });
+    this.authService.signup(email, password);
+    return this.authService.signup(email, password).pipe(
+      tap(() => this.state.set(initialState)),
+      catchError((err: AllAuthHttpErrorResponse) => {
+        if (err.status === 400) {
+          const errResponse = err.error as AllAuth400ErrorResponse;
+          this.state.set({
+            ...this.state(),
+            errors: errResponse.errors,
+          });
+          return of(undefined);
+        } else if (err.status === 500) {
+          this.state.set({
+            ...this.state(),
+            errors: ALLAUTH_SERVER_ERROR,
+          });
+        }
+        return throwError(() => new Error("Unable to signup"));
+      }),
+    );
   }
 }

@@ -43,7 +43,6 @@ import { toObservable } from "@angular/core/rxjs-interop";
   ],
 })
 export class LoginComponent implements OnInit {
-  loading$ = this.loginService.loading$;
   formErrors = this.loginService.formErrors;
   requiresMFA$ = this.loginService.requiresMFA$;
   hasFido2$ = this.loginService.hasFIDO2$;

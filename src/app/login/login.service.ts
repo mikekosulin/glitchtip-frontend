@@ -12,6 +12,7 @@ import {
   messagesLookup,
   reduceParamErrors,
 } from "../api/allauth/errorMessages";
+import { ALLAUTH_SERVER_ERROR } from "../constants";
 
 interface LoginState extends APIState {
   errors: AllAuthError[];
@@ -70,6 +71,11 @@ export class LoginService {
             errors: errResponse.errors,
           });
           return of(undefined);
+        } else if (err.status === 500) {
+          this.state.set({
+            ...this.state(),
+            errors: ALLAUTH_SERVER_ERROR,
+          });
         }
         return throwError(() => new Error("Unable to log in"));
       }),
