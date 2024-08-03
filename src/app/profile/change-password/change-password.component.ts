@@ -6,20 +6,20 @@ import {
   FormControl,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { PasswordService } from "./password.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { UserService } from "src/app/api/user/user.service";
-import { AuthService } from "src/app/api/auth/auth.service";
-import { map, take, mergeMap, tap } from "rxjs/operators";
-import { EMPTY } from "rxjs";
 import { MatIconModule } from "@angular/material/icon";
-import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
-import { InputMatcherDirective } from "../../shared/input-matcher.directive";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 import { NgIf, AsyncPipe } from "@angular/common";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { lastValueFrom, tap } from "rxjs";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { PasswordService } from "./password.service";
+import { UserService } from "src/app/api/user/user.service";
+import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
+import { InputMatcherDirective } from "../../shared/input-matcher.directive";
+import { FormErrorComponent } from "src/app/shared/forms/form-error/form-error.component";
 
 @Component({
   selector: "gt-change-password",
@@ -37,19 +37,20 @@ import { NgIf, AsyncPipe } from "@angular/common";
     LoadingButtonComponent,
     MatIconModule,
     AsyncPipe,
+    FormErrorComponent,
   ],
 })
 export class ChangePasswordComponent implements OnInit {
   @ViewChild(FormGroupDirective) formDirective?: FormGroupDirective;
   user$ = this.userService.userDetails$;
-  passwordResetLoading = false;
-  passwordResetSuccess = false;
+  loading = this.passwordService.loading;
+  passwordResetSuccess = this.passwordService.success;
+  formErrors = this.passwordService.formErrors;
+  fieldErrors = this.passwordService.fieldErrors;
 
-  loading = false;
-  error: string | null | undefined;
   form = new FormGroup({
-    old_password: new FormControl("", [Validators.required]),
-    new_password1: new FormControl("", [
+    current_password: new FormControl("", []),
+    new_password: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
@@ -59,12 +60,12 @@ export class ChangePasswordComponent implements OnInit {
     ]),
   });
 
-  get old_password() {
-    return this.form.get("old_password");
+  get current_password() {
+    return this.form.get("current_password");
   }
 
-  get new_password1() {
-    return this.form.get("new_password1");
+  get new_password() {
+    return this.form.get("new_password");
   }
 
   get new_password2() {
@@ -75,66 +76,39 @@ export class ChangePasswordComponent implements OnInit {
     private passwordService: PasswordService,
     private snackBar: MatSnackBar,
     private userService: UserService,
-    private authService: AuthService
-  ) {}
+  ) {
+    toObservable(this.passwordService.fieldErrors).subscribe((fieldErrors) => {
+      Object.keys(this.form.controls).forEach((field) => {
+        const control = this.form.get(field);
+        if (fieldErrors[field] && control) {
+          control.setErrors({ serverError: fieldErrors[field] });
+        }
+      });
+    });
+  }
 
   ngOnInit() {
     this.userService.getUserDetails();
-    this.passwordResetSuccess = false;
-    this.passwordResetLoading = false;
   }
 
   onSubmit() {
     if (this.form.valid) {
-      this.loading = true;
-      this.passwordService
-        .changePassword(
-          this.form.value.old_password!,
-          this.form.value.new_password1!,
-          this.form.value.new_password2!
-        )
-        .subscribe(
-          () => {
-            this.formDirective?.resetForm();
-            this.snackBar.open("Your new password has been saved.");
-            this.loading = false;
-            this.error = null;
-          },
-          (err) => {
-            this.loading = false;
-            if (err.status === 400 && err.error.old_password) {
-              this.error = "Your current password is incorrect.";
-            } else if (err.status === 400 && err.error.new_password2) {
-              this.new_password2?.setErrors({
-                serverError: err.error.new_password2,
+      lastValueFrom(
+        this.passwordService
+          .changePassword(
+            this.form.value.current_password!,
+            this.form.value.new_password!,
+          )
+          .pipe(
+            tap(() => {
+              this.snackBar.open($localize`Your new password has been saved.`);
+              this.form.reset();
+              Object.keys(this.form.controls).forEach((key) => {
+                this.form.get(key)!.setErrors(null);
               });
-            } else {
-              this.error = "Error: " + err.statusText;
-            }
-          }
-        );
+            }),
+          ),
+      );
     }
-  }
-
-  passwordReset() {
-    this.passwordResetSuccess = false;
-    this.passwordResetLoading = true;
-    this.user$
-      .pipe(
-        map((user) => user?.email),
-        take(1),
-        mergeMap((email) => {
-          if (email) {
-            return this.authService.passwordReset(email).pipe(
-              tap(() => {
-                this.passwordResetSuccess = true;
-                this.passwordResetLoading = false;
-              })
-            );
-          }
-          return EMPTY;
-        })
-      )
-      .toPromise();
   }
 }

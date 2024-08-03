@@ -53,14 +53,16 @@
               }}</span>
             </mat-error>
           </mat-form-field>
-          <button
-            id="submit"
-            class="full-width"
-            mat-flat-button
-            color="primary"
-            i18n
-            >Log in</button
-          >
+          
+        <gt-loading-button
+          class="full-width"
+          i18n-buttonText
+          buttonText="Log in"
+          [fullWidth]="true"
+          [loading]="loading()"
+          id="submit"
+        >
+        </gt-loading-button>
         </form>
         <ng-container *ngIf="socialApps$ | async as socialApps">
           <div *ngIf="socialApps.length" class="or">

@@ -22,6 +22,7 @@ import { CommonModule } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { lastValueFrom, tap } from "rxjs";
 import { toObservable } from "@angular/core/rxjs-interop";
+import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
 
 @Component({
   selector: "gt-login",
@@ -33,6 +34,7 @@ import { toObservable } from "@angular/core/rxjs-interop";
     MatCardModule,
     LoginTotpComponent,
     LoginFido2Component,
+    LoadingButtonComponent,
     ReactiveFormsModule,
     FormErrorComponent,
     MatFormFieldModule,
@@ -44,6 +46,7 @@ import { toObservable } from "@angular/core/rxjs-interop";
 })
 export class LoginComponent implements OnInit {
   formErrors = this.loginService.formErrors;
+  loading = this.loginService.loading;
   requiresMFA$ = this.loginService.requiresMFA$;
   hasFido2$ = this.loginService.hasFIDO2$;
   useTOTP$ = this.loginService.useTOTP$;
