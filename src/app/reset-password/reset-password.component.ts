@@ -5,7 +5,6 @@ import {
   FormControl,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { ResetPasswordService } from "../api/reset-password/reset-password.service";
 import { SettingsService } from "../api/settings.service";
 import { RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
@@ -14,6 +13,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgIf, AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
+import { ResetPasswordService } from "./reset-password.service";
 
 @Component({
   selector: "gt-reset-password",
@@ -34,9 +34,6 @@ import { MatCardModule } from "@angular/material/card";
   ],
 })
 export class ResetPasswordComponent {
-  sendResetEmailError$ = this.resetService.sendResetEmailError$;
-  sendResetEmailLoading$ = this.resetService.sendResetEmailLoading$;
-  sendResetEmailSuccess$ = this.resetService.sendResetEmailSuccess$;
   form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
   });
@@ -44,7 +41,7 @@ export class ResetPasswordComponent {
 
   constructor(
     private resetService: ResetPasswordService,
-    private settings: SettingsService
+    private settings: SettingsService,
   ) {}
 
   get email() {
@@ -53,11 +50,11 @@ export class ResetPasswordComponent {
 
   onSubmit() {
     if (this.form.valid && this.form.value.email) {
-      this.resetService.sendResetEmail(this.form.value.email);
+      this.resetService.requestPassword(this.form.value.email);
     }
   }
 
   reset() {
-    this.resetService.clearState();
+    // this.resetService.clearState();
   }
 }

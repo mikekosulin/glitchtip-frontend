@@ -15,7 +15,7 @@ interface AuthenticationMethod {
   uid?: string;
 }
 
-interface AllAuthResponse {
+export interface AllAuthResponse {
   status: number;
 }
 

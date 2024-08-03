@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { allauthBase } from "src/app/constants";
 import {
   AllAuthGetEmailVerificationResponse,
+  AllAuthResponse,
   AllAuthSessionResponse,
 } from "./allauth.interfaces";
 
@@ -56,6 +57,12 @@ export class AuthenticationService {
   reauthenticate(password: string) {
     return this.http.post<AllAuthSessionResponse>(baseUrl + "/reauthenticate", {
       password,
+    });
+  }
+
+  requestPassword(email: string) {
+    return this.http.post<AllAuthResponse>(baseUrl + "/password/request", {
+      email,
     });
   }
 }
