@@ -2,13 +2,14 @@ import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, Router, ParamMap } from "@angular/router";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { AsyncPipe } from "@angular/common";
+import { toObservable } from "@angular/core/rxjs-interop";
 import { EMPTY } from "rxjs";
 import { map, catchError, tap } from "rxjs/operators";
+import { AuthService } from "../auth.service";
 import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
-import { AuthService } from "../api/auth/auth.service";
 import { LoginResponse } from "../api/auth/auth.interfaces";
 import { LoginService } from "../login/login.service";
-import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-auth",
@@ -27,10 +28,10 @@ export class AuthComponent implements OnInit {
     private oauthService: GlitchTipOAuthService,
     private authService: AuthService,
     private snackbar: MatSnackBar,
-    private loginService: LoginService
+    private loginService: LoginService,
   ) {
-    authService.isLoggedIn.subscribe(
-      (isLoggedIn) => (this.isLoggedIn = isLoggedIn)
+    toObservable(authService.isAuthenticated).subscribe(
+      (isLoggedIn) => (this.isLoggedIn = isLoggedIn),
     );
   }
 
@@ -48,7 +49,7 @@ export class AuthComponent implements OnInit {
   private attemptOAuthLogin(
     provider: string,
     fragment: string,
-    query: ParamMap
+    query: ParamMap,
   ) {
     // Various services return tokens in slightly different ways
     const accessToken = new URLSearchParams(fragment).get("access_token");
@@ -62,7 +63,7 @@ export class AuthComponent implements OnInit {
           catchError((error: HttpErrorResponse) => {
             this.processSocialAuthErrorResponse(error);
             return EMPTY;
-          })
+          }),
         )
         .toPromise();
     } else {
@@ -79,7 +80,7 @@ export class AuthComponent implements OnInit {
     } else if (error.status === 500) {
       this.router.navigate([""]);
       this.snackbar.open(
-        $localize`There was an error connecting to your social authentication provider.`
+        $localize`There was an error connecting to your social authentication provider.`,
       );
     }
   }
@@ -98,7 +99,7 @@ export class AuthComponent implements OnInit {
         this.loginService.promptForMFA(response.valid_auth);
         this.router.navigate(["/login"]);
       } else {
-        this.authService.afterLogin();
+        console.log(this.authService); // .afterLogin();
       }
     }
   }

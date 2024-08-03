@@ -1,19 +1,19 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
   Validators,
   ReactiveFormsModule,
+  FormGroup,
+  FormControl,
 } from "@angular/forms";
 import { map } from "rxjs/operators";
-import { ResetPasswordService } from "src/app/api/reset-password/reset-password.service";
 import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
 import { InputMatcherDirective } from "../../shared/input-matcher.directive";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgIf, AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
+import { of } from "rxjs";
 
 @Component({
   selector: "gt-set-new-password",
@@ -35,16 +35,16 @@ import { MatCardModule } from "@angular/material/card";
 })
 export class SetNewPasswordComponent {
   params$ = this.activatedRoute.params.pipe(
-    map((params) => ({ uid: params.uidb64, token: params.token }))
+    map((params) => ({ uid: params.uidb64, token: params.token })),
   );
-  setNewPasswordError$ = this.resetService.setNewPasswordError$;
-  setnewPasswordLoading$ = this.resetService.setNewPasswordLoading$;
-  form = new UntypedFormGroup({
-    new_password1: new UntypedFormControl("", [
+  setNewPasswordError$ = of(false);
+  setnewPasswordLoading$ = of(false);
+  form = new FormGroup({
+    new_password1: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
-    new_password2: new UntypedFormControl("", [
+    new_password2: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
@@ -58,25 +58,23 @@ export class SetNewPasswordComponent {
     return this.form.get("new_password2");
   }
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private resetService: ResetPasswordService
-  ) {}
+  constructor(private activatedRoute: ActivatedRoute) {}
 
   onSubmit() {
     if (this.form.valid) {
-      this.params$
-        .pipe(
-          map((params) => {
-            this.resetService.setNewPassword(
-              this.form.value.new_password1,
-              this.form.value.new_password2,
-              params.uid,
-              params.token
-            );
-          })
-        )
-        .subscribe();
+      //   this.params$
+      //     .pipe(
+      //       map((params) => {
+      //         this.resetService.setNewPassword(
+      //           this.form.value.new_password1,
+      //           this.form.value.new_password2,
+      //           params.uid,
+      //           params.token
+      //         );
+      //       })
+      //     )
+      //     .subscribe();
+      // }
     }
   }
 }

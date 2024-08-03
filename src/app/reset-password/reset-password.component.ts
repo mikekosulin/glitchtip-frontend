@@ -14,6 +14,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgIf, AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { ResetPasswordService } from "./reset-password.service";
+import { of } from "rxjs";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { mapFormErrors } from "../shared/forms/form.utils";
 
 @Component({
   selector: "gt-reset-password",
@@ -34,6 +37,8 @@ import { ResetPasswordService } from "./reset-password.service";
   ],
 })
 export class ResetPasswordComponent {
+  sendResetEmailSuccess$ = of("");
+  sendResetEmailLoading$ = of(false);
   form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
   });
@@ -42,7 +47,11 @@ export class ResetPasswordComponent {
   constructor(
     private resetService: ResetPasswordService,
     private settings: SettingsService,
-  ) {}
+  ) {
+    toObservable(this.resetService.fieldErrors).subscribe((fieldErrors) =>
+      mapFormErrors(fieldErrors, this.form),
+    );
+  }
 
   get email() {
     return this.form.get("email");

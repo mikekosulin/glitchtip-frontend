@@ -23,6 +23,7 @@ import { MatCardModule } from "@angular/material/card";
 import { lastValueFrom, tap } from "rxjs";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
+import { mapFormErrors } from "../shared/forms/form.utils";
 
 @Component({
   selector: "gt-login",
@@ -70,14 +71,9 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    toObservable(this.loginService.fieldErrors).subscribe((fieldErrors) => {
-      Object.keys(this.form.controls).forEach((field) => {
-        const control = this.form.get(field);
-        if (fieldErrors[field] && control) {
-          control.setErrors({ serverError: fieldErrors[field] });
-        }
-      });
-    });
+    toObservable(this.loginService.fieldErrors).subscribe((fieldErrors) =>
+      mapFormErrors(fieldErrors, this.form),
+    );
   }
 
   ngOnInit() {

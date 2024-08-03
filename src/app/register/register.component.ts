@@ -23,6 +23,7 @@ import { SocialApp } from "../api/user/user.interfaces";
 import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
 import { getUTM, setStorageWithExpiry } from "../shared/shared.utils";
 import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
+import { mapFormErrors } from "../shared/forms/form.utils";
 
 @Component({
   selector: "gt-register",
@@ -67,14 +68,9 @@ export class RegisterComponent implements OnInit {
     private settings: SettingsService,
     private oauthService: GlitchTipOAuthService,
   ) {
-    toObservable(this.registerService.fieldErrors).subscribe((fieldErrors) => {
-      Object.keys(this.form.controls).forEach((field) => {
-        const control = this.form.get(field);
-        if (fieldErrors[field] && control) {
-          control.setErrors({ serverError: fieldErrors[field] });
-        }
-      });
-    });
+    toObservable(this.registerService.fieldErrors).subscribe((fieldErrors) =>
+      mapFormErrors(fieldErrors, this.form),
+    );
   }
 
   ngOnInit() {

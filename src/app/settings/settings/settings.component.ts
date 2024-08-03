@@ -8,12 +8,13 @@ import {
 import { tap, filter, map } from "rxjs/operators";
 import { SettingsService } from "src/app/api/settings.service";
 import { OrganizationsService } from "src/app/api/organizations/organizations.service";
-import { AuthService } from "src/app/api/auth/auth.service";
 import { MainNavService } from "src/app/main-nav/main-nav.service";
 import { MobileNavToolbarComponent } from "../../mobile-nav-toolbar/mobile-nav-toolbar.component";
 import { NgIf, AsyncPipe } from "@angular/common";
 import { MatListModule } from "@angular/material/list";
 import { MatSidenavModule } from "@angular/material/sidenav";
+import { AuthService } from "src/app/auth.service";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "gt-settings",
@@ -34,7 +35,7 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 export class SettingsComponent {
   billingEnabled$ = this.service.billingEnabled$;
   organizationSlug$ = this.organizationService.activeOrganizationSlug$;
-  isLoggedIn$ = this.auth.isLoggedIn;
+  isLoggedIn$ = toObservable(this.auth.isAuthenticated);
   activeOrganizationDetail$ =
     this.organizationService.activeOrganizationDetail$;
 
@@ -43,15 +44,17 @@ export class SettingsComponent {
     private organizationService: OrganizationsService,
     private auth: AuthService,
     private mainNav: MainNavService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
     this.route.params
       .pipe(
         map((params) => params["org-slug"]),
         filter((orgSlug: string) => orgSlug !== undefined),
         tap((orgSlug) =>
-          this.organizationService.setActiveOrganizationFromRouteChange(orgSlug)
-        )
+          this.organizationService.setActiveOrganizationFromRouteChange(
+            orgSlug,
+          ),
+        ),
       )
       .subscribe();
   }

@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { AuthService } from "src/app/api/auth/auth.service";
-import { AcceptInviteService } from "src/app/api/accept/accept-invite.service";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { map, tap } from "rxjs/operators";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { NgIf, AsyncPipe } from "@angular/common";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { map, tap } from "rxjs/operators";
+import { AcceptInviteService } from "src/app/api/accept/accept-invite.service";
+import { AuthService } from "src/app/auth.service";
 
 @Component({
   selector: "gt-accept-invite",
@@ -16,15 +17,15 @@ import { NgIf, AsyncPipe } from "@angular/common";
   imports: [NgIf, MatCardModule, MatButtonModule, RouterLink, AsyncPipe],
 })
 export class AcceptInviteComponent implements OnInit {
-  isLoggedIn$ = this.authService.isLoggedIn;
+  isLoggedIn$ = toObservable(this.authService.isAuthenticated);
   params$ = this.activatedRoute.params.pipe(
     map((params) => ({
       memberId: params.memberId,
       token: params.token,
-    }))
+    })),
   );
   nextUrl$ = this.params$.pipe(
-    map(({ memberId, token }) => `/accept/${memberId}/${token}`)
+    map(({ memberId, token }) => `/accept/${memberId}/${token}`),
   );
   acceptInfo$ = this.acceptService.acceptInfo$;
   alreadyInOrg$ = this.acceptService.alreadyInOrg$;
@@ -32,7 +33,7 @@ export class AcceptInviteComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private acceptService: AcceptInviteService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +41,7 @@ export class AcceptInviteComponent implements OnInit {
       .pipe(
         tap(({ memberId, token }) => {
           this.acceptService.getAcceptInviteDetails(memberId, token);
-        })
+        }),
       )
       .subscribe();
   }
@@ -50,7 +51,7 @@ export class AcceptInviteComponent implements OnInit {
       .pipe(
         tap(({ memberId, token }) => {
           this.acceptService.acceptInvite(memberId, token);
-        })
+        }),
       )
       .subscribe();
   }

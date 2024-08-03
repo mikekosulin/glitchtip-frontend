@@ -20,6 +20,7 @@ import { UserService } from "src/app/api/user/user.service";
 import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
 import { InputMatcherDirective } from "../../shared/input-matcher.directive";
 import { FormErrorComponent } from "src/app/shared/forms/form-error/form-error.component";
+import { mapFormErrors } from "src/app/shared/forms/form.utils";
 
 @Component({
   selector: "gt-change-password",
@@ -77,14 +78,9 @@ export class ChangePasswordComponent implements OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService,
   ) {
-    toObservable(this.passwordService.fieldErrors).subscribe((fieldErrors) => {
-      Object.keys(this.form.controls).forEach((field) => {
-        const control = this.form.get(field);
-        if (fieldErrors[field] && control) {
-          control.setErrors({ serverError: fieldErrors[field] });
-        }
-      });
-    });
+    toObservable(this.passwordService.fieldErrors).subscribe((fieldErrors) =>
+      mapFormErrors(fieldErrors, this.form),
+    );
   }
 
   ngOnInit() {
