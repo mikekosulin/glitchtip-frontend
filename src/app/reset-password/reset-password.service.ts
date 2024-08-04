@@ -31,7 +31,9 @@ export class ResetPasswordService {
   loading = computed(() => this.state().loading);
   success = computed(() => this.state().success);
   formErrors = computed(() =>
-    messagesLookup(this.state().errors.filter((err) => !err.param)),
+    messagesLookup(
+      this.state().errors.filter((err) => !err.param || err.param === "key"),
+    ),
   );
   fieldErrors = computed(() =>
     reduceParamErrors(this.state().errors.filter((err) => err.param)),

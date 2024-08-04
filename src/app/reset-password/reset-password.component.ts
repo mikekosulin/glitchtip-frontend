@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
 import {
   Validators,
   FormGroup,
@@ -38,7 +38,7 @@ import { FormErrorComponent } from "../shared/forms/form-error/form-error.compon
     AsyncPipe,
   ],
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent implements OnInit {
   success = this.resetService.success;
   loading = this.resetService.loading;
   formErrors = this.resetService.formErrors;
@@ -54,6 +54,10 @@ export class ResetPasswordComponent {
     toObservable(this.resetService.fieldErrors).subscribe((fieldErrors) =>
       mapFormErrors(fieldErrors, this.form),
     );
+  }
+
+  ngOnInit() {
+    this.resetService.reset();
   }
 
   get email() {
