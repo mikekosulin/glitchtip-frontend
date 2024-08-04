@@ -63,17 +63,17 @@
             </span>
           </ng-container>
           <ng-container *ngIf="formMonitorType?.value === 'Heartbeat'">
-            <p class="mat-caption" i18n>
-              GlitchTip will await requests from your site to ensure it is
+            <p class="mat-caption" i18n
+              >GlitchTip will await requests from your site to ensure it is
               active. If it doesn't receive the request, the site will be marked
-              as Down.
-            </p>
+              as Down.</p
+            >
           </ng-container>
           <ng-container *ngIf="formMonitorType?.value === 'TCP Port'">
-            <span i18n>
-              GlitchTip will check to make sure the port at the specified URL is
-              accessible.
-            </span>
+            <span i18n
+              >GlitchTip will check to make sure the port at the specified URL
+              is accessible.</span
+            >
           </ng-container>
         </div>
       </div>
@@ -91,10 +91,11 @@
             </mat-hint>
             <mat-error *ngIf="formUrl?.errors">
               <ng-container *ngIf="formUrl?.errors?.maxlength; else urlHint">
-                <span i18n>
-                  URL may not be more than
-                  {{ formUrl.errors?.maxlength.requiredLength }} characters
-                </span>
+                <span i18n
+                  >URL may not be more than
+                  {{ formUrl.errors?.maxlength.requiredLength }}
+                  characters</span
+                >
               </ng-container>
             </mat-error>
             <ng-template #urlHint>
@@ -132,10 +133,10 @@
           </mat-select>
         </mat-form-field>
 
-        <div class="help-text mat-caption" i18n>
-          Uptime email notifications are sent to the team assigned to the
-          associated project.
-        </div>
+        <div class="help-text mat-caption" i18n
+          >Uptime email notifications are sent to the team assigned to the
+          associated project.</div
+        >
       </div>
       <div
         class="short-field-container"
@@ -228,18 +229,18 @@
                 "
               >
                 This will use approximately
-                {{ intervalPerMonth | number : "1.0-0" }}
+                {{ intervalPerMonth | number: "1.0-0" }}
                 <a [routerLink]="[]" (click)="openEventInfoDialog()">events</a>
                 per month out of the
-                {{ totalEventsAllowed | number : "1.0-0" }} events your
+                {{ totalEventsAllowed | number: "1.0-0" }} events your
                 organization's subscription allows for.
               </ng-container>
               <ng-template #limitExceeded>
                 This will use approximately
-                {{ intervalPerMonth | number : "1.0-0" }}
+                {{ intervalPerMonth | number: "1.0-0" }}
                 <a [routerLink]="[]" (click)="openEventInfoDialog()">events</a>
                 per month, exceeding the
-                {{ totalEventsAllowed | number : "1.0-0" }} events your
+                {{ totalEventsAllowed | number: "1.0-0" }} events your
                 organization's subscription allows for.
               </ng-template>
             </div>

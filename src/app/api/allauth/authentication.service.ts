@@ -65,4 +65,11 @@ export class AuthenticationService {
       email,
     });
   }
+
+  resetPassword(key: string, password: string) {
+    return this.http.post<AllAuthSessionResponse>(baseUrl + "/password/reset", {
+      key,
+      password,
+    });
+  }
 }

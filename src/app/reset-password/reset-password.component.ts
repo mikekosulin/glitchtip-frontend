@@ -5,18 +5,19 @@ import {
   FormControl,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { SettingsService } from "../api/settings.service";
 import { RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
-import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgIf, AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
-import { ResetPasswordService } from "./reset-password.service";
-import { of } from "rxjs";
 import { toObservable } from "@angular/core/rxjs-interop";
+import { lastValueFrom } from "rxjs";
+import { SettingsService } from "../api/settings.service";
+import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
+import { ResetPasswordService } from "./reset-password.service";
 import { mapFormErrors } from "../shared/forms/form.utils";
+import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
 
 @Component({
   selector: "gt-reset-password",
@@ -30,6 +31,7 @@ import { mapFormErrors } from "../shared/forms/form.utils";
     NgIf,
     MatFormFieldModule,
     MatInputModule,
+    FormErrorComponent,
     LoadingButtonComponent,
     MatButtonModule,
     RouterLink,
@@ -37,8 +39,9 @@ import { mapFormErrors } from "../shared/forms/form.utils";
   ],
 })
 export class ResetPasswordComponent {
-  sendResetEmailSuccess$ = of("");
-  sendResetEmailLoading$ = of(false);
+  success = this.resetService.success;
+  loading = this.resetService.loading;
+  formErrors = this.resetService.formErrors;
   form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
   });
@@ -59,11 +62,13 @@ export class ResetPasswordComponent {
 
   onSubmit() {
     if (this.form.valid && this.form.value.email) {
-      this.resetService.requestPassword(this.form.value.email);
+      lastValueFrom(this.resetService.requestPassword(this.form.value.email));
     }
   }
 
   reset() {
-    // this.resetService.clearState();
+    this.resetService.reset();
+    this.form.reset();
+    this.email!.setErrors(null);
   }
 }

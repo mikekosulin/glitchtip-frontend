@@ -8,7 +8,7 @@ export default [
     component: ResetPasswordComponent,
   },
   {
-    path: "set-new-password/:uidb64/:token",
+    path: "set-new-password/:key",
     component: SetNewPasswordComponent,
   },
 ] as Route[];

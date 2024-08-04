@@ -14,10 +14,12 @@ import {
 
 interface ResetPasswordState extends APIState {
   errors: AllAuthError[];
+  success: boolean;
 }
 
 const initialState: ResetPasswordState = {
   loading: false,
+  success: false,
   errors: [],
 };
 
@@ -27,6 +29,7 @@ const initialState: ResetPasswordState = {
 export class ResetPasswordService {
   state = signal(initialState);
   loading = computed(() => this.state().loading);
+  success = computed(() => this.state().success);
   formErrors = computed(() =>
     messagesLookup(this.state().errors.filter((err) => !err.param)),
   );
@@ -36,10 +39,14 @@ export class ResetPasswordService {
 
   constructor(private authenticationService: AuthenticationService) {}
 
+  reset() {
+    this.state.set(initialState);
+  }
+
   requestPassword(email: string) {
-    this.state.set({ ...this.state(), loading: true });
-    this.authenticationService.requestPassword(email).pipe(
-      tap(() => this.state.set(initialState)),
+    this.state.set({ ...initialState, loading: true });
+    return this.authenticationService.requestPassword(email).pipe(
+      tap(() => this.state.set({ ...initialState, success: true })),
       catchError((err: AllAuthHttpErrorResponse) => {
         this.state.set({
           ...this.state(),
@@ -50,6 +57,23 @@ export class ResetPasswordService {
           return of(undefined);
         }
         return throwError(() => new Error("Unable to request password"));
+      }),
+    );
+  }
+
+  resetPassword(key: string, password: string) {
+    this.state.set({ ...initialState, loading: true });
+    return this.authenticationService.resetPassword(key, password).pipe(
+      catchError((err: AllAuthHttpErrorResponse) => {
+        this.state.set({
+          ...this.state(),
+          loading: false,
+          errors: handleAllAuthErrorResponse(err),
+        });
+        if ([400, 500].includes(err.status)) {
+          return of(undefined);
+        }
+        return throwError(() => new Error("Unable to reset password"));
       }),
     );
   }
