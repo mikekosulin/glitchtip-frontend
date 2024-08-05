@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from "@angular/core";
+import { Injectable, computed } from "@angular/core";
 import { catchError, tap, throwError } from "rxjs";
 import { AccountService } from "src/app/api/allauth/account.service";
 import {
@@ -11,8 +11,9 @@ import {
   reduceParamErrors,
 } from "src/app/api/allauth/errorMessages";
 import { APIState } from "src/app/shared/shared.interfaces";
+import { StatefulService } from "src/app/shared/stateful-service/signal-state.service";
 
-interface PasswordState extends APIState {
+export interface PasswordState extends APIState {
   errors: AllAuthError[];
   success: boolean;
 }
@@ -26,8 +27,7 @@ const initialState: PasswordState = {
 @Injectable({
   providedIn: "root",
 })
-export class PasswordService {
-  state = signal(initialState);
+export class PasswordService extends StatefulService<PasswordState> {
   loading = computed(() => this.state().loading);
   errors = computed(() => this.state().errors);
   success = computed(() => this.state().success);
@@ -38,7 +38,9 @@ export class PasswordService {
     reduceParamErrors(this.state().errors.filter((err) => err.param)),
   );
 
-  constructor(private accountService: AccountService) {}
+  constructor(private accountService: AccountService) {
+    super(initialState);
+  }
 
   changePassword(current_password: string, new_password: string) {
     this.state.set(initialState);

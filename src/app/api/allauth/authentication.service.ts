@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { allauthBase } from "src/app/constants";
 import {
@@ -6,6 +6,7 @@ import {
   AllAuthResponse,
   AllAuthSessionResponse,
 } from "./allauth.interfaces";
+import { catchError, Observable, of, throwError } from "rxjs";
 
 const baseUrl = allauthBase + "/auth";
 
@@ -66,10 +67,23 @@ export class AuthenticationService {
     });
   }
 
-  resetPassword(key: string, password: string) {
-    return this.http.post<AllAuthSessionResponse>(baseUrl + "/password/reset", {
-      key,
-      password,
-    });
+  resetPassword(
+    key: string,
+    password: string,
+  ): Observable<AllAuthSessionResponse> {
+    return this.http
+      .post<AllAuthSessionResponse>(baseUrl + "/password/reset", {
+        key,
+        password,
+      })
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          // 401 is the normal response when ACCOUNT_LOGIN_ON_PASSWORD_RESET is false
+          if (error.status === 401) {
+            return of(error.error);
+          }
+          return throwError(() => error);
+        }),
+      );
   }
 }

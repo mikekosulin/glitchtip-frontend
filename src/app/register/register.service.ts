@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from "@angular/core";
+import { Injectable, computed } from "@angular/core";
 import { catchError, of, tap, throwError } from "rxjs";
 import { AuthService } from "../auth.service";
 import { APIState } from "../shared/shared.interfaces";
@@ -11,8 +11,9 @@ import {
   reduceParamErrors,
 } from "../api/allauth/errorMessages";
 import { handleAllAuthErrorResponse } from "../api/allauth/allauth.utils";
+import { StatefulService } from "../shared/stateful-service/signal-state.service";
 
-interface RegisterState extends APIState {
+export interface RegisterState extends APIState {
   errors: AllAuthError[];
 }
 
@@ -24,15 +25,16 @@ const initialState: RegisterState = {
 @Injectable({
   providedIn: "root",
 })
-export class RegisterService {
-  state = signal(initialState);
+export class RegisterService extends StatefulService<RegisterState> {
   formErrors = computed(() =>
     messagesLookup(this.state().errors.filter((err) => !err.param)),
   );
   fieldErrors = computed(() =>
     reduceParamErrors(this.state().errors.filter((err) => err.param)),
   );
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+    super(initialState);
+  }
 
   register(email: string, password: string) {
     this.state.set({ ...this.state(), loading: true, errors: [] });

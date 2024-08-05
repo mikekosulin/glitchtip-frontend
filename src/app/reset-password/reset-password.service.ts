@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from "@angular/core";
+import { Injectable, computed } from "@angular/core";
 import { catchError, of, tap, throwError } from "rxjs";
 import {
   AllAuthError,
@@ -11,8 +11,9 @@ import {
   messagesLookup,
   reduceParamErrors,
 } from "../api/allauth/errorMessages";
+import { StatefulService } from "../shared/stateful-service/signal-state.service";
 
-interface ResetPasswordState extends APIState {
+export interface ResetPasswordState extends APIState {
   errors: AllAuthError[];
   success: boolean;
 }
@@ -26,8 +27,7 @@ const initialState: ResetPasswordState = {
 @Injectable({
   providedIn: "root",
 })
-export class ResetPasswordService {
-  state = signal(initialState);
+export class ResetPasswordService extends StatefulService<ResetPasswordState> {
   loading = computed(() => this.state().loading);
   success = computed(() => this.state().success);
   formErrors = computed(() =>
@@ -39,10 +39,8 @@ export class ResetPasswordService {
     reduceParamErrors(this.state().errors.filter((err) => err.param)),
   );
 
-  constructor(private authenticationService: AuthenticationService) {}
-
-  reset() {
-    this.state.set(initialState);
+  constructor(private authenticationService: AuthenticationService) {
+    super(initialState);
   }
 
   requestPassword(email: string) {
@@ -50,15 +48,14 @@ export class ResetPasswordService {
     return this.authenticationService.requestPassword(email).pipe(
       tap(() => this.state.set({ ...initialState, success: true })),
       catchError((err: AllAuthHttpErrorResponse) => {
-        this.state.set({
-          ...this.state(),
+        this.setState({
           loading: false,
           errors: handleAllAuthErrorResponse(err),
         });
         if ([400, 500].includes(err.status)) {
           return of(undefined);
         }
-        return throwError(() => new Error("Unable to request password"));
+        return throwError(() => err);
       }),
     );
   }
@@ -67,15 +64,14 @@ export class ResetPasswordService {
     this.state.set({ ...initialState, loading: true });
     return this.authenticationService.resetPassword(key, password).pipe(
       catchError((err: AllAuthHttpErrorResponse) => {
-        this.state.set({
-          ...this.state(),
+        this.setState({
           loading: false,
           errors: handleAllAuthErrorResponse(err),
         });
         if ([400, 500].includes(err.status)) {
           return of(undefined);
         }
-        return throwError(() => new Error("Unable to reset password"));
+        return throwError(() => err);
       }),
     );
   }

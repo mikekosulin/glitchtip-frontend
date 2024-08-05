@@ -1,4 +1,4 @@
-import { Injectable, computed, signal } from "@angular/core";
+import { Injectable, computed } from "@angular/core";
 import { ValidAuth } from "../api/auth/auth.interfaces";
 import { catchError, of, tap, throwError } from "rxjs";
 import { APIState } from "../shared/shared.interfaces";
@@ -12,8 +12,9 @@ import {
   reduceParamErrors,
 } from "../api/allauth/errorMessages";
 import { handleAllAuthErrorResponse } from "../api/allauth/allauth.utils";
+import { StatefulService } from "../shared/stateful-service/signal-state.service";
 
-interface LoginState extends APIState {
+export interface LoginState extends APIState {
   errors: AllAuthError[];
   validAuth: ValidAuth[] | null;
   useTOTP: boolean;
@@ -33,9 +34,7 @@ const initialState: LoginState = {
 @Injectable({
   providedIn: "root",
 })
-export class LoginService {
-  state = signal(initialState);
-
+export class LoginService extends StatefulService<LoginState> {
   useTOTP$ = of(false);
   authInProg$ = of(false);
   hasFIDO2$ = of(false);
@@ -56,7 +55,13 @@ export class LoginService {
     ),
   );
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+    super(initialState);
+  }
+
+  reset() {
+    this.state.set(initialState);
+  }
 
   login(email: string, password: string) {
     this.state.set({ ...this.state(), loading: true, errors: [] });

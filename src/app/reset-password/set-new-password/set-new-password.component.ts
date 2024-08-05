@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { toObservable } from "@angular/core/rxjs-interop";
-import { ActivatedRoute, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import {
   Validators,
   ReactiveFormsModule,
@@ -12,12 +12,17 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { NgIf } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { lastValueFrom } from "rxjs";
-import { exhaustMap, map } from "rxjs/operators";
+import { exhaustMap, map, tap } from "rxjs/operators";
 import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
 import { InputMatcherDirective } from "../../shared/input-matcher.directive";
-import { ResetPasswordService } from "../reset-password.service";
+import {
+  ResetPasswordService,
+  ResetPasswordState,
+} from "../reset-password.service";
 import { mapFormErrors } from "src/app/shared/forms/form.utils";
 import { FormErrorComponent } from "src/app/shared/forms/form-error/form-error.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { StatefulComponent } from "src/app/shared/stateful-service/signal-state.component";
 
 @Component({
   selector: "gt-set-new-password",
@@ -37,13 +42,16 @@ import { FormErrorComponent } from "src/app/shared/forms/form-error/form-error.c
     RouterLink,
   ],
 })
-export class SetNewPasswordComponent {
+export class SetNewPasswordComponent extends StatefulComponent<
+  ResetPasswordState,
+  ResetPasswordService
+> {
   params$ = this.activatedRoute.params.pipe(
     map((params) => ({ key: params.key })),
   );
-  formErrors = this.resetService.formErrors;
-  success = this.resetService.success;
-  loading = this.resetService.loading;
+  formErrors = this.service.formErrors;
+  success = this.service.success;
+  loading = this.service.loading;
   form = new FormGroup({
     password: new FormControl("", [
       Validators.required,
@@ -64,12 +72,15 @@ export class SetNewPasswordComponent {
   }
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
-    private resetService: ResetPasswordService,
+    protected service: ResetPasswordService,
+    private snackBar: MatSnackBar,
   ) {
-    toObservable(this.resetService.fieldErrors).subscribe((fieldErrors) =>
+    toObservable(service.fieldErrors).subscribe((fieldErrors) =>
       mapFormErrors(fieldErrors, this.form),
     );
+    super(service);
   }
 
   onSubmit() {
@@ -77,10 +88,16 @@ export class SetNewPasswordComponent {
       lastValueFrom(
         this.params$.pipe(
           exhaustMap((params) =>
-            this.resetService.resetPassword(
-              params.key,
-              this.form.value.password!,
-            ),
+            this.service
+              .resetPassword(params.key, this.form.value.password!)
+              .pipe(
+                tap((resp) => {
+                  if (resp && resp.status === 401) {
+                    this.snackBar.open("Your password has been changed.");
+                    this.router.navigate(["/login"]);
+                  }
+                }),
+              ),
           ),
         ),
       );

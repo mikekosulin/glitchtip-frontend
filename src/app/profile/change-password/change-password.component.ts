@@ -15,12 +15,13 @@ import { NgIf, AsyncPipe } from "@angular/common";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { lastValueFrom, tap } from "rxjs";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { PasswordService } from "./password.service";
+import { PasswordService, PasswordState } from "./password.service";
 import { UserService } from "src/app/api/user/user.service";
 import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
 import { InputMatcherDirective } from "../../shared/input-matcher.directive";
 import { FormErrorComponent } from "src/app/shared/forms/form-error/form-error.component";
 import { mapFormErrors } from "src/app/shared/forms/form.utils";
+import { StatefulComponent } from "src/app/shared/stateful-service/signal-state.component";
 
 @Component({
   selector: "gt-change-password",
@@ -41,13 +42,16 @@ import { mapFormErrors } from "src/app/shared/forms/form.utils";
     FormErrorComponent,
   ],
 })
-export class ChangePasswordComponent implements OnInit {
+export class ChangePasswordComponent
+  extends StatefulComponent<PasswordState, PasswordService>
+  implements OnInit
+{
   @ViewChild(FormGroupDirective) formDirective?: FormGroupDirective;
   user$ = this.userService.userDetails$;
-  loading = this.passwordService.loading;
-  passwordResetSuccess = this.passwordService.success;
-  formErrors = this.passwordService.formErrors;
-  fieldErrors = this.passwordService.fieldErrors;
+  loading = this.service.loading;
+  passwordResetSuccess = this.service.success;
+  formErrors = this.service.formErrors;
+  fieldErrors = this.service.fieldErrors;
 
   form = new FormGroup({
     current_password: new FormControl("", []),
@@ -74,13 +78,14 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   constructor(
-    private passwordService: PasswordService,
+    protected service: PasswordService,
     private snackBar: MatSnackBar,
     private userService: UserService,
   ) {
-    toObservable(this.passwordService.fieldErrors).subscribe((fieldErrors) =>
+    toObservable(service.fieldErrors).subscribe((fieldErrors) =>
       mapFormErrors(fieldErrors, this.form),
     );
+    super(service);
   }
 
   ngOnInit() {
@@ -90,7 +95,7 @@ export class ChangePasswordComponent implements OnInit {
   onSubmit() {
     if (this.form.valid) {
       lastValueFrom(
-        this.passwordService
+        this.service
           .changePassword(
             this.form.value.current_password!,
             this.form.value.new_password!,

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import {
   Validators,
   ReactiveFormsModule,
@@ -6,7 +6,7 @@ import {
   FormControl,
 } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { LoginService } from "./login.service";
+import { LoginService, LoginState } from "./login.service";
 import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
 import { SettingsService } from "../api/settings.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
@@ -24,6 +24,7 @@ import { lastValueFrom, tap } from "rxjs";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
 import { mapFormErrors } from "../shared/forms/form.utils";
+import { StatefulComponent } from "../shared/stateful-service/signal-state.component";
 
 @Component({
   selector: "gt-login",
@@ -45,12 +46,15 @@ import { mapFormErrors } from "../shared/forms/form.utils";
     RouterLink,
   ],
 })
-export class LoginComponent implements OnInit {
-  formErrors = this.loginService.formErrors;
-  loading = this.loginService.loading;
-  requiresMFA$ = this.loginService.requiresMFA$;
-  hasFido2$ = this.loginService.hasFIDO2$;
-  useTOTP$ = this.loginService.useTOTP$;
+export class LoginComponent extends StatefulComponent<
+  LoginState,
+  LoginService
+> {
+  formErrors = this.service.formErrors;
+  loading = this.service.loading;
+  requiresMFA$ = this.service.requiresMFA$;
+  hasFido2$ = this.service.hasFIDO2$;
+  useTOTP$ = this.service.useTOTP$;
   form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", [
@@ -64,28 +68,17 @@ export class LoginComponent implements OnInit {
   acceptInfo$ = this.acceptService.acceptInfo$;
 
   constructor(
-    private loginService: LoginService,
+    protected service: LoginService,
     private oauthService: GlitchTipOAuthService,
     private settings: SettingsService,
     private acceptService: AcceptInviteService,
     private router: Router,
     private route: ActivatedRoute,
   ) {
-    toObservable(this.loginService.fieldErrors).subscribe((fieldErrors) =>
+    toObservable(service.fieldErrors).subscribe((fieldErrors) =>
       mapFormErrors(fieldErrors, this.form),
     );
-  }
-
-  ngOnInit() {
-    // this.acceptInfo$
-    //   .pipe(
-    //     tap((acceptInfo) => {
-    //       if (acceptInfo) {
-    //         this.form.patchValue({ email: acceptInfo.orgUser.email });
-    //       }
-    //     }),
-    //   )
-    //   .subscribe();
+    super(service);
   }
 
   get email() {
@@ -107,7 +100,7 @@ export class LoginComponent implements OnInit {
       //   this.authService.setRedirectUrl(nextUrl);
       // }
       lastValueFrom(
-        this.loginService
+        this.service
           .login(this.form.value.email!, this.form.value.password!)
           .pipe(
             tap((resp) => {
