@@ -50,7 +50,7 @@ export class RegisterService extends StatefulService<RegisterState> {
         if ([400, 500].includes(err.status)) {
           return of(undefined);
         }
-        return throwError(() => new Error("Unable to signup"));
+        return throwError(() => err);
       }),
     );
   }

@@ -7,7 +7,6 @@ import {
 } from "@angular/forms";
 import { Router, ActivatedRoute, RouterLink } from "@angular/router";
 import { tap } from "rxjs/operators";
-import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -15,8 +14,9 @@ import { CommonModule } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { lastValueFrom } from "rxjs";
 import { toObservable } from "@angular/core/rxjs-interop";
+import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
 import { InputMatcherDirective } from "../shared/input-matcher.directive";
-import { RegisterService } from "./register.service";
+import { RegisterService, RegisterState } from "./register.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
 import { SettingsService } from "../api/settings.service";
 import { SocialApp } from "../api/user/user.interfaces";
@@ -24,6 +24,7 @@ import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
 import { getUTM, setStorageWithExpiry } from "../shared/shared.utils";
 import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
 import { mapFormErrors } from "../shared/forms/form.utils";
+import { StatefulComponent } from "../shared/stateful-service/signal-state.component";
 
 @Component({
   selector: "gt-register",
@@ -43,7 +44,10 @@ import { mapFormErrors } from "../shared/forms/form.utils";
     RouterLink,
   ],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent
+  extends StatefulComponent<RegisterState, RegisterService>
+  implements OnInit
+{
   tags = "";
   socialApps$ = this.settings.socialApps$;
   form = new FormGroup({
@@ -57,20 +61,21 @@ export class RegisterComponent implements OnInit {
       Validators.minLength(8),
     ]),
   });
-  formErrors = this.registerService.formErrors;
+  formErrors = this.service.formErrors;
   acceptInfo$ = this.acceptService.acceptInfo$;
 
   constructor(
-    private registerService: RegisterService,
+    protected service: RegisterService,
     private router: Router,
     private route: ActivatedRoute,
     private acceptService: AcceptInviteService,
     private settings: SettingsService,
     private oauthService: GlitchTipOAuthService,
   ) {
-    toObservable(this.registerService.fieldErrors).subscribe((fieldErrors) =>
+    toObservable(service.fieldErrors).subscribe((fieldErrors) =>
       mapFormErrors(fieldErrors, this.form),
     );
+    super(service);
   }
 
   ngOnInit() {
@@ -103,7 +108,7 @@ export class RegisterComponent implements OnInit {
     if (this.form.valid) {
       const nextUrl = this.route.snapshot.queryParamMap.get("next");
       lastValueFrom(
-        this.registerService
+        this.service
           .register(this.form.value.email!, this.form.value.password1!)
           .pipe(
             tap((resp) => {

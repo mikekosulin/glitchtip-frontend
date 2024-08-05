@@ -1,18 +1,17 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { UntypedFormControl, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { combineLatest, map } from "rxjs";
-import { GlitchTipOAuthService } from "src/app/api/oauth/oauth.service";
 import { SettingsService } from "src/app/api/settings.service";
-import { UserService } from "src/app/api/user/user.service";
-import { SocialApp } from "../../api/user/user.interfaces";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDividerModule } from "@angular/material/divider";
-import { AuthSvgComponent } from "../../shared/auth-svg/auth-svg.component";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCardModule } from "@angular/material/card";
 import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { UserService } from "src/app/api/user/user.service";
+import { AuthenticationService } from "src/app/api/allauth/authentication.service";
+import { AuthSvgComponent } from "../../shared/auth-svg/auth-svg.component";
 
 @Component({
   selector: "gt-social-auth",
@@ -44,23 +43,23 @@ export class SocialAuthComponent implements OnInit {
           return {
             ...socialAccount,
             name: socialApps.find(
-              (socialApp) => socialApp.provider === socialAccount.provider
+              (socialApp) => socialApp.provider === socialAccount.provider,
             )?.name,
           };
-        }
+        },
       );
       return {
         ...userDetails,
         identities: socialAccountsWithNames,
       };
-    })
+    }),
   );
-  account = new UntypedFormControl();
+  account = new FormControl();
 
   constructor(
     private userService: UserService,
-    private oauthService: GlitchTipOAuthService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private authenticationService: AuthenticationService,
   ) {}
 
   ngOnInit(): void {
@@ -68,13 +67,11 @@ export class SocialAuthComponent implements OnInit {
   }
 
   addAccount() {
-    // No connection for GitHub because it doesn't allow for multiple redirect URI's
-    // Can connect to GitHub on the log in page
-    const socialApp: SocialApp = this.account.value;
-    this.oauthService.initOAuthLogin(socialApp);
+    this.authenticationService.provider_redirect(
+      this.account.value.provider,
+      "connect",
+    );
   }
 
-  disconnect(id: number, account: string, provider: string) {
-    this.userService.disconnectSocialAccount(id, account, provider);
-  }
+  disconnect(id: number, account: string, provider: string) {}
 }

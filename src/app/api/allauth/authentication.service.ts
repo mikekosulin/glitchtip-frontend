@@ -7,8 +7,44 @@ import {
   AllAuthSessionResponse,
 } from "./allauth.interfaces";
 import { catchError, Observable, of, throwError } from "rxjs";
+import { JsonObject } from "src/app/interface-primitives";
 
 const baseUrl = allauthBase + "/auth";
+
+function postForm(action: string, data: JsonObject) {
+  const f = document.createElement("form");
+  f.method = "POST";
+  f.action = action;
+
+  for (const key in data) {
+    const d = document.createElement("input");
+    d.type = "hidden";
+    d.name = key;
+    d.value = data[key]?.toString()!;
+    f.appendChild(d);
+  }
+  document.body.appendChild(f);
+  f.submit();
+}
+
+function getCookie(name: string) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+export function getCSRFToken() {
+  return getCookie("csrftoken");
+}
 
 @Injectable({
   providedIn: "root",
@@ -85,5 +121,14 @@ export class AuthenticationService {
           return throwError(() => error);
         }),
       );
+  }
+
+  provider_redirect(provider: string, process: "login" | "connect" = "login") {
+    postForm(baseUrl + "/provider/redirect", {
+      provider,
+      process,
+      callback_url: "/",
+      csrfmiddlewaretoken: getCSRFToken(),
+    });
   }
 }
