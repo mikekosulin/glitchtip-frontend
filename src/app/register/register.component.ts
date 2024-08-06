@@ -52,7 +52,7 @@ export class RegisterComponent
   socialApps$ = this.settings.socialApps$;
   form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
-    password1: new FormControl("", [
+    password: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
@@ -96,8 +96,8 @@ export class RegisterComponent
     return this.form.get("email");
   }
 
-  get password1() {
-    return this.form.get("password1");
+  get password() {
+    return this.form.get("password");
   }
 
   get password2() {
@@ -109,7 +109,7 @@ export class RegisterComponent
       const nextUrl = this.route.snapshot.queryParamMap.get("next");
       lastValueFrom(
         this.service
-          .register(this.form.value.email!, this.form.value.password1!)
+          .register(this.form.value.email!, this.form.value.password!)
           .pipe(
             tap((resp) => {
               if (resp?.meta.is_authenticated) {

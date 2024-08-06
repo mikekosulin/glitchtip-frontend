@@ -107,7 +107,12 @@ export class LoginComponent extends StatefulComponent<
               if (resp) {
                 if (resp.meta.is_authenticated) {
                   if (nextUrl) {
-                    this.router.navigateByUrl(nextUrl);
+                    if (nextUrl.startsWith("/admin/")) {
+                      // Load Django, not JS router
+                      window.location.href = nextUrl;
+                    } else {
+                      this.router.navigateByUrl(nextUrl);
+                    }
                   } else {
                     this.router.navigate(["/"]);
                   }

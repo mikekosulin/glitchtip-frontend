@@ -24,28 +24,28 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password1" />
+          <mat-label i18n>Password</mat-label>
+          <input matInput type="password" formControlName="password" />
           <mat-error>
-            <span *ngIf="password1?.errors?.minlength"
+            <span *ngIf="password?.errors?.minlength"
               >Your password should be at least 8 characters long</span
             >
-            <span *ngIf="password1?.errors?.required"
+            <span *ngIf="password?.errors?.required"
               >A password is required to sign up</span
             >
-            <span *ngIf="password1?.errors?.serverError">{{
-              password1?.errors?.serverError
+            <span *ngIf="password?.errors?.serverError">{{
+              password?.errors?.serverError
             }}</span>
           </mat-error>
         </mat-form-field>
         <mat-form-field class="full-width" appearance="outline">
-          <mat-label>Confirm password</mat-label>
+          <mat-label i18n>Confirm password</mat-label>
           <input
             matInput
             type="password"
             placeholder="Confirm Password"
             formControlName="password2"
-            gtInputMatcher="password1"
+            gtInputMatcher="password"
           />
 
           <mat-error>
