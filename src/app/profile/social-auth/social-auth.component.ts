@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
-import { combineLatest, map } from "rxjs";
-import { SettingsService } from "src/app/api/settings.service";
+import { catchError, lastValueFrom, of, tap, throwError } from "rxjs";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatOptionModule } from "@angular/material/core";
@@ -9,9 +8,14 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCardModule } from "@angular/material/card";
 import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { UserService } from "src/app/api/user/user.service";
 import { AuthenticationService } from "src/app/api/allauth/authentication.service";
 import { AuthSvgComponent } from "../../shared/auth-svg/auth-svg.component";
+import { StatefulComponent } from "src/app/shared/stateful-service/signal-state.component";
+import { SocialAuthService, SocialAuthState } from "./social-auth.service";
+import { AllAuthHttpErrorResponse } from "src/app/api/allauth/allauth.interfaces";
+import { UNHANDLED_ERROR } from "src/app/constants";
 
 @Component({
   selector: "gt-social-auth",
@@ -33,36 +37,25 @@ import { AuthSvgComponent } from "../../shared/auth-svg/auth-svg.component";
     AsyncPipe,
   ],
 })
-export class SocialAuthComponent implements OnInit {
-  disconnectLoading$ = this.userService.disconnectLoading$;
-  socialApps$ = this.settingsService.socialApps$;
-  user$ = combineLatest([this.socialApps$, this.userService.userDetails$]).pipe(
-    map(([socialApps, userDetails]) => {
-      let socialAccountsWithNames = userDetails?.identities.map(
-        (socialAccount) => {
-          return {
-            ...socialAccount,
-            name: socialApps.find(
-              (socialApp) => socialApp.provider === socialAccount.provider,
-            )?.name,
-          };
-        },
-      );
-      return {
-        ...userDetails,
-        identities: socialAccountsWithNames,
-      };
-    }),
-  );
+export class SocialAuthComponent
+  extends StatefulComponent<SocialAuthState, SocialAuthService>
+  implements OnInit
+{
+  socialApps$ = this.service.socialApps$;
+  user$ = this.service.user$;
+  disconnectLoadingId = this.service.loadingId;
   account = new FormControl();
 
   constructor(
+    protected service: SocialAuthService,
     private userService: UserService,
-    private settingsService: SettingsService,
     private authenticationService: AuthenticationService,
-  ) {}
+    private snackBar: MatSnackBar,
+  ) {
+    super(service);
+  }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.userService.getUserDetails();
   }
 
@@ -73,5 +66,23 @@ export class SocialAuthComponent implements OnInit {
     );
   }
 
-  disconnect(id: number, account: string, provider: string) {}
+  disconnect(id: number, provider: string, account: string) {
+    lastValueFrom(
+      this.service.disconnect(id, provider, account).pipe(
+        tap(() => {
+          this.snackBar.open(
+            $localize`You have successfully disconnected your social auth account`,
+          );
+        }),
+        catchError((err: AllAuthHttpErrorResponse) => {
+          if (err.status === 400 && err.error.errors?.length) {
+            this.snackBar.open(err.error.errors[0].message);
+            return of(undefined);
+          }
+          this.snackBar.open(UNHANDLED_ERROR);
+          return throwError(() => err);
+        }),
+      ),
+    );
+  }
 }

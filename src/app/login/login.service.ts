@@ -76,7 +76,7 @@ export class LoginService extends StatefulService<LoginState> {
         if ([400, 500].includes(err.status)) {
           return of(undefined);
         }
-        return throwError(() => new Error("Unable to log in"));
+        return throwError(() => err);
       }),
     );
   }

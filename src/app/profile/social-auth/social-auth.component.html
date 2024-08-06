@@ -44,11 +44,17 @@
             <div class="socialaccount-wrapper">
               <button
                 mat-stroked-button
-                (click)="disconnect(socialAccount.id, socialAccount.uid, socialAccount.provider)"
-                [disabled]="(disconnectLoading$ | async) === socialAccount.id"
+                (click)="
+                  disconnect(
+                    socialAccount.id,
+                    socialAccount.provider,
+                    socialAccount.uid
+                  )
+                "
+                [disabled]="disconnectLoadingId() === socialAccount.id"
               >
                 <gt-auth-svg
-                  [loading]="(disconnectLoading$ | async) === socialAccount.id"
+                  [loading]="disconnectLoadingId() === socialAccount.id"
                   source="disconnect"
                   text="Disconnect {{ socialAccount.name }}"
                   [provider]="socialAccount.provider"
