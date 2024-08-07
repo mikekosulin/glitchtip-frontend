@@ -30,10 +30,6 @@ export const routes: Routes = [
     title: "Reset Password",
   },
   {
-    path: "auth",
-    loadChildren: () => import("./auth/routes"),
-  },
-  {
     path: "accept/:memberId/:token",
     loadChildren: () => import("./accept/routes"),
   },

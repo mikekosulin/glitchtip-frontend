@@ -7,7 +7,6 @@ import {
 } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { LoginService, LoginState } from "./login.service";
-import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
 import { SettingsService } from "../api/settings.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
 import { SocialApp } from "../api/user/user.interfaces";
@@ -69,7 +68,6 @@ export class LoginComponent extends StatefulComponent<
 
   constructor(
     protected service: LoginService,
-    private oauthService: GlitchTipOAuthService,
     private settings: SettingsService,
     private acceptService: AcceptInviteService,
     private router: Router,
@@ -89,9 +87,7 @@ export class LoginComponent extends StatefulComponent<
     return this.form.get("password");
   }
 
-  onSocialApp(socialApp: SocialApp) {
-    this.oauthService.initOAuthLogin(socialApp);
-  }
+  onSocialApp(socialApp: SocialApp) {}
 
   onSubmit() {
     if (this.form.valid) {
