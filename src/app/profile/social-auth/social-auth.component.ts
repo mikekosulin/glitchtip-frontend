@@ -63,6 +63,7 @@ export class SocialAuthComponent
     this.authenticationService.provider_redirect(
       this.account.value.provider,
       "connect",
+      window.location.href,
     );
   }
 

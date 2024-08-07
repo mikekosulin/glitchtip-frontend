@@ -123,11 +123,15 @@ export class AuthenticationService {
       );
   }
 
-  provider_redirect(provider: string, process: "login" | "connect" = "login") {
+  provider_redirect(
+    provider: string,
+    process: "login" | "connect" = "login",
+    callbackUrl = "/",
+  ) {
     postForm(baseUrl + "/provider/redirect", {
       provider,
       process,
-      callback_url: "/",
+      callback_url: callbackUrl,
       csrfmiddlewaretoken: getCSRFToken(),
     });
   }
