@@ -1,18 +1,16 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
-  UntypedFormControl,
-  UntypedFormGroup,
+  FormControl,
+  FormGroup,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { take } from "rxjs/operators";
-import { MultiFactorAuthService } from "../../multi-factor-auth.service";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { FormErrorComponent } from "../../../../shared/forms/form-error/form-error.component";
 import { MatButtonModule } from "@angular/material/button";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { NgIf } from "@angular/common";
+import { MultiFactorAuthService } from "../../multi-factor-auth.service";
+import { FormErrorComponent } from "../../../../shared/forms/form-error/form-error.component";
 
 @Component({
   selector: "gt-backup-codes",
@@ -27,16 +25,15 @@ import { NgIf, AsyncPipe } from "@angular/common";
     FormErrorComponent,
     MatFormFieldModule,
     MatInputModule,
-    AsyncPipe,
   ],
 })
 export class BackupCodesComponent {
-  TOTPKey$ = this.service.TOTPKey$;
-  error$ = this.service.serverError$;
-  copiedCodes$ = this.service.copiedCodes$;
-  regenCodes$ = this.service.regenCodes$;
-  backupCodeForm = new UntypedFormGroup({
-    backupCode: new UntypedFormControl("", [
+  TOTPAuthenticator = this.service.TOTPAuthenticator;
+  // error$ = this.service.serverError$;
+  // copiedCodes$ = this.service.copiedCodes$;
+  // regenCodes$ = this.service.regenCodes$;
+  backupCodeForm = new FormGroup({
+    backupCode: new FormControl("", [
       Validators.required,
       Validators.minLength(16),
       Validators.maxLength(16),
@@ -45,7 +42,7 @@ export class BackupCodesComponent {
 
   constructor(
     private service: MultiFactorAuthService,
-    private snackBar: MatSnackBar
+    // private snackBar: MatSnackBar,
   ) {}
 
   get backupCode() {
@@ -53,48 +50,44 @@ export class BackupCodesComponent {
   }
 
   startRegenCodes() {
-    this.service.setRegenCodes();
+    // this.service.setRegenCodes();
   }
 
   copyCodes() {
-    this.service.backupCodes$.pipe(take(1)).subscribe((codes) => {
-      if (codes) {
-        navigator.clipboard.writeText(codes.join("\n"));
-        this.service.setCopiedCodes();
-        this.snackBar.open("Backup codes copied to clipboard.");
-      }
-    });
+    // this.service.backupCodes$.pipe(take(1)).subscribe((codes) => {
+    //   if (codes) {
+    //     navigator.clipboard.writeText(codes.join("\n"));
+    //     this.service.setCopiedCodes();
+    //     this.snackBar.open("Backup codes copied to clipboard.");
+    //   }
+    // });
   }
 
   downloadCodes() {
-    this.service.backupCodes$.pipe(take(1)).subscribe((codes) => {
-      if (codes) {
-        this.download("glitchtip-backup.txt", codes.join("\n"));
-        this.service.setCopiedCodes();
-      }
-    });
+    // this.download("glitchtip-backup.txt", codes.join("\n"));
+    // this.service.setCopiedCodes();
   }
 
   verifyBackupCode() {
-    const code = this.backupCodeForm.get("backupCode")?.value;
-    if (this.backupCodeForm.valid && code) {
-      this.service.verifyBackupCode(code).subscribe();
-    }
+    // const code = this.backupCodeForm.get("backupCode")?.value;
+    // if (this.backupCodeForm.valid && code) {
+    //   this.service.verifyBackupCode(code).subscribe();
+    // }
   }
 
-  private download(filename: string, text: string) {
-    const element = document.createElement("a");
-    element.setAttribute(
-      "href",
-      "data:text/plain;charset=utf-8," + encodeURIComponent(text)
-    );
-    element.setAttribute("download", filename);
+  // private download(filename: string, text: string) {
+  //   const element = document.createElement("a");
+  //   element.setAttribute(
+  //     "href",
+  //     "data:text/plain;charset=utf-8," + encodeURIComponent(text),
+  //   );
+  //   element.setAttribute("download", filename);
 
-    element.style.display = "none";
-    document.body.appendChild(element);
+  //   element.style.display = "none";
+  //   document.body.appendChild(element);
 
-    element.click();
+  //   element.click();
 
-    document.body.removeChild(element);
-  }
+  //   document.body.removeChild(element);
+  // }
 }

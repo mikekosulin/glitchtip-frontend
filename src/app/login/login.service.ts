@@ -64,12 +64,11 @@ export class LoginService extends StatefulService<LoginState> {
   }
 
   login(email: string, password: string) {
-    this.state.set({ ...this.state(), loading: true, errors: [] });
+    this.setState({ loading: true, errors: [] });
     return this.authService.login(email, password).pipe(
       tap(() => this.state.set(initialState)),
       catchError((err: AllAuthHttpErrorResponse) => {
-        this.state.set({
-          ...this.state(),
+        this.setState({
           loading: false,
           errors: handleAllAuthErrorResponse(err),
         });
@@ -79,6 +78,11 @@ export class LoginService extends StatefulService<LoginState> {
         return throwError(() => err);
       }),
     );
+  }
+
+  socialLogin(provider: string, callbackUrl = "/") {
+    this.setState({ loading: true, errors: [] });
+    this.authService.providerRedirect(provider, callbackUrl, "login");
   }
 
   promptForMFA(validAuth: ValidAuth[]) {}

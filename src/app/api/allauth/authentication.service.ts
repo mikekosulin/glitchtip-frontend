@@ -123,10 +123,10 @@ export class AuthenticationService {
       );
   }
 
-  provider_redirect(
+  providerRedirect(
     provider: string,
-    process: "login" | "connect" = "login",
     callbackUrl = "/",
+    process: "login" | "connect" = "login",
   ) {
     postForm(baseUrl + "/provider/redirect", {
       provider,

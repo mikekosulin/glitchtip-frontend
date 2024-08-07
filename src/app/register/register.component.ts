@@ -20,8 +20,7 @@ import { RegisterService, RegisterState } from "./register.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
 import { SettingsService } from "../api/settings.service";
 import { SocialApp } from "../api/user/user.interfaces";
-import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
-import { getUTM, setStorageWithExpiry } from "../shared/shared.utils";
+import { getUTM } from "../shared/shared.utils";
 import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
 import { mapFormErrors } from "../shared/forms/form.utils";
 import { StatefulComponent } from "../shared/stateful-service/signal-state.component";
@@ -70,7 +69,6 @@ export class RegisterComponent
     private route: ActivatedRoute,
     private acceptService: AcceptInviteService,
     private settings: SettingsService,
-    private oauthService: GlitchTipOAuthService,
   ) {
     toObservable(service.fieldErrors).subscribe((fieldErrors) =>
       mapFormErrors(fieldErrors, this.form),
@@ -126,11 +124,6 @@ export class RegisterComponent
   }
 
   onSocialApp(socialApp: SocialApp) {
-    const utm = getUTM().toString();
-    if (utm) {
-      setStorageWithExpiry("register", utm, 5 * 60 * 1000);
-    }
-
-    this.oauthService.initOAuthLogin(socialApp);
+    this.service.socialRegister(socialApp.provider);
   }
 }

@@ -4,6 +4,7 @@ import { allauthBase } from "src/app/constants";
 import {
   AllAuthProvidersResponse,
   AllAuthSessionResponse,
+  AuthenticatorsResponse,
 } from "./allauth.interfaces";
 
 const baseUrl = allauthBase + "/account";
@@ -35,5 +36,17 @@ export class AccountService {
         account,
       },
     });
+  }
+
+  listAuthenticators() {
+    return this.http.get<AuthenticatorsResponse>(baseUrl + "/authenticators");
+  }
+
+  listRecoveryCodes() {
+    return this.http.get(baseUrl + "/authenticators/recovery-codes");
+  }
+
+  regenerateRecoveryCodes() {
+    return this.http.post(baseUrl + "/authenticators/recovery-codes", null);
   }
 }

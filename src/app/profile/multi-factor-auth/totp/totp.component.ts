@@ -7,24 +7,22 @@ import {
   OnDestroy,
 } from "@angular/core";
 import {
-  UntypedFormControl,
-  UntypedFormGroup,
+  FormControl,
+  FormGroup,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
 import * as QRCode from "qrcode";
-import { combineLatest } from "rxjs";
-import { delay, filter, tap } from "rxjs/operators";
-import { MultiFactorAuthService } from "../multi-factor-auth.service";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatButtonModule } from "@angular/material/button";
+import { NgIf } from "@angular/common";
+import { MatDividerModule } from "@angular/material/divider";
+import { MatCardModule } from "@angular/material/card";
+import { MultiFactorAuthService } from "../multi-factor-auth.service";
 import { FormErrorComponent } from "../../../shared/forms/form-error/form-error.component";
 import { ToDoItemComponent } from "../../../shared/to-do-item/to-do-item.component";
 import { BackupCodesComponent } from "./backup-codes/backup-codes.component";
-import { MatButtonModule } from "@angular/material/button";
-import { NgIf, AsyncPipe } from "@angular/common";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatCardModule } from "@angular/material/card";
 
 @Component({
   selector: "gt-totp",
@@ -43,18 +41,17 @@ import { MatCardModule } from "@angular/material/card";
     FormErrorComponent,
     MatFormFieldModule,
     MatInputModule,
-    AsyncPipe,
   ],
 })
 export class TOTPComponent implements OnInit, OnDestroy {
   @ViewChild("canvas", { static: false }) canvas: ElementRef | undefined;
-  TOTPKey$ = this.service.TOTPKey$;
-  TOTP$ = this.service.totp$;
-  step$ = this.service.setupTOTPStage$;
-  error$ = this.service.serverError$;
-  copiedCodes$ = this.service.copiedCodes$;
-  codeForm = new UntypedFormGroup({
-    code: new UntypedFormControl("", [
+  TOTPAuthenticator = this.service.TOTPAuthenticator;
+  // TOTP$ = this.service.totp$;
+  step = this.service.setupTOTPStage;
+  // error$ = this.service.serverError$;
+  // copiedCodes$ = this.service.copiedCodes$;
+  codeForm = new FormGroup({
+    code: new FormControl("", [
       Validators.required,
       Validators.minLength(6),
       Validators.maxLength(6),
@@ -68,13 +65,13 @@ export class TOTPComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    combineLatest([this.service.totp$, this.step$])
-      .pipe(
-        filter(([totp, step]) => step === 3 && totp !== null),
-        delay(0),
-        tap(([totp, _]) => this.generateQRCode(totp!.provisioning_uri))
-      )
-      .subscribe();
+    // combineLatest([this.service.totp$, this.step$])
+    //   .pipe(
+    //     filter(([totp, step]) => step === 3 && totp !== null),
+    //     delay(0),
+    //     tap(([totp, _]) => this.generateQRCode(totp!.provisioning_uri))
+    //   )
+    //   .subscribe();
   }
 
   ngOnDestroy() {
@@ -90,19 +87,20 @@ export class TOTPComponent implements OnInit, OnDestroy {
   }
 
   enableTOTP() {
-    if (this.codeForm.valid) {
-      const code = this.code;
-      if (code) {
-        this.service.enableTOTP(code.value).pipe().subscribe();
-      }
-    }
+    // if (this.codeForm.valid) {
+    //   const code = this.code;
+    //   if (code) {
+    //     this.service.enableTOTP(code.value).pipe().subscribe();
+    //   }
+    // }
   }
 
   deleteKey(keyId: number) {
-    this.service.deleteKey(keyId, "TOTP").subscribe();
+    // this.service.deleteKey(keyId, "TOTP").subscribe();
   }
 
-  getStepIsDone(step: number, currentStep: number) {
+  getStepIsDone(step: number) {
+    const currentStep = this.step();
     if (currentStep < step) {
       return "false";
     } else if (currentStep === step) {

@@ -1,4 +1,4 @@
-<div *ngIf="TOTPKey$ | async">
+<div *ngIf="TOTPAuthenticator">
   <p class="mat-h2"><strong>Regenerate backup codes</strong></p>
   <p class="mat-h4">
     If you have lost your backup codes you can generate new ones, invalidating
@@ -6,7 +6,7 @@
     <strong>Print out these new codes or save them someplace safe.</strong>
   </p>
   <button
-    *ngIf="(regenCodes$ | async) === false"
+    *ngIf="false"
     mat-stroked-button
     color="primary"
     (click)="startRegenCodes()"
@@ -14,9 +14,8 @@
     Regenerate codes
   </button>
 </div>
-<div *ngIf="(regenCodes$ | async) || (TOTPKey$ | async) === undefined">
-  <p *ngIf="(TOTPKey$ | async) === undefined" class="mat-h4">
-    Download or copy a list of backup codes. If you ever lose your phone, each
+<div *ngIf="TOTPAuthenticator() === undefined">
+  <p *ngIf="TOTPAuthenticator() === undefined" class="mat-h4" i18n>Download or copy a list of backup codes. If you ever lose your phone, each
     of these recovery codes can be used one time to regain access to your
     account. <strong>Print them out or save them someplace safe.</strong>
   </p>
@@ -32,7 +31,7 @@
     Enter one of the backup codes to confirm that you have saved them:
   </p>
   <form [formGroup]="backupCodeForm">
-    <gt-form-error [error]="error$ | async"></gt-form-error>
+    <gt-form-error></gt-form-error>
     <mat-form-field appearance="outline">
       <mat-label>Backup code</mat-label>
       <input matInput formControlName="backupCode" />
@@ -47,10 +46,8 @@
     <button
       mat-flat-button
       color="primary"
-      [disabled]="(copiedCodes$ | async) !== true"
       (click)="verifyBackupCode()"
     >
-      {{ (regenCodes$ | async) ? "Confirm" : "Next" }}
     </button>
   </form>
 </div>

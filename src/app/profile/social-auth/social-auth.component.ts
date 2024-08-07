@@ -16,6 +16,7 @@ import { StatefulComponent } from "src/app/shared/stateful-service/signal-state.
 import { SocialAuthService, SocialAuthState } from "./social-auth.service";
 import { AllAuthHttpErrorResponse } from "src/app/api/allauth/allauth.interfaces";
 import { UNHANDLED_ERROR } from "src/app/constants";
+import { User } from "src/app/api/user/user.interfaces";
 
 @Component({
   selector: "gt-social-auth",
@@ -43,6 +44,7 @@ export class SocialAuthComponent
 {
   socialApps$ = this.service.socialApps$;
   user$ = this.service.user$;
+  user?: User | any;
   disconnectLoadingId = this.service.loadingId;
   account = new FormControl();
 
@@ -57,33 +59,40 @@ export class SocialAuthComponent
 
   ngOnInit() {
     this.userService.getUserDetails();
+    this.user$.subscribe((user) => {
+      this.user = user;
+    });
   }
 
   addAccount() {
-    this.authenticationService.provider_redirect(
+    this.authenticationService.providerRedirect(
       this.account.value.provider,
-      "connect",
       window.location.href,
+      "connect",
     );
   }
 
   disconnect(id: number, provider: string, account: string) {
-    lastValueFrom(
-      this.service.disconnect(id, provider, account).pipe(
-        tap(() => {
-          this.snackBar.open(
-            $localize`You have successfully disconnected your social auth account`,
-          );
-        }),
-        catchError((err: AllAuthHttpErrorResponse) => {
-          if (err.status === 400 && err.error.errors?.length) {
-            this.snackBar.open(err.error.errors[0].message);
-            return of(undefined);
-          }
-          this.snackBar.open(UNHANDLED_ERROR);
-          return throwError(() => err);
-        }),
-      ),
-    );
+    if (this.user?.hasPasswordAuth || this.user!.identities.length > 1) {
+      lastValueFrom(
+        this.service.disconnect(id, provider, account).pipe(
+          tap(() => {
+            this.snackBar.open(
+              $localize`You have successfully disconnected your social auth account`,
+            );
+          }),
+          catchError((err: AllAuthHttpErrorResponse) => {
+            if (err.status === 400 && err.error.errors?.length) {
+              this.snackBar.open(err.error.errors[0].message);
+              return of(undefined);
+            }
+            this.snackBar.open(UNHANDLED_ERROR);
+            return throwError(() => err);
+          }),
+        ),
+      );
+    } else {
+      this.snackBar.open($localize`Your account has no password set up.`);
+    }
   }
 }

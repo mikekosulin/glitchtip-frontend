@@ -10,6 +10,7 @@ import {
   messagesLookup,
   reduceParamErrors,
 } from "src/app/api/allauth/errorMessages";
+import { UserService } from "src/app/api/user/user.service";
 import { APIState } from "src/app/shared/shared.interfaces";
 import { StatefulService } from "src/app/shared/stateful-service/signal-state.service";
 
@@ -38,7 +39,10 @@ export class PasswordService extends StatefulService<PasswordState> {
     reduceParamErrors(this.state().errors.filter((err) => err.param)),
   );
 
-  constructor(private accountService: AccountService) {
+  constructor(
+    private accountService: AccountService,
+    private userService: UserService,
+  ) {
     super(initialState);
   }
 
@@ -47,7 +51,10 @@ export class PasswordService extends StatefulService<PasswordState> {
     return this.accountService
       .changePassword(current_password, new_password)
       .pipe(
-        tap(() => this.state.set({ ...initialState, success: true })),
+        tap(() => {
+          this.state.set({ ...initialState, success: true });
+          this.userService.getUserDetails();
+        }),
         catchError((err: AllAuthHttpErrorResponse) => {
           this.state.set({
             ...this.state(),

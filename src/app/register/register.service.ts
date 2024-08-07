@@ -54,4 +54,9 @@ export class RegisterService extends StatefulService<RegisterState> {
       }),
     );
   }
+
+  socialRegister(provider: string, callbackUrl = "/") {
+    this.setState({ loading: true, errors: [] });
+    this.authService.providerRedirect(provider, callbackUrl, "login");
+  }
 }

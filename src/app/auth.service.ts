@@ -52,6 +52,14 @@ export class AuthService {
       );
   }
 
+  providerRedirect(
+    provider: string,
+    callbackUrl: string,
+    process: "login" | "connect",
+  ) {
+    this.authenticationService.providerRedirect(provider, callbackUrl, process);
+  }
+
   logout() {
     return this.authenticationService.logout().pipe(
       catchError((err: HttpErrorResponse) => {

@@ -85,3 +85,35 @@ export interface AllAuth400HttpErrorResponse extends HttpErrorResponse {
 export type AllAuthHttpErrorResponse =
   | AllAuth400HttpErrorResponse
   | HttpErrorResponse;
+
+interface AuthenticatorBase {
+  last_used_at: number;
+  created_at: number;
+  type: string;
+}
+
+export interface TOTPAuthenticator extends AuthenticatorBase {
+  type: "totp";
+}
+
+interface RecoveryCodesAuthenticator extends AuthenticatorBase {
+  type: "recovery_codes";
+  total_code_count: number;
+  unused_code_count: number;
+}
+
+interface WebAuthnAuthenticator extends AuthenticatorBase {
+  type: "webauthn";
+  id: number;
+  name: string;
+  is_passwordless?: boolean;
+}
+
+export type Authenticator =
+  | TOTPAuthenticator
+  | RecoveryCodesAuthenticator
+  | WebAuthnAuthenticator;
+
+export interface AuthenticatorsResponse extends AllAuthResponse {
+  data: Authenticator[];
+}

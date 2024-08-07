@@ -6,24 +6,24 @@ import {
   FormControl,
 } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { CommonModule } from "@angular/common";
+import { MatCardModule } from "@angular/material/card";
+import { lastValueFrom, tap } from "rxjs";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
+import { LoginFido2Component } from "./login-fido2/login-fido2.component";
+import { LoginTotpComponent } from "./login-totp/login-totp.component";
+import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
+import { mapFormErrors } from "../shared/forms/form.utils";
+import { StatefulComponent } from "../shared/stateful-service/signal-state.component";
 import { LoginService, LoginState } from "./login.service";
 import { SettingsService } from "../api/settings.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
 import { SocialApp } from "../api/user/user.interfaces";
 import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
-import { MatButtonModule } from "@angular/material/button";
-import { MatInputModule } from "@angular/material/input";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
-import { LoginFido2Component } from "./login-fido2/login-fido2.component";
-import { LoginTotpComponent } from "./login-totp/login-totp.component";
-import { CommonModule } from "@angular/common";
-import { MatCardModule } from "@angular/material/card";
-import { lastValueFrom, tap } from "rxjs";
-import { toObservable } from "@angular/core/rxjs-interop";
-import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
-import { mapFormErrors } from "../shared/forms/form.utils";
-import { StatefulComponent } from "../shared/stateful-service/signal-state.component";
 
 @Component({
   selector: "gt-login",
@@ -87,7 +87,9 @@ export class LoginComponent extends StatefulComponent<
     return this.form.get("password");
   }
 
-  onSocialApp(socialApp: SocialApp) {}
+  onSocialApp(socialApp: SocialApp) {
+    this.service.socialLogin(socialApp.provider);
+  }
 
   onSubmit() {
     if (this.form.valid) {
