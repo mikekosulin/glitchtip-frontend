@@ -9,6 +9,10 @@ import {
 
 const baseUrl = allauthBase + "/account";
 
+interface RecoveryCodes {
+  codes: string[];
+}
+
 @Injectable({
   providedIn: "root",
 })
@@ -48,5 +52,13 @@ export class AccountService {
 
   regenerateRecoveryCodes() {
     return this.http.post(baseUrl + "/authenticators/recovery-codes", null);
+  }
+
+  generateRecoveryCodes() {
+    return this.http.get<RecoveryCodes>("/api/0/generate-recovery-codes/");
+  }
+
+  setRecoveryCodes(code: string) {
+    return this.http.post("/api/0/generate-recovery-codes/", { code });
   }
 }

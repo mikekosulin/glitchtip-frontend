@@ -36,6 +36,7 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
         | TOTPAuthenticator
         | undefined,
   );
+  codes = computed(() => this.state().tempRecoveryCodes);
   constructor(private accountService: AccountService) {
     super(initialState);
   }
@@ -56,14 +57,11 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
   incrementTOTPStage() {
     const setupTOTPStage = this.setupTOTPStage();
     if (setupTOTPStage === 1) {
-      // this.setState({
-      //   setupTOTPStage: setupTOTPStage + 1,
-      //   tempRecoveryCodes: codes,
-      // });
-      //   this.getTOTP().subscribe();
-    } else {
-      this.setState({ setupTOTPStage: setupTOTPStage + 1 });
+      this.accountService
+        .generateRecoveryCodes()
+        .pipe(tap((resp) => this.setState({ tempRecoveryCodes: resp.codes })));
     }
+    this.setState({ setupTOTPStage: setupTOTPStage + 1 });
   }
 
   decrementTOTPStage() {
