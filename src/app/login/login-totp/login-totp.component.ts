@@ -17,7 +17,7 @@ import { LoginService } from "../login.service";
 import { RouterLink } from "@angular/router";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatButtonModule } from "@angular/material/button";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormErrorComponent } from "../../shared/forms/form-error/form-error.component";
@@ -33,13 +33,11 @@ import { FormErrorComponent } from "../../shared/forms/form-error/form-error.com
     FormErrorComponent,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
-    NgFor,
     MatButtonModule,
     MatCheckboxModule,
     RouterLink,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class LoginTotpComponent implements OnInit, AfterViewInit {
   @ViewChild("input") input!: ElementRef;

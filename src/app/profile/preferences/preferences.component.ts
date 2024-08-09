@@ -17,7 +17,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -39,7 +39,6 @@ function autocompleteStringValidator(validOptions: Array<string>): ValidatorFn {
   imports: [
     MatCardModule,
     MatDividerModule,
-    NgIf,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -47,11 +46,10 @@ function autocompleteStringValidator(validOptions: Array<string>): ValidatorFn {
     MatButtonModule,
     MatButtonToggleModule,
     MatIconModule,
-    NgFor,
     MatOptionModule,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class PreferencesComponent implements OnInit {
   defaultTimeZone: string = "Default";

@@ -9,7 +9,7 @@ import {
 import { Comment } from "src/app/api/comments/comments.interfaces";
 import { MatButtonModule } from "@angular/material/button";
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
-import { NgIf } from "@angular/common";
+
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 
@@ -22,10 +22,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    NgIf,
     LoadingButtonComponent,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
 })
 export class CommentFormComponent implements OnInit {
   @Input() comment?: Comment;

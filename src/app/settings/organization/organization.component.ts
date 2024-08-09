@@ -13,7 +13,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-organization",
@@ -21,15 +21,14 @@ import { NgIf, AsyncPipe } from "@angular/common";
   styleUrls: ["./organization.component.scss"],
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatDividerModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class OrganizationComponent implements OnInit {
   activeOrganizationDetail$ =

@@ -1,14 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 import { isStacktrace } from "src/app/issues/utils";
 import { IssueDetailService } from "../../../issue-detail.service";
-import {
-  NgFor,
-  NgIf,
-  NgSwitch,
-  NgSwitchCase,
-  NgSwitchDefault,
-  AsyncPipe,
-} from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-raw-stacktrace",
@@ -16,7 +9,7 @@ import {
   styleUrls: ["./raw-stacktrace.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgFor, NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault, AsyncPipe],
+  imports: [AsyncPipe],
 })
 export class RawStacktraceComponent {
   @Input() eventPlatform: string | null | undefined;

@@ -11,7 +11,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { lastValueFrom, tap } from "rxjs";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -29,7 +29,6 @@ import { StatefulComponent } from "src/app/shared/stateful-service/signal-state.
   styleUrls: ["./change-password.component.scss"],
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatDividerModule,
     ReactiveFormsModule,
@@ -39,8 +38,8 @@ import { StatefulComponent } from "src/app/shared/stateful-service/signal-state.
     LoadingButtonComponent,
     MatIconModule,
     AsyncPipe,
-    FormErrorComponent,
-  ],
+    FormErrorComponent
+],
 })
 export class ChangePasswordComponent
   extends StatefulComponent<PasswordState, PasswordService>

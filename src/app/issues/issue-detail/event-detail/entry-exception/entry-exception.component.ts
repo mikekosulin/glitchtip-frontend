@@ -8,7 +8,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatButtonModule } from "@angular/material/button";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-entry-exception",
@@ -17,17 +17,15 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatButtonModule,
     MatButtonToggleModule,
-    NgFor,
     MatChipsModule,
     MatExpansionModule,
     FrameTitleComponent,
     FrameExpandedComponent,
     RawStacktraceComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class EntryExceptionComponent {
   @Input() eventTitle: string | undefined;

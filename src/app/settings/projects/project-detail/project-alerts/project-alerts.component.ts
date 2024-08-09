@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { LoadingButtonComponent } from "../../../../shared/loading-button/loading-button.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
@@ -27,15 +27,13 @@ import { MatCardModule } from "@angular/material/card";
     MatButtonModule,
     MatDialogModule,
     MatDividerModule,
-    NgIf,
     AlertFormComponent,
-    NgFor,
     MatIconModule,
     MatTooltipModule,
     LoadingButtonComponent,
     MatProgressSpinnerModule,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ProjectAlertsComponent implements OnInit, OnDestroy {
   @ViewChild("newAlert") newAlertRef?: AlertFormComponent;

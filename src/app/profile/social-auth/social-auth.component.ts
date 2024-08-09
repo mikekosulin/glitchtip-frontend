@@ -7,7 +7,7 @@ import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UserService } from "src/app/api/user/user.service";
 import { AuthenticationService } from "src/app/api/allauth/authentication.service";
@@ -25,18 +25,16 @@ import { User } from "src/app/api/user/user.interfaces";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    NgFor,
     MatOptionModule,
     AuthSvgComponent,
     MatDividerModule,
     MatButtonModule,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class SocialAuthComponent
   extends StatefulComponent<SocialAuthState, SocialAuthService>

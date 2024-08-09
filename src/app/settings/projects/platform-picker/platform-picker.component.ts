@@ -25,7 +25,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-platform-picker",
@@ -41,17 +41,15 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
   ],
   standalone: true,
   imports: [
-    NgIf,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
     MatTabsModule,
-    NgFor,
     MatButtonModule,
     MatExpansionModule,
     MatListModule,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class PlatformPickerComponent implements ControlValueAccessor {
   @Input() template: "buttons" | "dropdown" = "buttons";

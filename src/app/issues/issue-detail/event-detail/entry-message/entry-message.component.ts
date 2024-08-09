@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { IssueDetailService } from "../../issue-detail.service";
 import { EntryDataComponent } from "../../../../shared/entry-data/entry-data.component";
 import { MatDividerModule } from "@angular/material/divider";
-import { NgIf, NgFor, AsyncPipe, KeyValuePipe } from "@angular/common";
+import { AsyncPipe, KeyValuePipe } from "@angular/common";
 
 @Component({
   selector: "gt-entry-message",
@@ -11,13 +11,11 @@ import { NgIf, NgFor, AsyncPipe, KeyValuePipe } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatDividerModule,
-    NgFor,
     EntryDataComponent,
     AsyncPipe,
-    KeyValuePipe,
-  ],
+    KeyValuePipe
+],
 })
 export class EntryMessageComponent {
   eventEntryMessage$ = this.issueService.eventEntryMessage$;

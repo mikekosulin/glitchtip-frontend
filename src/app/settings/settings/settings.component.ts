@@ -10,7 +10,7 @@ import { SettingsService } from "src/app/api/settings.service";
 import { OrganizationsService } from "src/app/api/organizations/organizations.service";
 import { MainNavService } from "src/app/main-nav/main-nav.service";
 import { MobileNavToolbarComponent } from "../../mobile-nav-toolbar/mobile-nav-toolbar.component";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatListModule } from "@angular/material/list";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { AuthService } from "src/app/auth.service";
@@ -26,11 +26,10 @@ import { toObservable } from "@angular/core/rxjs-interop";
     MatListModule,
     RouterLink,
     RouterLinkActive,
-    NgIf,
     MobileNavToolbarComponent,
     RouterOutlet,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class SettingsComponent {
   billingEnabled$ = this.service.billingEnabled$;

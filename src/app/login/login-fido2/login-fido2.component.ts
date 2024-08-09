@@ -5,7 +5,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatButtonModule } from "@angular/material/button";
 import { FormErrorComponent } from "../../shared/forms/form-error/form-error.component";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-login-fido2",
@@ -14,14 +14,13 @@ import { NgIf, AsyncPipe } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatProgressBarModule,
     FormErrorComponent,
     MatButtonModule,
     MatCheckboxModule,
     RouterLink,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class LoginFido2Component implements OnInit {
   useTOTP$ = this.loginService.useTOTP$;

@@ -5,7 +5,7 @@ import {
   RouterLinkActive,
   RouterOutlet,
 } from "@angular/router";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatListModule } from "@angular/material/list";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { toObservable } from "@angular/core/rxjs-interop";
@@ -26,11 +26,10 @@ import { MainNavService } from "../main-nav/main-nav.service";
     MatListModule,
     RouterLink,
     RouterLinkActive,
-    NgIf,
     MobileNavToolbarComponent,
     RouterOutlet,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ProfileComponent {
   user$ = this.userService.userDetails$;

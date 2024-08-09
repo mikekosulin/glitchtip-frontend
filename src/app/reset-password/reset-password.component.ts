@@ -9,7 +9,7 @@ import { RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { lastValueFrom } from "rxjs";
@@ -32,15 +32,14 @@ import { StatefulComponent } from "../shared/stateful-service/signal-state.compo
   imports: [
     MatCardModule,
     ReactiveFormsModule,
-    NgIf,
     MatFormFieldModule,
     MatInputModule,
     FormErrorComponent,
     LoadingButtonComponent,
     MatButtonModule,
     RouterLink,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ResetPasswordComponent extends StatefulComponent<
   ResetPasswordState,

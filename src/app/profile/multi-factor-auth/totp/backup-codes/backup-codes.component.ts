@@ -9,9 +9,10 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { NgIf } from "@angular/common";
+
 import { MultiFactorAuthService } from "../../multi-factor-auth.service";
 import { FormErrorComponent } from "../../../../shared/forms/form-error/form-error.component";
+import { lastValueFrom } from "rxjs";
 
 @Component({
   selector: "gt-backup-codes",
@@ -20,7 +21,6 @@ import { FormErrorComponent } from "../../../../shared/forms/form-error/form-err
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatButtonModule,
     ReactiveFormsModule,
     FormErrorComponent,
@@ -30,14 +30,13 @@ import { FormErrorComponent } from "../../../../shared/forms/form-error/form-err
 })
 export class BackupCodesComponent {
   TOTPAuthenticator = this.service.TOTPAuthenticator;
-  // error$ = this.service.serverError$;
-  // copiedCodes$ = this.service.copiedCodes$;
-  // regenCodes$ = this.service.regenCodes$;
+  error = this.service.error;
+  copiedCodes = this.service.copiedCodes;
   backupCodeForm = new FormGroup({
     backupCode: new FormControl("", [
       Validators.required,
-      Validators.minLength(16),
-      Validators.maxLength(16),
+      Validators.minLength(8),
+      Validators.maxLength(8),
     ]),
   });
 
@@ -51,26 +50,28 @@ export class BackupCodesComponent {
   }
 
   startRegenCodes() {
-    // this.service.setRegenCodes();
+    lastValueFrom(this.service.generateRecoveryCodes());
   }
 
   copyCodes() {
     const codes = this.service.codes();
     if (codes) {
       navigator.clipboard.writeText(codes.join("\n"));
+      this.service.setCopiedCodes();
       this.snackBar.open("Backup codes copied to clipboard.");
     }
   }
 
   downloadCodes() {
     this.download("glitchtip-backup.txt", this.service.codes().join("\n"));
+    this.service.setCopiedCodes();
   }
 
   verifyBackupCode() {
-    // const code = this.backupCodeForm.get("backupCode")?.value;
-    // if (this.backupCodeForm.valid && code) {
-    //   this.service.verifyBackupCode(code).subscribe();
-    // }
+    const code = this.backupCodeForm.get("backupCode")?.value;
+    if (this.backupCodeForm.valid && code) {
+      lastValueFrom(this.service.setRecoveryCodes(code));
+    }
   }
 
   private download(filename: string, text: string) {

@@ -12,7 +12,7 @@ import { AuthTokensService, AuthTokensState } from "../auth-tokens.service";
 import { StatefulBaseComponent } from "src/app/shared/stateful-service/stateful-base.component";
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
 import { MatInputModule } from "@angular/material/input";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -32,14 +32,12 @@ import { MatCardModule } from "@angular/material/card";
     MatIconModule,
     MatDividerModule,
     MatFormFieldModule,
-    NgIf,
     ReactiveFormsModule,
     MatInputModule,
     MatCheckboxModule,
-    NgFor,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class NewTokenComponent
   extends StatefulBaseComponent<AuthTokensState, AuthTokensService>

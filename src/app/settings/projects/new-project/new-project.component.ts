@@ -23,7 +23,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatInputModule } from "@angular/material/input";
 import { PlatformPickerComponent } from "../platform-picker/platform-picker.component";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 
 @Component({
@@ -35,19 +35,17 @@ import { MatCardModule } from "@angular/material/card";
     MatCardModule,
     MatDialogModule,
     ReactiveFormsModule,
-    NgIf,
     MatFormFieldModule,
     PlatformPickerComponent,
     MatInputModule,
     MatSelectModule,
-    NgFor,
     MatOptionModule,
     MatButtonModule,
     MatTooltipModule,
     MatIconModule,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class NewProjectComponent implements OnInit {
   teams$ = this.teamsService.teams$;

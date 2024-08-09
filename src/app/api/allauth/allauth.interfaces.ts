@@ -117,3 +117,15 @@ export type Authenticator =
 export interface AuthenticatorsResponse extends AllAuthResponse {
   data: Authenticator[];
 }
+
+export interface AuthenticatorTOTPStatusResponse extends AllAuthResponse {
+  data: TOTPAuthenticator;
+}
+
+export interface AuthenticatorTOTPStatusNotFound extends AllAuthResponse {
+  status: 404;
+  meta: {
+    secret: string;
+    totp_url: string;
+  };
+}

@@ -18,7 +18,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { NgIf } from "@angular/common";
+
 
 export class NewAlertErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -46,14 +46,13 @@ export const selectionRequiredValidator: ValidatorFn = (
   styleUrls: ["./alert-form.component.scss"],
   standalone: true,
   imports: [
-    NgIf,
     ReactiveFormsModule,
     MatCheckboxModule,
     MatTooltipModule,
     MatFormFieldModule,
     MatInputModule,
-    LoadingButtonComponent,
-  ],
+    LoadingButtonComponent
+],
 })
 export class AlertFormComponent implements OnInit {
   @Input() loading: boolean | null = false;

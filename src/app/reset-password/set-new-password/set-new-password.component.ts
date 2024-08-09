@@ -9,7 +9,7 @@ import {
 } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf } from "@angular/common";
+
 import { MatCardModule } from "@angular/material/card";
 import { lastValueFrom } from "rxjs";
 import { exhaustMap, map, tap } from "rxjs/operators";
@@ -33,14 +33,13 @@ import { StatefulComponent } from "src/app/shared/stateful-service/signal-state.
   imports: [
     MatCardModule,
     ReactiveFormsModule,
-    NgIf,
     FormErrorComponent,
     MatFormFieldModule,
     MatInputModule,
     InputMatcherDirective,
     LoadingButtonComponent,
-    RouterLink,
-  ],
+    RouterLink
+],
 })
 export class SetNewPasswordComponent extends StatefulComponent<
   ResetPasswordState,

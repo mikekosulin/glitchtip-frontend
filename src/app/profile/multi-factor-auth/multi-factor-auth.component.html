@@ -1,3 +1,5 @@
-<section class="l-body" *ngIf="initialLoadComplete()">
-  <gt-totp></gt-totp>
-</section>
+@if (initialLoadComplete()) {
+  <section class="l-body">
+    <gt-totp></gt-totp>
+  </section>
+}

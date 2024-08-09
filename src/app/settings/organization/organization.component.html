@@ -2,7 +2,7 @@
   <header class="page-header">
     <h1 class="mat-headline-4">General Settings</h1>
   </header>
-  <ng-container *ngIf="activeOrganizationDetail$ | async as activeOrg">
+  @if (activeOrganizationDetail$ | async; as activeOrg) {
     <mat-card>
       <mat-card-header>
         <mat-card-title>General</mat-card-title>
@@ -13,7 +13,9 @@
           <mat-form-field appearance="outline">
             <mat-label>Name</mat-label>
             <input matInput formControlName="name" [value]="activeOrg.name" />
-            <mat-error *ngIf="updateError">{{ updateError }}</mat-error>
+            @if (updateError) {
+              <mat-error>{{ updateError }}</mat-error>
+            }
           </mat-form-field>
           <gt-loading-button
             [disabled]="name?.value === activeOrg.name"
@@ -21,7 +23,7 @@
             color="primary"
             buttonText="Update Name"
             id="update-org"
-          >
+            >
           </gt-loading-button>
         </form>
       </mat-card-content>
@@ -37,7 +39,9 @@
             By deleting this organization, you will lose all data including
             projects and their associated events.
           </p>
-          <mat-error *ngIf="deleteError">{{ deleteError }}</mat-error>
+          @if (deleteError) {
+            <mat-error>{{ deleteError }}</mat-error>
+          }
         </div>
         <gt-loading-button
           data-test
@@ -45,9 +49,9 @@
           [loading]="deleteLoading"
           (click)="removeOrganization(activeOrg.slug, activeOrg.name)"
           id="delete-org"
-        >
+          >
         </gt-loading-button>
       </mat-card-content>
     </mat-card>
-  </ng-container>
+  }
 </section>

@@ -2,5 +2,7 @@
   <button mat-button class="sidenav-toggle">
     <mat-icon>menu</mat-icon>
   </button>
-  <span class="active-org" *ngIf="activeOrg">{{ activeOrg.name }}</span>
+  @if (activeOrg) {
+    <span class="active-org">{{ activeOrg.name }}</span>
+  }
 </mat-toolbar>

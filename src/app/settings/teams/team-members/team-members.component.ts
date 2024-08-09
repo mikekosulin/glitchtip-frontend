@@ -12,7 +12,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 
 @Component({
@@ -22,17 +22,15 @@ import { MatCardModule } from "@angular/material/card";
   standalone: true,
   imports: [
     MatCardModule,
-    NgIf,
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    NgFor,
     MatOptionModule,
     MatDividerModule,
     RouterLink,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class TeamMembersComponent implements OnInit {
   teamMembers$ = this.teamsService.teamMembers$;

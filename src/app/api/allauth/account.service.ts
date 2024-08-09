@@ -4,6 +4,7 @@ import { allauthBase } from "src/app/constants";
 import {
   AllAuthProvidersResponse,
   AllAuthSessionResponse,
+  AuthenticatorTOTPStatusResponse,
   AuthenticatorsResponse,
 } from "./allauth.interfaces";
 
@@ -52,6 +53,12 @@ export class AccountService {
 
   regenerateRecoveryCodes() {
     return this.http.post(baseUrl + "/authenticators/recovery-codes", null);
+  }
+
+  totpAuthenticatorStatus() {
+    return this.http.get<AuthenticatorTOTPStatusResponse>(
+      baseUrl + "/authenticators/totp",
+    );
   }
 
   generateRecoveryCodes() {

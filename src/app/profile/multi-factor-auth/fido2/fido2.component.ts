@@ -5,7 +5,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
@@ -21,18 +21,16 @@ import { FormErrorComponent } from "../../../shared/forms/form-error/form-error.
   imports: [
     MatCardModule,
     MatDividerModule,
-    NgIf,
     FormErrorComponent,
     LoadingButtonComponent,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    NgFor,
     MatTooltipModule,
     MatIconModule,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class Fido2Component {
   // tooltipDisabled = false;

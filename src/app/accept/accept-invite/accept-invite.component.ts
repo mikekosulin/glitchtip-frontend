@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { map, tap } from "rxjs/operators";
 import { AcceptInviteService } from "src/app/api/accept/accept-invite.service";
@@ -14,7 +14,7 @@ import { AuthService } from "src/app/auth.service";
   styleUrls: ["./accept-invite.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgIf, MatCardModule, MatButtonModule, RouterLink, AsyncPipe],
+  imports: [MatCardModule, MatButtonModule, RouterLink, AsyncPipe],
 })
 export class AcceptInviteComponent implements OnInit {
   isLoggedIn$ = toObservable(this.authService.isAuthenticated);

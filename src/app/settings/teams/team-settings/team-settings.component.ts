@@ -14,7 +14,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-team-settings",
@@ -23,15 +23,14 @@ import { NgIf, AsyncPipe } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatDividerModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class TeamSettingsComponent implements OnInit {
   team$ = this.teamsService.team$;

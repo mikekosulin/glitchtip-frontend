@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
@@ -15,7 +15,7 @@ const knownSocialProviders = [
 @Component({
   standalone: true,
   selector: "gt-auth-svg",
-  imports: [CommonModule, MatProgressSpinnerModule],
+  imports: [MatProgressSpinnerModule],
   templateUrl: "./auth-svg.component.html",
   styleUrls: ["./auth-svg.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,

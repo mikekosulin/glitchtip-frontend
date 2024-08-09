@@ -16,7 +16,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
 import { MatChipsModule } from "@angular/material/chips";
-import { NgFor, NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 
@@ -28,8 +28,6 @@ import { MatCardModule } from "@angular/material/card";
   imports: [
     MatCardModule,
     MatDividerModule,
-    NgFor,
-    NgIf,
     MatChipsModule,
     LoadingButtonComponent,
     MatProgressSpinnerModule,
@@ -38,8 +36,8 @@ import { MatCardModule } from "@angular/material/card";
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ManageEmailsComponent implements OnInit {
   emailAddresses$ = this.emailService.emailAddressesSorted$;

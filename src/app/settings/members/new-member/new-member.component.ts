@@ -17,7 +17,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 
@@ -51,16 +51,14 @@ function emailsValidator(control: AbstractControl): ValidationErrors | null {
     MatCardModule,
     MatDividerModule,
     ReactiveFormsModule,
-    NgIf,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
     MatSelectModule,
-    NgFor,
     MatOptionModule,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class NewMemberComponent implements OnInit, OnDestroy {
   enableUserRegistration$ = this.settingsService.enableUserRegistration$;

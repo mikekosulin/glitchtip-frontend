@@ -1,4 +1,4 @@
-<ng-container *ngIf="commentsListLoading$ | async; else showComments">
+@if (commentsListLoading$ | async) {
   <div class="comments-loading-wrapper">
     <mat-progress-spinner
       [diameter]="33"
@@ -6,40 +6,41 @@
       mode="indeterminate"
     ></mat-progress-spinner>
   </div>
-</ng-container>
-<ng-template #showComments>
+} @else {
   <div class="comment-create-wrapper">
-    <ng-container *ngIf="displayCommentCreation$ | async">
+    @if (displayCommentCreation$ | async) {
       <gt-comment-form
         [loading]="(createCommentLoading$ | async)!"
         (commentSubmitted)="createOrUpdateComment($event)"
       ></gt-comment-form>
-    </ng-container>
+    }
   </div>
-
   <div class="comment-list">
-    <ng-container *ngFor="let comment of comments$ | async; let i = index">
-      <mat-divider class="list-head-divider" *ngIf="i === 0"></mat-divider>
+    @for (comment of comments$ | async; track comment; let i = $index) {
+      @if (i === 0) {
+        <mat-divider class="list-head-divider"></mat-divider>
+      }
       <div class="comment">
-        <ng-container *ngIf="comment.updateMode; else displayComment">
+        @if (comment.updateMode) {
           <gt-comment-form
             [comment]="comment"
             [loading]="comment.updateLoading"
             (cancelUpdate)="cancelCommentUpdateMode($event)"
             (commentSubmitted)="createOrUpdateComment($event)"
           ></gt-comment-form>
-        </ng-container>
-        <ng-template #displayComment>
+        } @else {
           <div class="delete-loading-wrapper">
-            <div class="delete-loading-overlay" *ngIf="comment.deleteLoading">
-              <div class="delete-spinner-wrapper">
-                <mat-progress-spinner
-                  [diameter]="33"
-                  color="primary"
-                  mode="indeterminate"
-                ></mat-progress-spinner>
+            @if (comment.deleteLoading) {
+              <div class="delete-loading-overlay">
+                <div class="delete-spinner-wrapper">
+                  <mat-progress-spinner
+                    [diameter]="33"
+                    color="primary"
+                    mode="indeterminate"
+                  ></mat-progress-spinner>
+                </div>
               </div>
-            </div>
+            }
             <div class="comment-header">
               <div class="comment-user-details">
                 <div>
@@ -53,27 +54,28 @@
                   }}</span>
                 </div>
               </div>
-              <ng-container *ngIf="user$ | async as user">
-                <div
-                  *ngIf="user.id === comment.user.id"
-                  class="comment-edit-options"
-                >
-                  <button
-                    mat-icon-button
-                    class="small-icon-button"
-                    (click)="triggerCommentUpdateMode(comment.id)"
-                  >
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    class="small-icon-button"
-                    (click)="deleteComment(comment.id)"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </ng-container>
+              @if (user$ | async; as user) {
+                @if (user.id === comment.user.id) {
+                  <div
+                    class="comment-edit-options"
+                    >
+                    <button
+                      mat-icon-button
+                      class="small-icon-button"
+                      (click)="triggerCommentUpdateMode(comment.id)"
+                      >
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      class="small-icon-button"
+                      (click)="deleteComment(comment.id)"
+                      >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                }
+              }
             </div>
             <div
               markdown
@@ -81,9 +83,9 @@
               class="comment-markdown"
             ></div>
           </div>
-        </ng-template>
+        }
       </div>
       <mat-divider></mat-divider>
-    </ng-container>
+    }
   </div>
-</ng-template>
+}

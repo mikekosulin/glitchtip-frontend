@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
@@ -9,7 +9,7 @@ import { MatIconModule } from "@angular/material/icon";
 @Component({
   standalone: true,
   selector: "gt-to-do-item",
-  imports: [CommonModule, MatIconModule],
+  imports: [MatIconModule],
   templateUrl: "./to-do-item.component.html",
   styleUrls: ["./to-do-item.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -13,7 +13,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
 import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { AuthService } from "src/app/auth.service";
 import { toObservable } from "@angular/core/rxjs-interop";
@@ -26,19 +26,17 @@ import { toObservable } from "@angular/core/rxjs-interop";
   standalone: true,
   imports: [
     MatSidenavModule,
-    NgIf,
     MatToolbarModule,
     RouterLink,
     MatButtonModule,
     MatMenuModule,
-    NgFor,
     MatDividerModule,
     MatListModule,
     RouterLinkActive,
     MatCardModule,
     MobileNavToolbarComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class MainNavComponent {
   activeOrganizationLoaded = false;

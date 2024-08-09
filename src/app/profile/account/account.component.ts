@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from "@angular/core";
 import { UserService } from "src/app/api/user/user.service";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 import { lastValueFrom, tap } from "rxjs";
@@ -24,11 +24,10 @@ import { AuthService } from "src/app/auth.service";
     ManageEmailsComponent,
     MatCardModule,
     MatDividerModule,
-    NgIf,
     MatFormFieldModule,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class AccountComponent implements OnDestroy {
   userDeleteLoading$ = this.userService.userDeleteLoading$;

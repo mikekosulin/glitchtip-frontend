@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { AsyncPipe, NgIf, NgFor, KeyValuePipe } from "@angular/common";
+import { AsyncPipe, KeyValuePipe } from "@angular/common";
 import {
   MatCard,
   MatCardContent,
@@ -17,8 +17,6 @@ import { EntryDataComponent } from "../shared/entry-data/entry-data.component";
   standalone: true,
   imports: [
     AsyncPipe,
-    NgIf,
-    NgFor,
     MatCard,
     MatCardHeader,
     MatCardTitle,
@@ -26,8 +24,8 @@ import { EntryDataComponent } from "../shared/entry-data/entry-data.component";
     MatDivider,
     MatHint,
     EntryDataComponent,
-    KeyValuePipe,
-  ],
+    KeyValuePipe
+],
   templateUrl: "./system-info.component.html",
   styleUrls: ["./system-info.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,

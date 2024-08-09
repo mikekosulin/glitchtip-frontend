@@ -4,13 +4,13 @@ import {
   input,
   Input,
 } from "@angular/core";
-import { CommonModule } from "@angular/common";
+
 import { MatInputModule } from "@angular/material/input";
 
 @Component({
   standalone: true,
   selector: "gt-form-error",
-  imports: [CommonModule, MatInputModule],
+  imports: [MatInputModule],
   templateUrl: "./form-error.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

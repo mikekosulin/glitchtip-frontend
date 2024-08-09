@@ -7,7 +7,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { NgIf, NgFor, AsyncPipe, KeyValuePipe } from "@angular/common";
+import { AsyncPipe, KeyValuePipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 
@@ -20,17 +20,15 @@ import { MatCardModule } from "@angular/material/card";
   imports: [
     MatCardModule,
     MatDividerModule,
-    NgIf,
     MatProgressSpinnerModule,
     MatButtonToggleModule,
     MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
-    NgFor,
     RouterLink,
     AsyncPipe,
-    KeyValuePipe,
-  ],
+    KeyValuePipe
+],
 })
 export class NotificationsComponent implements OnInit {
   subscribeByDefault$ = this.notificationsService.subscribeByDefault$;

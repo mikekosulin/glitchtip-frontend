@@ -7,7 +7,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-auth-tokens",
@@ -15,16 +15,14 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
   styleUrls: ["./auth-tokens.component.scss"],
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatButtonModule,
     RouterLink,
     MatDividerModule,
-    NgFor,
     CopyInputComponent,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class AuthTokensComponent
   extends StatefulBaseComponent<AuthTokensState, AuthTokensService>

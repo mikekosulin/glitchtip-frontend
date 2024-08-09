@@ -3,28 +3,38 @@
   <div class="instructions" i18n
     >Enter the code from the authenticator app on your mobile device. If you’ve
     lost your device, you may enter one of your recovery codes.</div
-  >
-  <form class="contents-left" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <mat-form-field class="full-width" appearance="outline">
-      <mat-label i18n>Verification Code</mat-label>
-      <input #input matInput formControlName="code" />
-      <mat-error *ngIf="code?.invalid">
-        <span *ngIf="code?.errors?.required" i18n>Required</span>
-        <span *ngIf="code?.errors?.minlength || code?.errors?.maxlength" i18n
-          >Code must be of length 6 or 16</span
-        >
-        <span *ngFor="let serverError of code?.errors?.serverError">{{
-          serverError
-        }}</span>
-      </mat-error>
-    </mat-form-field>
-    <button id="submit" mat-flat-button color="primary" i18n>Login</button>
-    <mat-checkbox class="mat-caption" formControlName="remember"
-      >Don't prompt again on this device</mat-checkbox
     >
-  </form>
+    <form class="contents-left" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label i18n>Verification Code</mat-label>
+        <input #input matInput formControlName="code" />
+        @if (code?.invalid) {
+          <mat-error>
+            @if (code?.errors?.required) {
+              <span i18n>Required</span>
+            }
+            @if (code?.errors?.minlength || code?.errors?.maxlength) {
+              <span i18n
+                >Code must be of length 6 or 16</span
+                >
+              }
+              @for (serverError of code?.errors?.serverError; track serverError) {
+                <span>{{
+                  serverError
+                }}</span>
+              }
+            </mat-error>
+          }
+        </mat-form-field>
+        <button id="submit" mat-flat-button color="primary" i18n>Login</button>
+        <mat-checkbox class="mat-caption" formControlName="remember"
+          >Don't prompt again on this device</mat-checkbox
+          >
+        </form>
 
-  <a *ngIf="hasFIDO2$ | async" [routerLink]="[]" (click)="switchMethod()" i18n
-    >Log in with security key instead</a
-  >
-</div>
+        @if (hasFIDO2$ | async) {
+          <a [routerLink]="[]" (click)="switchMethod()" i18n
+            >Log in with security key instead</a
+            >
+          }
+        </div>

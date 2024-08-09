@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
-import { NgIf } from "@angular/common";
+
 import { lastValueFrom } from "rxjs";
 import { MultiFactorAuthService } from "./multi-factor-auth.service";
 // import { Fido2Component } from "./fido2/fido2.component";
@@ -11,7 +11,7 @@ import { TOTPComponent } from "./totp/totp.component";
   styleUrls: ["./multi-factor-auth.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgIf, TOTPComponent],
+  imports: [TOTPComponent],
 })
 export class MultiFactorAuthComponent implements OnInit {
   initialLoadComplete = this.service.initialLoadComplete;

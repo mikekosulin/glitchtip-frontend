@@ -12,13 +12,14 @@ import {
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import * as QRCode from "qrcode";
+import QRCode from "qrcode";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonModule } from "@angular/material/button";
-import { NgIf } from "@angular/common";
+
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
+import { toObservable } from "@angular/core/rxjs-interop";
 import { MultiFactorAuthService } from "../multi-factor-auth.service";
 import { FormErrorComponent } from "../../../shared/forms/form-error/form-error.component";
 import { ToDoItemComponent } from "../../../shared/to-do-item/to-do-item.component";
@@ -33,7 +34,6 @@ import { BackupCodesComponent } from "./backup-codes/backup-codes.component";
   imports: [
     MatCardModule,
     MatDividerModule,
-    NgIf,
     MatButtonModule,
     BackupCodesComponent,
     ToDoItemComponent,
@@ -46,7 +46,8 @@ import { BackupCodesComponent } from "./backup-codes/backup-codes.component";
 export class TOTPComponent implements OnInit, OnDestroy {
   @ViewChild("canvas", { static: false }) canvas: ElementRef | undefined;
   TOTPAuthenticator = this.service.TOTPAuthenticator;
-  // TOTP$ = this.service.totp$;
+  totp = this.service.totp;
+  totp$ = toObservable(this.totp);
   step = this.service.setupTOTPStage;
   // error$ = this.service.serverError$;
   // copiedCodes$ = this.service.copiedCodes$;
@@ -65,13 +66,11 @@ export class TOTPComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // combineLatest([this.service.totp$, this.step$])
-    //   .pipe(
-    //     filter(([totp, step]) => step === 3 && totp !== null),
-    //     delay(0),
-    //     tap(([totp, _]) => this.generateQRCode(totp!.provisioning_uri))
-    //   )
-    //   .subscribe();
+    this.totp$.subscribe((totp) => {
+      if (totp) {
+        this.generateQRCode(totp.totpUrl);
+      }
+    });
   }
 
   ngOnDestroy() {
