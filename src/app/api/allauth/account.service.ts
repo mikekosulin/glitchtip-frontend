@@ -61,6 +61,13 @@ export class AccountService {
     );
   }
 
+  activateTOTP(code: string) {
+    return this.http.post<AuthenticatorTOTPStatusResponse>(
+      baseUrl + "/authenticators/totp",
+      { code },
+    );
+  }
+
   generateRecoveryCodes() {
     return this.http.get<RecoveryCodes>("/api/0/generate-recovery-codes/");
   }

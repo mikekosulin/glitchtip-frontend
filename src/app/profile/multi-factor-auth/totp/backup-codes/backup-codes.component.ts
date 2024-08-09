@@ -13,6 +13,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MultiFactorAuthService } from "../../multi-factor-auth.service";
 import { FormErrorComponent } from "../../../../shared/forms/form-error/form-error.component";
 import { lastValueFrom } from "rxjs";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "gt-backup-codes",
@@ -43,7 +44,11 @@ export class BackupCodesComponent {
   constructor(
     private service: MultiFactorAuthService,
     private snackBar: MatSnackBar,
-  ) {}
+  ) {
+    toObservable(this.error).subscribe((error) =>
+      this.backupCode?.setErrors({ serverError: [error] }),
+    );
+  }
 
   get backupCode() {
     return this.backupCodeForm.get("backupCode");

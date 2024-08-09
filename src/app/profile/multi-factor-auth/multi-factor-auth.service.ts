@@ -1,12 +1,26 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable, computed } from "@angular/core";
-import { catchError, lastValueFrom, of, tap, throwError } from "rxjs";
+import {
+  catchError,
+  exhaustMap,
+  lastValueFrom,
+  of,
+  tap,
+  throwError,
+} from "rxjs";
 import { AccountService } from "src/app/api/allauth/account.service";
 import {
+  AllAuthError,
+  AllAuthHttpErrorResponse,
   Authenticator,
   AuthenticatorTOTPStatusNotFound,
   TOTPAuthenticator,
 } from "src/app/api/allauth/allauth.interfaces";
+import { handleAllAuthErrorResponse } from "src/app/api/allauth/allauth.utils";
+import {
+  messagesLookup,
+  reduceParamErrors,
+} from "src/app/api/allauth/errorMessages";
 import { SERVER_ERROR } from "src/app/constants";
 import { APIState } from "src/app/shared/shared.interfaces";
 import { StatefulService } from "src/app/shared/stateful-service/signal-state.service";
@@ -16,7 +30,8 @@ export interface MFAState extends APIState {
   authenticators: Authenticator[];
   setupTOTPStage: number;
   tempRecoveryCodes: string[];
-  error: string | null;
+  error: string | null; // Simplistic error, not from allauth
+  errors: AllAuthError[];
   copiedCodes: boolean;
   totp: {
     secret: string;
@@ -31,6 +46,7 @@ const initialState: MFAState = {
   setupTOTPStage: 1,
   tempRecoveryCodes: [],
   error: null,
+  errors: [],
   copiedCodes: false,
   totp: null,
 };
@@ -43,6 +59,12 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
   loading = computed(() => this.state().loading);
   setupTOTPStage = computed(() => this.state().setupTOTPStage);
   error = computed(() => this.state().error);
+  formErrors = computed(() =>
+    messagesLookup(this.state().errors.filter((err) => !err.param)),
+  );
+  fieldErrors = computed(() =>
+    reduceParamErrors(this.state().errors.filter((err) => err.param)),
+  );
   copiedCodes = computed(() => this.state().copiedCodes);
   totp = computed(() => this.state().totp);
   TOTPAuthenticator = computed(
@@ -73,20 +95,7 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
     const setupTOTPStage = this.setupTOTPStage();
     if (setupTOTPStage === 1) {
       lastValueFrom(this.generateRecoveryCodes());
-    } else if (setupTOTPStage === 2) {
-      lastValueFrom(
-        this.accountService.totpAuthenticatorStatus().pipe(
-          catchError((err: HttpErrorResponse) => {
-            if (err.status === 404) {
-              const resp = err.error as AuthenticatorTOTPStatusNotFound;
-              this.setState({
-                totp: { secret: resp.meta.secret, totpUrl: resp.meta.totp_url },
-              });
-            }
-            return of(undefined);
-          }),
-        ),
-      );
+    } else if (setupTOTPStage === 3) {
     }
     this.setState({ setupTOTPStage: setupTOTPStage + 1 });
   }
@@ -108,6 +117,43 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
     this.setState({ copiedCodes: true });
   }
 
+  getTOTPStatus() {
+    return this.accountService.totpAuthenticatorStatus().pipe(
+      catchError((err: HttpErrorResponse) => {
+        if (err.status === 404) {
+          const resp = err.error as AuthenticatorTOTPStatusNotFound;
+          this.setState({
+            totp: { secret: resp.meta.secret, totpUrl: resp.meta.totp_url },
+          });
+        }
+        return of(undefined);
+      }),
+    );
+  }
+
+  activateTOTP(code: string) {
+    this.setState({ loading: true });
+    return this.accountService.activateTOTP(code).pipe(
+      tap(() =>
+        this.state.update((state) => ({
+          ...state,
+          loading: false,
+          setupTOTPStage: state.setupTOTPStage + 1,
+        })),
+      ),
+      catchError((err: AllAuthHttpErrorResponse) => {
+        this.setState({
+          loading: false,
+          errors: handleAllAuthErrorResponse(err),
+        });
+        if ([400, 500].includes(err.status)) {
+          return of(undefined);
+        }
+        return throwError(() => err);
+      }),
+    );
+  }
+
   setRecoveryCodes(code: string) {
     this.setState({ loading: true });
     return this.accountService.setRecoveryCodes(code).pipe(
@@ -118,6 +164,7 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
           setupTOTPStage: state.setupTOTPStage + 1,
         })),
       ),
+      exhaustMap(() => this.getTOTPStatus()),
       catchError((err: HttpErrorResponse) => {
         if (err.status === 400) {
           this.setState({ error: err.error.detail });

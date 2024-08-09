@@ -36,6 +36,9 @@
         @if (backupCode?.errors?.minlength || backupCode?.errors?.maxlength) {
         <span i18n>Code must be 8 digits</span>
         }
+        @if (backupCode?.errors?.serverError) {
+        <span i18n>{{ backupCode?.errors?.serverError }}</span>
+        }
       </mat-error>
       }
     </mat-form-field>
