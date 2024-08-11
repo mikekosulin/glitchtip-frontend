@@ -1,11 +1,10 @@
 import { Component, ChangeDetectionStrategy, OnInit } from "@angular/core";
-import { LoginService } from "../login.service";
 import { RouterLink } from "@angular/router";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatButtonModule } from "@angular/material/button";
-import { FormErrorComponent } from "../../shared/forms/form-error/form-error.component";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { AsyncPipe } from "@angular/common";
+import { FormErrorComponent } from "../../shared/forms/form-error/form-error.component";
+import { LoginService } from "../login.service";
 
 @Component({
   selector: "gt-login-fido2",
@@ -19,13 +18,12 @@ import { AsyncPipe } from "@angular/common";
     MatButtonModule,
     MatCheckboxModule,
     RouterLink,
-    AsyncPipe
-],
+  ],
 })
 export class LoginFido2Component implements OnInit {
-  useTOTP$ = this.loginService.useTOTP$;
+  useTOTP = false; //this.loginService.useTOTP;
   // error$ = this.loginService.error$;
-  authInProg$ = this.loginService.authInProg$;
+  authInProg = false; //this.loginService.authInProg;
 
   constructor(private loginService: LoginService) {}
 
@@ -42,6 +40,6 @@ export class LoginFido2Component implements OnInit {
   }
 
   toggleRemember(event: boolean) {
-    this.loginService.toggleRemember(event);
+    // this.loginService.toggleRemember(event);
   }
 }

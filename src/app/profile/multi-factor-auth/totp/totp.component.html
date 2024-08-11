@@ -6,7 +6,7 @@
   <mat-card-content>
     @if (TOTPAuthenticator()) {
     <p i18n>TOTP authentication is currently enabled on your account.</p>
-    <button mat-flat-button color="primary" i18n>Disable TOTP</button>
+    <button mat-flat-button color="primary" i18n (click)="deactivateTOTP()">Disable TOTP</button>
     <gt-backup-codes></gt-backup-codes>
     } @else {
     <p class="mat-h3" i18n>Make your account more secure by requiring a time-based one time

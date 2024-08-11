@@ -44,6 +44,14 @@ export class AuthService {
       );
   }
 
+  mfaAuthenticate(code: string) {
+    return this.authenticationService
+      .mfaAuthenticate(code)
+      .pipe(
+        tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
+      );
+  }
+
   signup(email: string, password: string) {
     return this.authenticationService
       .signup(email, password)

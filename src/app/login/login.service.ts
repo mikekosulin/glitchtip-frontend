@@ -1,11 +1,12 @@
 import { Injectable, computed } from "@angular/core";
-import { ValidAuth } from "../api/auth/auth.interfaces";
 import { catchError, of, tap, throwError } from "rxjs";
 import { APIState } from "../shared/shared.interfaces";
 import { AuthService } from "../auth.service";
 import {
   AllAuthError,
   AllAuthHttpErrorResponse,
+  AllAuthLoginNotAuthResponse,
+  AuthFlow,
 } from "../api/allauth/allauth.interfaces";
 import {
   messagesLookup,
@@ -16,29 +17,35 @@ import { StatefulService } from "../shared/stateful-service/signal-state.service
 
 export interface LoginState extends APIState {
   errors: AllAuthError[];
-  validAuth: ValidAuth[] | null;
-  useTOTP: boolean;
-  authInProg: boolean;
+  validAuth: null;
   rememberRequest: boolean;
+  authFlows: AuthFlow[] | null;
+  preferTOTP: boolean; // User selected totp/recovery over webauthn
 }
 
 const initialState: LoginState = {
   loading: false,
   errors: [],
   validAuth: null,
-  useTOTP: false,
-  authInProg: false,
   rememberRequest: false,
+  authFlows: null,
+  preferTOTP: false,
 };
 
 @Injectable({
   providedIn: "root",
 })
 export class LoginService extends StatefulService<LoginState> {
-  useTOTP$ = of(false);
-  authInProg$ = of(false);
-  hasFIDO2$ = of(false);
-  requiresMFA$ = of(false);
+  mfaAuthenticate = computed(() =>
+    this.state().authFlows?.find(
+      (authFlow) => authFlow.id === "mfa_authenticate",
+    ),
+  );
+  hasWebAuthn = computed(
+    () => this.mfaAuthenticate()?.types?.includes("webauthn") || false,
+  );
+  requiresMfa = computed(() => !!this.mfaAuthenticate());
+  preferTOTP = computed(() => this.state().preferTOTP && this.hasWebAuthn());
   loading = computed(() => this.state().loading);
   formErrors = computed(() =>
     messagesLookup(
@@ -68,14 +75,21 @@ export class LoginService extends StatefulService<LoginState> {
     return this.authService.login(email, password).pipe(
       tap(() => this.state.set(initialState)),
       catchError((err: AllAuthHttpErrorResponse) => {
-        this.setState({
-          loading: false,
-          errors: handleAllAuthErrorResponse(err),
-        });
-        if ([400, 500].includes(err.status)) {
+        if (err.status === 401) {
+          // Valid login, but not yet authenticated
+          const resp = err.error as AllAuthLoginNotAuthResponse;
+          this.setState({ loading: false, authFlows: resp.data.flows });
           return of(undefined);
+        } else {
+          this.setState({
+            loading: false,
+            errors: handleAllAuthErrorResponse(err),
+          });
+          if ([400, 500].includes(err.status)) {
+            return of(undefined);
+          }
+          return throwError(() => err);
         }
-        return throwError(() => err);
       }),
     );
   }
@@ -85,18 +99,13 @@ export class LoginService extends StatefulService<LoginState> {
     this.authService.providerRedirect(provider, callbackUrl, "login");
   }
 
-  promptForMFA(validAuth: ValidAuth[]) {}
-
-  switchMethod() {}
+  switchMethod() {
+    this.state.update((state) => ({ ...state, preferTOTP: !state.preferTOTP }));
+  }
 
   authenticateFIDO2() {}
 
-  toggleRemember(request = false) {}
-
-  authenticateTOTP(code: string, remember = false) {}
-
-  /** Create a new trusted device key, save as cookie */
-  rememberDevice() {}
-
-  authenticateBackupCode(code: string) {}
+  totpAuthenticate(code: string) {
+    return this.authService.mfaAuthenticate(code);
+  }
 }

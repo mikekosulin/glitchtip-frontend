@@ -9,7 +9,7 @@ import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { CommonModule } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 import { lastValueFrom, tap } from "rxjs";
 import { toObservable } from "@angular/core/rxjs-interop";
@@ -31,7 +31,7 @@ import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
   styleUrls: ["./login.component.scss"],
   standalone: true,
   imports: [
-    CommonModule,
+    AsyncPipe,
     MatCardModule,
     LoginTotpComponent,
     LoginFido2Component,
@@ -51,9 +51,10 @@ export class LoginComponent extends StatefulComponent<
 > {
   formErrors = this.service.formErrors;
   loading = this.service.loading;
-  requiresMFA$ = this.service.requiresMFA$;
-  hasFido2$ = this.service.hasFIDO2$;
-  useTOTP$ = this.service.useTOTP$;
+  requiresMFA = this.service.requiresMfa;
+  hasFido2 = false;
+  // hasFido2$ = this.service.hasFIDO2;
+  useTOTP = false; //this.service.useTOTP;
   form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", [

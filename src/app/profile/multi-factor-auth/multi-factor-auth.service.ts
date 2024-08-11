@@ -29,7 +29,8 @@ export interface MFAState extends APIState {
   initialLoadComplete: boolean;
   authenticators: Authenticator[];
   setupTOTPStage: number;
-  tempRecoveryCodes: string[];
+  recoveryCodes: string[];
+  regenCodes: boolean;
   error: string | null; // Simplistic error, not from allauth
   errors: AllAuthError[];
   copiedCodes: boolean;
@@ -44,7 +45,8 @@ const initialState: MFAState = {
   loading: false,
   authenticators: [],
   setupTOTPStage: 1,
-  tempRecoveryCodes: [],
+  recoveryCodes: [],
+  regenCodes: false,
   error: null,
   errors: [],
   copiedCodes: false,
@@ -73,7 +75,8 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
         | TOTPAuthenticator
         | undefined,
   );
-  codes = computed(() => this.state().tempRecoveryCodes);
+  codes = computed(() => this.state().recoveryCodes);
+  regenCodes = computed(() => this.state().regenCodes);
   constructor(private accountService: AccountService) {
     super(initialState);
   }
@@ -103,7 +106,20 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
   generateRecoveryCodes() {
     return this.accountService
       .generateRecoveryCodes()
-      .pipe(tap((resp) => this.setState({ tempRecoveryCodes: resp.codes })));
+      .pipe(tap((resp) => this.setState({ recoveryCodes: resp.codes })));
+  }
+
+  regenerateRecoveryCodes() {
+    this.setState({ loading: true, regenCodes: false });
+    return this.accountService.regenerateRecoveryCodes().pipe(
+      tap((resp) =>
+        this.setState({
+          loading: false,
+          regenCodes: true,
+          recoveryCodes: resp.data.unused_codes,
+        }),
+      ),
+    );
   }
 
   decrementTOTPStage() {
@@ -152,6 +168,13 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
         return throwError(() => err);
       }),
     );
+  }
+
+  deactivateTOTP() {
+    this.setState({ loading: true });
+    return this.accountService
+      .deactivateTOTP()
+      .pipe(exhaustMap(() => this.getAuthenticators()));
   }
 
   setRecoveryCodes(code: string) {

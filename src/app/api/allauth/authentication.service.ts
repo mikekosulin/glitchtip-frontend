@@ -67,6 +67,13 @@ export class AuthenticationService {
     });
   }
 
+  mfaAuthenticate(code: string) {
+    return this.http.post<AllAuthSessionResponse>(
+      baseUrl + "/2fa/authenticate",
+      { code },
+    );
+  }
+
   signup(email: string, password: string) {
     return this.http.post<AllAuthSessionResponse>(baseUrl + "/signup", {
       email,

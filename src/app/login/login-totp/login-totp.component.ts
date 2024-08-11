@@ -13,14 +13,14 @@ import {
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { LoginService } from "../login.service";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatButtonModule } from "@angular/material/button";
-import { AsyncPipe } from "@angular/common";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { LoginService } from "../login.service";
 import { FormErrorComponent } from "../../shared/forms/form-error/form-error.component";
+import { lastValueFrom, tap } from "rxjs";
 
 @Component({
   selector: "gt-login-totp",
@@ -36,13 +36,10 @@ import { FormErrorComponent } from "../../shared/forms/form-error/form-error.com
     MatButtonModule,
     MatCheckboxModule,
     RouterLink,
-    AsyncPipe
-],
+  ],
 })
 export class LoginTotpComponent implements OnInit, AfterViewInit {
   @ViewChild("input") input!: ElementRef;
-  // error$ = this.loginService.error$;
-  hasFIDO2$ = this.loginService.hasFIDO2$;
   form = new FormGroup({
     code: new FormControl("", [
       Validators.required,
@@ -55,6 +52,7 @@ export class LoginTotpComponent implements OnInit, AfterViewInit {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private loginService: LoginService,
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -79,15 +77,15 @@ export class LoginTotpComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit() {
-    // if (this.form.valid && this.code) {
-    //   const code = this.code.value!;
-    //   if (code.length === 6) {
-    //     this.loginService
-    //       .authenticateTOTP(code, this.form.value.remember === true)
-    //       .subscribe();
-    //   } else {
-    //     this.loginService.authenticateBackupCode(code).subscribe();
-    //   }
-    // }
+    if (this.form.valid && this.code) {
+      const code = this.code.value!;
+      if (code.length === 6) {
+        lastValueFrom(
+          this.loginService
+            .totpAuthenticate(code)
+            .pipe(tap(() => this.router.navigate(["/"]))),
+        );
+      }
+    }
   }
 }

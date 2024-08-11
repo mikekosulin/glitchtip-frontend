@@ -3,9 +3,11 @@ import { Injectable } from "@angular/core";
 import { allauthBase } from "src/app/constants";
 import {
   AllAuthProvidersResponse,
+  AllAuthResponse,
   AllAuthSessionResponse,
   AuthenticatorTOTPStatusResponse,
   AuthenticatorsResponse,
+  RegenerateRecoveryCodesResponse,
 } from "./allauth.interfaces";
 
 const baseUrl = allauthBase + "/account";
@@ -52,7 +54,10 @@ export class AccountService {
   }
 
   regenerateRecoveryCodes() {
-    return this.http.post(baseUrl + "/authenticators/recovery-codes", null);
+    return this.http.post<RegenerateRecoveryCodesResponse>(
+      baseUrl + "/authenticators/recovery-codes",
+      null,
+    );
   }
 
   totpAuthenticatorStatus() {
@@ -66,6 +71,10 @@ export class AccountService {
       baseUrl + "/authenticators/totp",
       { code },
     );
+  }
+
+  deactivateTOTP() {
+    return this.http.delete<AllAuthResponse>(baseUrl + "/authenticators/totp");
   }
 
   generateRecoveryCodes() {

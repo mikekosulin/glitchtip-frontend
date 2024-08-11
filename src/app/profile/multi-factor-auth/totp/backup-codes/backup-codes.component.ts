@@ -33,6 +33,7 @@ export class BackupCodesComponent {
   TOTPAuthenticator = this.service.TOTPAuthenticator;
   error = this.service.error;
   copiedCodes = this.service.copiedCodes;
+  regenCodes = this.service.regenCodes;
   backupCodeForm = new FormGroup({
     backupCode: new FormControl("", [
       Validators.required,
@@ -55,7 +56,7 @@ export class BackupCodesComponent {
   }
 
   startRegenCodes() {
-    lastValueFrom(this.service.generateRecoveryCodes());
+    lastValueFrom(this.service.regenerateRecoveryCodes());
   }
 
   copyCodes() {

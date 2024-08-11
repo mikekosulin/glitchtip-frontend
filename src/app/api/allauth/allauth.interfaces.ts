@@ -62,6 +62,32 @@ export interface AllAuthProvidersResponse extends AllAuthLoginResponse {
   data: ProviderAccount[];
 }
 
+type FlowID =
+  | "verify_email"
+  | "login"
+  | "signup"
+  | "provider_redirect"
+  | "provider_signup"
+  | "provider_token"
+  | "mfa_authenticate"
+  | "reauthenticate"
+  | "mfa_reauthenticate";
+
+export interface AuthFlow {
+  id: FlowID;
+  providers?: Provider[];
+  is_pending?: boolean;
+  types?: string[];
+}
+
+export interface AllAuthLoginNotAuthResponse extends AllAuthResponse {
+  status: 401;
+  data: {
+    flows: AuthFlow[];
+  };
+  meta: AuthenticationMeta;
+}
+
 export interface AllAuthGetEmailVerificationResponse extends AllAuthResponse {
   data: any;
   meta: any;
@@ -102,6 +128,10 @@ interface RecoveryCodesAuthenticator extends AuthenticatorBase {
   unused_code_count: number;
 }
 
+interface RecoveryCodesAuthenticatorCodes extends RecoveryCodesAuthenticator {
+  unused_codes: string[];
+}
+
 interface WebAuthnAuthenticator extends AuthenticatorBase {
   type: "webauthn";
   id: number;
@@ -128,4 +158,8 @@ export interface AuthenticatorTOTPStatusNotFound extends AllAuthResponse {
     secret: string;
     totp_url: string;
   };
+}
+
+export interface RegenerateRecoveryCodesResponse extends AllAuthResponse {
+  data: RecoveryCodesAuthenticatorCodes;
 }
