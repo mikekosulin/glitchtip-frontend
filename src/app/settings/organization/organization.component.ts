@@ -1,10 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import {
-  UntypedFormControl,
-  UntypedFormGroup,
-  ReactiveFormsModule,
-} from "@angular/forms";
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { tap, take } from "rxjs/operators";
 import { OrganizationsService } from "../../api/organizations/organizations.service";
 import { Organization } from "src/app/api/organizations/organizations.interface";
@@ -27,8 +23,8 @@ import { AsyncPipe } from "@angular/common";
     MatFormFieldModule,
     MatInputModule,
     LoadingButtonComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class OrganizationComponent implements OnInit {
   activeOrganizationDetail$ =
@@ -37,13 +33,13 @@ export class OrganizationComponent implements OnInit {
   updateLoading = false;
   deleteError = "";
   deleteLoading = false;
-  form = new UntypedFormGroup({
-    name: new UntypedFormControl(""),
+  form = new FormGroup({
+    name: new FormControl(""),
   });
 
   constructor(
     private organizationsService: OrganizationsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -56,11 +52,11 @@ export class OrganizationComponent implements OnInit {
             this.organizationsService.retrieveOrganizations().toPromise();
             this.organizationsService.refreshOrganizationDetail().subscribe();
           }
-        })
+        }),
       )
       .toPromise();
     this.activeOrganizationDetail$.subscribe((data) =>
-      data ? this.form.patchValue({ name: data.name }) : undefined
+      data ? this.form.patchValue({ name: data.name }) : undefined,
     );
   }
 
@@ -71,25 +67,25 @@ export class OrganizationComponent implements OnInit {
   updateOrganization() {
     this.updateLoading = true;
     this.organizationsService
-      .updateOrganization(this.form.value.name)
+      .updateOrganization(this.form.value.name!)
       .subscribe(
         (org: Organization) => {
           this.updateLoading = false;
           this.snackBar.open(
-            `The name of your organization has been updated to ${org.name}`
+            `The name of your organization has been updated to ${org.name}`,
           );
         },
         (err) => {
           this.updateLoading = false;
           this.updateError = `${err.statusText}: ${err.status}`;
-        }
+        },
       );
   }
 
   removeOrganization(slug: string, name: string) {
     if (
       window.confirm(
-        `Are you sure you want to remove ${name}? You will permanently lose all projects and teams associated with it.`
+        `Are you sure you want to remove ${name}? You will permanently lose all projects and teams associated with it.`,
       )
     ) {
       this.deleteLoading = true;
@@ -97,13 +93,13 @@ export class OrganizationComponent implements OnInit {
         () => {
           this.deleteLoading = false;
           this.snackBar.open(
-            `You have successfully deleted ${name} from your organizations`
+            `You have successfully deleted ${name} from your organizations`,
           );
         },
         (err) => {
           this.deleteLoading = false;
           this.deleteError = "Error: " + err.statusText;
-        }
+        },
       );
     }
   }

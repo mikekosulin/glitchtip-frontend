@@ -2,29 +2,29 @@
   <section class="mat-typography">
     @if (frame.filename || frame.module) {
       <span
-      [matTooltip]="
-        frame.absPath
-          ? showToolTip(frame.absPath, frame.filename, frame.module)
-          : ''
-      "
-        >
+        [matTooltip]="
+          frame.absPath
+            ? showToolTip(frame.absPath, frame.filename, frame.module)
+            : ''
+        "
+      >
         {{
-        displayFilenameOrModule(frame.platform, frame.filename, frame.module)
+          displayFilenameOrModule(frame.platform, frame.filename, frame.module)
         }}
       </span>
       @if (
         displayFilenameOrModule(
-        frame.platform,
-        frame.filename,
-        frame.module
+          frame.platform,
+          frame.filename,
+          frame.module
         ) === frame.module && frame.filename
-        ) {
+      ) {
         <a
           class="help-button small-icon-button"
           mat-icon-button
           matTooltipPosition="above"
           [matTooltip]="frame.filename"
-          >
+        >
           <mat-icon>help</mat-icon>
         </a>
       }
@@ -33,19 +33,19 @@
           [href]="frame.absPath ? sanitizeUrl(frame.absPath) : null"
           target="_blank"
           >{{ frame.absPath ? sanitizeUrl(frame.absPath) : null }}</a
-          >
-        }
-        @if (frame?.function) {
-          in
-        }
+        >
       }
-      <!-- TODO: Add rawFunction conditions-->
       @if (frame.function) {
-        {{ frame.function }}
+        in
       }
-      @if (frame.lineNo && frame.lineNo > 0) {
-        at line {{ frame.lineNo
-        }}@if (frame.colNo && frame.colNo > 0) {
+    }
+    <!-- TODO: Add rawFunction conditions-->
+    @if (frame.function) {
+      {{ frame.function }}
+    }
+    @if (frame.lineNo && frame.lineNo > 0) {
+      at line {{ frame.lineNo }}
+      @if (frame.colNo && frame.colNo > 0) {
         :{{ frame.colNo }}
       }
     }

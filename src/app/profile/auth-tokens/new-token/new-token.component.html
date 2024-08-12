@@ -6,75 +6,65 @@
         mat-flat-button
         [routerLink]="['/profile', 'auth-tokens']"
         aria-label="Back to auth tokens"
-        >
+      >
         <mat-icon>keyboard_arrow_left</mat-icon>
         Auth Tokens
       </a>
     </mat-card-header>
     <mat-divider></mat-divider>
     <mat-card-content>
-      <mat-error class="server-error"
-        >@if (createError$ | async) {
-        <span>{{
-          createError$ | async
-        }}</span>
-        }</mat-error
+      <mat-error class="server-error">
+        @if (createError$ | async) {
+          <span>{{ createError$ | async }}</span>
+        }
+      </mat-error>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <h2>Label</h2>
+        <p>Give your token a name, so you can easily identify it.</p>
+        <mat-form-field appearance="outline">
+          <mat-label>Label</mat-label>
+          <input matInput type="text" formControlName="label" />
+          <mat-error>
+            @if (label.errors?.required) {
+              <span>Create a label for your auth token</span>
+            }
+            @if (label.errors?.serverErrorLabel) {
+              <span>{{ label.errors?.serverErrorLabel }}</span>
+            }
+          </mat-error>
+        </mat-form-field>
+        <h2>Scopes</h2>
+        <p>Set the kind of access you want this token to have to your app.</p>
+        <mat-checkbox
+          class="select-all"
+          #selectAllCheckbox
+          (change)="bulkModifyScopes()"
         >
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <h2>Label</h2>
-          <p>Give your token a name, so you can easily identify it.</p>
-          <mat-form-field appearance="outline">
-            <mat-label>Label</mat-label>
-            <input matInput type="text" formControlName="label" />
-            <mat-error
-              >@if (label?.errors?.required) {
-              <span
-                >Create a label for your auth token</span
-                >
-                }@if (label?.errors?.serverErrorLabel) {
-                <span>{{
-                  label.errors?.serverErrorLabel
-                }}</span>
-                }</mat-error
-                >
-              </mat-form-field>
-              <h2>Scopes</h2>
-              <p>Set the kind of access you want this token to have to your app.</p>
-              <mat-checkbox
-                class="select-all"
-                #selectAllCheckbox
-                (change)="bulkModifyScopes()"
-                >
-                <b>Full Access</b>
+          <b>Full Access</b>
+        </mat-checkbox>
+        <ul>
+          @for (scope of scopes.controls; track scope; let i = $index) {
+            <li formArrayName="scopes">
+              <mat-checkbox [formControlName]="i">
+                {{ scopeOptions[i] }}
               </mat-checkbox>
-              <ul>
-                @for (scope of scopes.controls; track scope; let i = $index) {
-                  <li
-                    formArrayName="scopes"
-                    >
-                    <mat-checkbox [formControlName]="i">
-                      {{ scopeOptions[i] }}
-                    </mat-checkbox>
-                  </li>
-                }
-              </ul>
+            </li>
+          }
+        </ul>
 
-              <mat-error class="checkbox-error"
-                >@if (scopes?.errors?.selectOne) {
-                <span
-                  >Select at least one scope</span
-                  >
-                  }@if (scopes?.errors?.serverErrorScopes) {
-                  <span>{{
-                    scopes.errors?.serverErrorScopes
-                  }}</span>
-                  }</mat-error
-                  >
-                  <gt-loading-button
-                    [loading]="(createLoading$ | async) === true"
-                    buttonText="Create Token"
-                  ></gt-loading-button>
-                </form>
-              </mat-card-content>
-            </mat-card>
-          </section>
+        <mat-error class="checkbox-error">
+          @if (scopes.errors?.selectOne) {
+            <span>Select at least one scope</span>
+          }
+          @if (scopes.errors?.serverErrorScopes) {
+            <span>{{ scopes.errors?.serverErrorScopes }}</span>
+          }
+        </mat-error>
+        <gt-loading-button
+          [loading]="(createLoading$ | async) === true"
+          buttonText="Create Token"
+        ></gt-loading-button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

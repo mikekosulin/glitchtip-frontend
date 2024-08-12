@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
+  FormGroup,
+  FormControl,
   Validators,
   AbstractControl,
   ValidationErrors,
@@ -29,7 +29,7 @@ function validateEmails(emails: string) {
       .map((email) =>
         Validators.email({
           value: email.replace(/\s/g, ""),
-        } as AbstractControl)
+        } as AbstractControl),
       )
       .find((email) => email !== null) === undefined
   );
@@ -57,8 +57,8 @@ function emailsValidator(control: AbstractControl): ValidationErrors | null {
     MatSelectModule,
     MatOptionModule,
     LoadingButtonComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class NewMemberComponent implements OnInit, OnDestroy {
   enableUserRegistration$ = this.settingsService.enableUserRegistration$;
@@ -67,17 +67,17 @@ export class NewMemberComponent implements OnInit, OnDestroy {
     this.organizationsService.filteredOrganizationTeams$;
   errors$ = this.organizationsService.errors$;
   loading$ = this.organizationsService.loading$;
-  form = new UntypedFormGroup({
-    email: new UntypedFormControl("", [Validators.required, emailsValidator]),
-    role: new UntypedFormControl("", [Validators.required]),
-    teams: new UntypedFormControl([]),
+  form = new FormGroup({
+    email: new FormControl("", [Validators.required, emailsValidator]),
+    role: new FormControl("", [Validators.required]),
+    teams: new FormControl([]),
   });
-  formRole = this.form.get("role") as UntypedFormControl;
+  formRole = this.form.get("role") as FormControl;
 
   constructor(
     private organizationsService: OrganizationsService,
     private route: ActivatedRoute,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
   ) {}
 
   ngOnInit(): void {
@@ -100,11 +100,11 @@ export class NewMemberComponent implements OnInit, OnDestroy {
       const role = this.form.get("role")?.value;
       const teams = this.form.get("teams")?.value;
 
-      emails.split(",").map((email: string) => {
+      emails!.split(",").map((email: string) => {
         this.organizationsService.inviteOrganizationMembers(
           email.replace(/\s/g, ""),
-          teams,
-          role
+          teams!,
+          role! as any,
         );
       });
     }

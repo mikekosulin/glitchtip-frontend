@@ -2,15 +2,13 @@
   [formGroup]="commentForm"
   #formDirective="ngForm"
   (ngSubmit)="submitComment(formDirective)"
-  >
+>
   <mat-form-field appearance="outline">
     <mat-label>{{ comment ? "Update Comment" : "Comment" }}</mat-label>
     <textarea matInput formControlName="text" required></textarea>
     <mat-hint>Markdown supported</mat-hint>
-    @if (commentFormText?.errors?.required) {
-      <mat-error>
-        Enter comment text.
-      </mat-error>
+    @if (commentFormText.errors?.required) {
+      <mat-error> Enter comment text. </mat-error>
     }
   </mat-form-field>
   <div class="buttons">
@@ -19,7 +17,7 @@
       [disabled]="disableSubmissions()"
       [loading]="loading"
       [buttonText]="comment ? 'Update Comment' : 'Submit Comment'"
-      >
+    >
     </gt-loading-button>
     @if (comment) {
       <button
@@ -27,7 +25,7 @@
         (click)="emitCancelUpdate()"
         mat-stroked-button
         >Cancel</button
-        >
-      }
-    </div>
-  </form>
+      >
+    }
+  </div>
+</form>

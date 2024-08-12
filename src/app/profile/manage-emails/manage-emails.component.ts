@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
+  FormGroup,
+  FormControl,
   Validators,
   FormGroupDirective,
   AbstractControl,
@@ -36,8 +36,8 @@ import { MatCardModule } from "@angular/material/card";
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class ManageEmailsComponent implements OnInit {
   emailAddresses$ = this.emailService.emailAddressesSorted$;
@@ -65,19 +65,19 @@ export class ManageEmailsComponent implements OnInit {
     this.emailAddresses$.pipe(
       map((emails) => {
         const matchedEmail = emails.find(
-          (email) => email.email === control.value
+          (email) => email.email === control.value,
         );
         return matchedEmail ? { matchesExistingValidator: true } : null;
       }),
-      first()
+      first(),
     );
 
   // tslint:disable:member-ordering
-  form = new UntypedFormGroup({
-    email_address: new UntypedFormControl(
+  form = new FormGroup({
+    email_address: new FormControl(
       "",
       [Validators.email, Validators.required],
-      this.matchesExistingValidator
+      this.matchesExistingValidator,
     ),
   });
 
@@ -95,7 +95,7 @@ export class ManageEmailsComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.emailService.addEmailAddress(this.form.value.email_address);
+      this.emailService.addEmailAddress(this.form.value.email_address!);
     }
   }
 }

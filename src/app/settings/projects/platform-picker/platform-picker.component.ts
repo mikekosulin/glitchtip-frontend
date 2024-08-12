@@ -15,7 +15,7 @@ import { flattenedPlatforms } from "./platforms-for-picker";
 import categoryList from "./platform-categories";
 import {
   ControlValueAccessor,
-  UntypedFormControl,
+  FormControl,
   NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
 } from "@angular/forms";
@@ -48,8 +48,8 @@ import { AsyncPipe } from "@angular/common";
     MatButtonModule,
     MatExpansionModule,
     MatListModule,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class PlatformPickerComponent implements ControlValueAccessor {
   @Input() template: "buttons" | "dropdown" = "buttons";
@@ -71,7 +71,7 @@ export class PlatformPickerComponent implements ControlValueAccessor {
   categoryList = categoryList;
 
   /** Used to filter project names */
-  filterPlatformInput = new UntypedFormControl();
+  filterPlatformInput = new FormControl();
 
   /** Projects that are filtered via the text field form control */
   filteredPlatforms$ = this.filterPlatformInput.valueChanges.pipe(
@@ -83,10 +83,10 @@ export class PlatformPickerComponent implements ControlValueAccessor {
       } else {
         this.setSelected(this.allTabIndex);
         return this.platforms.filter((platform) =>
-          platform.id.toLowerCase().includes(value.toLowerCase())
+          platform.id.toLowerCase().includes(value.toLowerCase()),
         );
       }
-    })
+    }),
   );
 
   selected = 0;
@@ -101,14 +101,14 @@ export class PlatformPickerComponent implements ControlValueAccessor {
 
   getPlatformId(platformFromCategoryList: string) {
     const platformInfo = this.platforms.find(
-      (platform) => platform.id === platformFromCategoryList
+      (platform) => platform.id === platformFromCategoryList,
     );
     return platformInfo ? platformInfo.id : "other";
   }
 
   getPlatformName(platformFromCategoryList: string) {
     const platformInfo = this.platforms.find(
-      (platform) => platform.id === platformFromCategoryList
+      (platform) => platform.id === platformFromCategoryList,
     );
     return platformInfo ? platformInfo.name : platformFromCategoryList;
   }
@@ -147,7 +147,7 @@ export class PlatformPickerComponent implements ControlValueAccessor {
   }
 
   @HostListener("document:keydown", ["$event"]) onKeydownHandler(
-    event: KeyboardEvent
+    event: KeyboardEvent,
   ) {
     if (this.expansionPanel?.expanded) {
       if (event.key === "ArrowDown") {
@@ -162,14 +162,14 @@ export class PlatformPickerComponent implements ControlValueAccessor {
 
   moveDown() {
     const projectButtons = Array.from(
-      document.querySelectorAll(".picker-button")
+      document.querySelectorAll(".picker-button"),
     ) as HTMLElement[];
     // If the text box is focused, go to the first item
     if (this.filterInput?.nativeElement.id === document.activeElement?.id) {
       projectButtons[0]?.focus();
     } else {
       const indexOfActive = projectButtons.findIndex(
-        (button) => button.id === document.activeElement?.id
+        (button) => button.id === document.activeElement?.id,
       );
       if (indexOfActive <= projectButtons.length - 2) {
         // If we're in the list items, go to the next list item
@@ -183,10 +183,10 @@ export class PlatformPickerComponent implements ControlValueAccessor {
 
   moveUp() {
     const projectButtons = Array.from(
-      document.querySelectorAll(".picker-button")
+      document.querySelectorAll(".picker-button"),
     ) as HTMLElement[];
     const indexOfActive = projectButtons.findIndex(
-      (button) => button.id === document.activeElement?.id
+      (button) => button.id === document.activeElement?.id,
     );
     if (indexOfActive > 0) {
       // If we're in the list items, go to the previous list item
