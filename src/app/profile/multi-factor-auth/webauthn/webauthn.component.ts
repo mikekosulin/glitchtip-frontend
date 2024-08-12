@@ -1,21 +1,26 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
 import { FormErrorComponent } from "../../../shared/forms/form-error/form-error.component";
+import { MultiFactorAuthService } from "../multi-factor-auth.service";
+import { lastValueFrom } from "rxjs";
 
 @Component({
-  selector: "gt-fido2",
-  template: `<span></span>`,
-  // templateUrl: "./fido2.component.html",
-  styleUrls: ["./fido2.component.scss"],
+  selector: "gt-webauthn",
+  templateUrl: "./webauthn.component.html",
+  styleUrls: ["./webauthn.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -29,25 +34,28 @@ import { FormErrorComponent } from "../../../shared/forms/form-error/form-error.
     MatButtonModule,
     MatTooltipModule,
     MatIconModule,
-    AsyncPipe
-],
+  ],
 })
-export class Fido2Component {
+export class WebauthnComponent {
+  stage = this.service.webauthnState;
+  authenticators = [];
+  hasTOTP = this.service.TOTPAuthenticator;
+  error = null;
   // tooltipDisabled = false;
   // TOTPKey$ = this.service.TOTPKey$;
   // FIDO2Keys$ = this.service.FIDO2Keys$;
   // setupFIDO2Stage$ = this.service.setupFIDO2Stage$;
   // error$ = this.service.serverError$;
-  // fido2Form = new UntypedFormGroup({
-  //   fido2Code: new UntypedFormControl("", [Validators.required]),
-  // });
-  constructor() {}
+  form = new FormGroup({
+    code: new FormControl("", [Validators.required]),
+  });
+  constructor(private service: MultiFactorAuthService) {}
   // get fido2Code() {
   //   return this.fido2Form.get("fido2Code");
   // }
-  // activateFido2() {
-  //   this.service.activateFido2().subscribe();
-  // }
+  activateWebauthn() {
+    lastValueFrom(this.service.getWebauthn());
+  }
   // registerFido2() {
   //   const name = this.fido2Form.get("fido2Code")?.value;
   //   if (this.fido2Form.valid && name) {

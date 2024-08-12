@@ -7,6 +7,7 @@ import {
   AllAuthSessionResponse,
   AuthenticatorTOTPStatusResponse,
   AuthenticatorsResponse,
+  GetWebauthnResponse,
   RegenerateRecoveryCodesResponse,
 } from "./allauth.interfaces";
 
@@ -83,5 +84,11 @@ export class AccountService {
 
   setRecoveryCodes(code: string) {
     return this.http.post("/api/0/generate-recovery-codes/", { code });
+  }
+
+  getWebauthn() {
+    return this.http.get<GetWebauthnResponse>(
+      baseUrl + "/authenticators/webauthn",
+    );
   }
 }

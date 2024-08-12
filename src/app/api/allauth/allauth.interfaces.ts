@@ -163,3 +163,9 @@ export interface AuthenticatorTOTPStatusNotFound extends AllAuthResponse {
 export interface RegenerateRecoveryCodesResponse extends AllAuthResponse {
   data: RecoveryCodesAuthenticatorCodes;
 }
+
+export interface GetWebauthnResponse extends AllAuthResponse {
+  data: {
+    creation_options: any;
+  };
+}

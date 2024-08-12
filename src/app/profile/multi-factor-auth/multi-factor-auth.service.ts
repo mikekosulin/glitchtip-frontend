@@ -1,6 +1,10 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable, computed } from "@angular/core";
 import {
+  create,
+  parseCreationOptionsFromJSON,
+} from "@github/webauthn-json/browser-ponyfill";
+import {
   catchError,
   exhaustMap,
   lastValueFrom,
@@ -38,6 +42,7 @@ export interface MFAState extends APIState {
     secret: string;
     totpUrl: string;
   } | null;
+  webauthnStage: number;
 }
 
 const initialState: MFAState = {
@@ -51,6 +56,7 @@ const initialState: MFAState = {
   errors: [],
   copiedCodes: false,
   totp: null,
+  webauthnStage: 1,
 };
 
 @Injectable({
@@ -77,6 +83,8 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
   );
   codes = computed(() => this.state().recoveryCodes);
   regenCodes = computed(() => this.state().regenCodes);
+  webauthnState = computed(() => this.state().webauthnStage);
+
   constructor(private accountService: AccountService) {
     super(initialState);
   }
@@ -197,6 +205,20 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
           return of(undefined);
         }
         return throwError(() => err);
+      }),
+    );
+  }
+
+  getWebauthn() {
+    this.setState({ loading: true, errors: [] });
+    return this.accountService.getWebauthn().pipe(
+      exhaustMap(async (resp) => {
+        return await create(
+          parseCreationOptionsFromJSON(resp.data.creation_options),
+        );
+      }),
+      tap(() => {
+        this.setState({ webauthnStage: 2, loading: false });
       }),
     );
   }
