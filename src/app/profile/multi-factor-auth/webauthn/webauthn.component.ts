@@ -12,10 +12,12 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
+import { lastValueFrom, tap } from "rxjs";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
 import { FormErrorComponent } from "../../../shared/forms/form-error/form-error.component";
 import { MultiFactorAuthService } from "../multi-factor-auth.service";
-import { lastValueFrom } from "rxjs";
+import { checkForOverflow } from "src/app/shared/shared.utils";
 
 @Component({
   selector: "gt-webauthn",
@@ -36,47 +38,57 @@ import { lastValueFrom } from "rxjs";
     MatIconModule,
   ],
 })
-export class WebauthnComponent {
-  stage = this.service.webauthnState;
-  authenticators = [];
+export class WebAuthnComponent {
+  stage = this.service.webAuthnState;
   hasTOTP = this.service.TOTPAuthenticator;
   error = null;
-  // tooltipDisabled = false;
+  authenticators = this.service.webAuthnAuthenticators;
+  tooltipDisabled = false;
   // TOTPKey$ = this.service.TOTPKey$;
   // FIDO2Keys$ = this.service.FIDO2Keys$;
   // setupFIDO2Stage$ = this.service.setupFIDO2Stage$;
   // error$ = this.service.serverError$;
   form = new FormGroup({
-    code: new FormControl("", [Validators.required]),
+    name: new FormControl("", [Validators.required]),
   });
-  constructor(private service: MultiFactorAuthService) {}
-  // get fido2Code() {
-  //   return this.fido2Form.get("fido2Code");
-  // }
-  activateWebauthn() {
+  constructor(
+    private service: MultiFactorAuthService,
+    private snackBar: MatSnackBar,
+  ) {}
+  get name() {
+    return this.form.get("name");
+  }
+  activateWebAuthn() {
     lastValueFrom(this.service.getWebauthn());
   }
-  // registerFido2() {
-  //   const name = this.fido2Form.get("fido2Code")?.value;
-  //   if (this.fido2Form.valid && name) {
-  //     this.service.registerFido2(name).subscribe();
-  //     return EMPTY;
-  //   } else {
-  //     return EMPTY;
-  //   }
-  // }
-  // deleteFido2Key(keyId: number) {
-  //   this.service.deleteKey(keyId, "FIDO2").subscribe();
-  // }
-  // formatDate(lastUsed: string) {
-  //   if (lastUsed) {
-  //     const date = new Date(lastUsed);
-  //     return date.toLocaleDateString();
-  //   } else {
-  //     return "Not yet used";
-  //   }
-  // }
-  // checkIfTooltipIsNecessary($event: Event) {
-  //   this.tooltipDisabled = checkForOverflow($event);
-  // }
+  registerWebAuthn() {
+    const name = this.name?.value;
+    if (this.form.valid && name) {
+      lastValueFrom(
+        this.service
+          .addWebAuthn(name)
+          .pipe(
+            tap(() =>
+              this.snackBar.open(
+                $localize`Your security key has been registered.`,
+              ),
+            ),
+          ),
+      );
+    }
+  }
+  deleteWebAuthn(id: number) {
+    // this.service.dele(keyId, "FIDO2").subscribe();
+  }
+  formatDate(lastUsed?: number) {
+    if (lastUsed) {
+      const date = ((new Date(lastUsed) as any) * 1000) as unknown as Date;
+      return date.toLocaleDateString();
+    } else {
+      return "Not yet used";
+    }
+  }
+  checkIfTooltipIsNecessary($event: Event) {
+    this.tooltipDisabled = checkForOverflow($event);
+  }
 }

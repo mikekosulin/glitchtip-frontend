@@ -5,9 +5,11 @@ import {
   AllAuthGetEmailVerificationResponse,
   AllAuthResponse,
   AllAuthSessionResponse,
+  GetWebAuthnCredentialRequestResponse,
 } from "./allauth.interfaces";
 import { catchError, Observable, of, throwError } from "rxjs";
 import { JsonObject } from "src/app/interface-primitives";
+import { AuthenticationPublicKeyCredential } from "@github/webauthn-json/dist/types/browser-ponyfill";
 
 const baseUrl = allauthBase + "/auth";
 
@@ -141,5 +143,18 @@ export class AuthenticationService {
       callback_url: callbackUrl,
       csrfmiddlewaretoken: getCSRFToken(),
     });
+  }
+
+  getWebAuthnCredentialRequest() {
+    return this.http.get<GetWebAuthnCredentialRequestResponse>(
+      baseUrl + "/webauthn/authenticate",
+    );
+  }
+
+  perform2FAWebAuthn(credential: AuthenticationPublicKeyCredential) {
+    return this.http.post<AllAuthSessionResponse>(
+      baseUrl + "/webauthn/authenticate",
+      { credential },
+    );
   }
 }

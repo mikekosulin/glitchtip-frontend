@@ -1,4 +1,8 @@
 import { HttpErrorResponse } from "@angular/common/http";
+import {
+  CredentialCreationOptionsJSON,
+  CredentialRequestOptionsJSON,
+} from "@github/webauthn-json";
 
 interface AllAuthUser {
   id: number;
@@ -132,7 +136,7 @@ interface RecoveryCodesAuthenticatorCodes extends RecoveryCodesAuthenticator {
   unused_codes: string[];
 }
 
-interface WebAuthnAuthenticator extends AuthenticatorBase {
+export interface WebAuthnAuthenticator extends AuthenticatorBase {
   type: "webauthn";
   id: number;
   name: string;
@@ -166,6 +170,20 @@ export interface RegenerateRecoveryCodesResponse extends AllAuthResponse {
 
 export interface GetWebauthnResponse extends AllAuthResponse {
   data: {
-    creation_options: any;
+    creation_options: CredentialCreationOptionsJSON;
+  };
+}
+
+export interface WebAuthnAuthenticatorResponse extends AllAuthResponse {
+  status: 200;
+  data: WebAuthnAuthenticator;
+  meta: {
+    recovery_codes_generated: boolean;
+  };
+}
+
+export interface GetWebAuthnCredentialRequestResponse extends AllAuthResponse {
+  data: {
+    request_options: CredentialRequestOptionsJSON;
   };
 }

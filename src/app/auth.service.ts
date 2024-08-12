@@ -1,6 +1,10 @@
 import { Injectable, effect, signal } from "@angular/core";
 import { HttpErrorResponse } from "@angular/common/http";
-import { EMPTY, catchError, of, tap, throwError } from "rxjs";
+import { EMPTY, catchError, exhaustMap, of, tap, throwError } from "rxjs";
+import {
+  get,
+  parseRequestOptionsFromJSON,
+} from "@github/webauthn-json/browser-ponyfill";
 import { AuthenticationService } from "./api/allauth/authentication.service";
 
 const initialIsAuthenticated = localStorage.getItem("isAuthenticated");
@@ -50,6 +54,20 @@ export class AuthService {
       .pipe(
         tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
       );
+  }
+
+  webAuthnAuthenticate() {
+    return this.authenticationService.getWebAuthnCredentialRequest().pipe(
+      exhaustMap(async (resp) => {
+        return await get(
+          parseRequestOptionsFromJSON(resp.data.request_options),
+        );
+      }),
+      exhaustMap((credential) => {
+        return this.authenticationService.perform2FAWebAuthn(credential);
+      }),
+      tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
+    );
   }
 
   signup(email: string, password: string) {

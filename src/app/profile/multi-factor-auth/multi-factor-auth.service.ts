@@ -1,10 +1,12 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable, computed } from "@angular/core";
 import {
+  RegistrationPublicKeyCredential,
   create,
   parseCreationOptionsFromJSON,
 } from "@github/webauthn-json/browser-ponyfill";
 import {
+  EMPTY,
   catchError,
   exhaustMap,
   lastValueFrom,
@@ -19,6 +21,7 @@ import {
   Authenticator,
   AuthenticatorTOTPStatusNotFound,
   TOTPAuthenticator,
+  WebAuthnAuthenticator,
 } from "src/app/api/allauth/allauth.interfaces";
 import { handleAllAuthErrorResponse } from "src/app/api/allauth/allauth.utils";
 import {
@@ -42,7 +45,8 @@ export interface MFAState extends APIState {
     secret: string;
     totpUrl: string;
   } | null;
-  webauthnStage: number;
+  webAuthnStage: number;
+  credential: RegistrationPublicKeyCredential | null;
 }
 
 const initialState: MFAState = {
@@ -56,7 +60,8 @@ const initialState: MFAState = {
   errors: [],
   copiedCodes: false,
   totp: null,
-  webauthnStage: 1,
+  webAuthnStage: 1,
+  credential: null,
 };
 
 @Injectable({
@@ -81,9 +86,15 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
         | TOTPAuthenticator
         | undefined,
   );
+  webAuthnAuthenticators = computed(
+    () =>
+      this.state().authenticators.filter(
+        (auth) => auth.type === "webauthn",
+      ) as WebAuthnAuthenticator[],
+  );
   codes = computed(() => this.state().recoveryCodes);
   regenCodes = computed(() => this.state().regenCodes);
-  webauthnState = computed(() => this.state().webauthnStage);
+  webAuthnState = computed(() => this.state().webAuthnStage);
 
   constructor(private accountService: AccountService) {
     super(initialState);
@@ -211,15 +222,43 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
 
   getWebauthn() {
     this.setState({ loading: true, errors: [] });
-    return this.accountService.getWebauthn().pipe(
+    return this.accountService.getWebAuthn().pipe(
       exhaustMap(async (resp) => {
         return await create(
           parseCreationOptionsFromJSON(resp.data.creation_options),
         );
       }),
-      tap(() => {
-        this.setState({ webauthnStage: 2, loading: false });
+      tap((credential) => {
+        this.setState({ webAuthnStage: 2, loading: false, credential });
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.warn(err);
+        this.setState({
+          error: $localize`Device activation was unsuccessful.`,
+          webAuthnStage: 1,
+        });
+        return EMPTY;
       }),
     );
+  }
+
+  addWebAuthn(name: string) {
+    const credential = this.state().credential;
+    if (credential) {
+      this.setState({ loading: true, errors: [] });
+      return this.accountService
+        .addWebAuthn(name, this.state().credential)
+        .pipe(
+          tap(() => {
+            this.clearState();
+          }),
+        );
+    }
+    return EMPTY;
+  }
+
+  deleteWebAuthn(id: number) {
+    this.setState({ loading: true, errors: [] });
+    return this.accountService.deleteWebAuthn([id]);
   }
 }

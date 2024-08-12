@@ -5,16 +5,16 @@ import {
   FormGroup,
   FormControl,
 } from "@angular/forms";
-import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
-import { lastValueFrom, tap } from "rxjs";
+import { lastValueFrom } from "rxjs";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
-import { LoginFido2Component } from "./login-fido2/login-fido2.component";
+import { LoginWebAuthnComponent } from "./login-webauthn/login-webauthn.component";
 import { LoginTotpComponent } from "./login-totp/login-totp.component";
 import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
 import { mapFormErrors } from "../shared/forms/form.utils";
@@ -34,7 +34,7 @@ import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
     AsyncPipe,
     MatCardModule,
     LoginTotpComponent,
-    LoginFido2Component,
+    LoginWebAuthnComponent,
     LoadingButtonComponent,
     ReactiveFormsModule,
     FormErrorComponent,
@@ -52,9 +52,8 @@ export class LoginComponent extends StatefulComponent<
   formErrors = this.service.formErrors;
   loading = this.service.loading;
   requiresMFA = this.service.requiresMfa;
-  hasFido2 = false;
-  // hasFido2$ = this.service.hasFIDO2;
-  useTOTP = false; //this.service.useTOTP;
+  hasWebAuthn = this.service.hasWebAuthn;
+  preferTOTP = this.service.preferTOTP;
   form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", [
@@ -71,8 +70,6 @@ export class LoginComponent extends StatefulComponent<
     protected service: LoginService,
     private settings: SettingsService,
     private acceptService: AcceptInviteService,
-    private router: Router,
-    private route: ActivatedRoute,
   ) {
     toObservable(service.fieldErrors).subscribe((fieldErrors) =>
       mapFormErrors(fieldErrors, this.form),
@@ -94,31 +91,8 @@ export class LoginComponent extends StatefulComponent<
 
   onSubmit() {
     if (this.form.valid) {
-      const nextUrl = this.route.snapshot.queryParamMap.get("next");
-      // if (nextUrl) {
-      //   this.authService.setRedirectUrl(nextUrl);
-      // }
       lastValueFrom(
-        this.service
-          .login(this.form.value.email!, this.form.value.password!)
-          .pipe(
-            tap((resp) => {
-              if (resp) {
-                if (resp.meta.is_authenticated) {
-                  if (nextUrl) {
-                    if (nextUrl.startsWith("/admin/")) {
-                      // Load Django, not JS router
-                      window.location.href = nextUrl;
-                    } else {
-                      this.router.navigateByUrl(nextUrl);
-                    }
-                  } else {
-                    this.router.navigate(["/"]);
-                  }
-                }
-              }
-            }),
-          ),
+        this.service.login(this.form.value.email!, this.form.value.password!),
       );
     }
   }

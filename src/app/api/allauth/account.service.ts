@@ -9,6 +9,7 @@ import {
   AuthenticatorsResponse,
   GetWebauthnResponse,
   RegenerateRecoveryCodesResponse,
+  WebAuthnAuthenticatorResponse,
 } from "./allauth.interfaces";
 
 const baseUrl = allauthBase + "/account";
@@ -86,9 +87,35 @@ export class AccountService {
     return this.http.post("/api/0/generate-recovery-codes/", { code });
   }
 
-  getWebauthn() {
+  getWebAuthn() {
     return this.http.get<GetWebauthnResponse>(
       baseUrl + "/authenticators/webauthn",
+    );
+  }
+
+  addWebAuthn(name: string, credential: any) {
+    return this.http.post<WebAuthnAuthenticatorResponse>(
+      baseUrl + "/authenticators/webauthn",
+      {
+        name,
+        credential,
+      },
+    );
+  }
+
+  deleteWebAuthn(ids: number[]) {
+    return this.http.delete<AllAuthResponse>(
+      baseUrl + "/authenticators/webauthn",
+      {
+        body: { authenticators: ids },
+      },
+    );
+  }
+
+  renameWebAuthn(id: number, name: string) {
+    return this.http.put<WebAuthnAuthenticatorResponse>(
+      baseUrl + "/authenticators/webauthn",
+      { id, name },
     );
   }
 }

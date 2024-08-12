@@ -12,7 +12,7 @@
         <span i18n>Required</span>
         }
         @if (code?.errors?.minlength || code?.errors?.maxlength) {
-        <span i18n>Code must be of length 6 or 16</span>
+        <span i18n>Code must be of length 6, 8, or 16</span>
         }
         @for (serverError of code?.errors?.serverError; track serverError) {
         <span>{{

@@ -14,6 +14,7 @@ import {
 } from "../api/allauth/errorMessages";
 import { handleAllAuthErrorResponse } from "../api/allauth/allauth.utils";
 import { StatefulService } from "../shared/stateful-service/signal-state.service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 export interface LoginState extends APIState {
   errors: AllAuthError[];
@@ -62,7 +63,11 @@ export class LoginService extends StatefulService<LoginState> {
     ),
   );
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
     super(initialState);
   }
 
@@ -74,6 +79,11 @@ export class LoginService extends StatefulService<LoginState> {
     this.setState({ loading: true, errors: [] });
     return this.authService.login(email, password).pipe(
       tap(() => this.state.set(initialState)),
+      tap((resp) => {
+        if (resp.meta.is_authenticated) {
+          this.redirect();
+        }
+      }),
       catchError((err: AllAuthHttpErrorResponse) => {
         if (err.status === 401) {
           // Valid login, but not yet authenticated
@@ -94,6 +104,20 @@ export class LoginService extends StatefulService<LoginState> {
     );
   }
 
+  redirect() {
+    const nextUrl = this.route.snapshot.queryParamMap.get("next");
+    if (nextUrl) {
+      if (nextUrl.startsWith("/admin/")) {
+        // Load Django, not JS router
+        window.location.href = nextUrl;
+      } else {
+        this.router.navigateByUrl(nextUrl);
+      }
+    } else {
+      this.router.navigate(["/"]);
+    }
+  }
+
   socialLogin(provider: string, callbackUrl = "/") {
     this.setState({ loading: true, errors: [] });
     this.authService.providerRedirect(provider, callbackUrl, "login");
@@ -103,9 +127,23 @@ export class LoginService extends StatefulService<LoginState> {
     this.state.update((state) => ({ ...state, preferTOTP: !state.preferTOTP }));
   }
 
-  authenticateFIDO2() {}
+  webAuthnAuthenticate() {
+    return this.authService.webAuthnAuthenticate().pipe(
+      tap((resp) => {
+        if (resp.meta.is_authenticated) {
+          this.redirect();
+        }
+      }),
+    );
+  }
 
   totpAuthenticate(code: string) {
-    return this.authService.mfaAuthenticate(code);
+    return this.authService.mfaAuthenticate(code).pipe(
+      tap((resp) => {
+        if (resp.meta.is_authenticated) {
+          this.redirect();
+        }
+      }),
+    );
   }
 }

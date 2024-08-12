@@ -3,13 +3,14 @@ import { RouterLink } from "@angular/router";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { lastValueFrom } from "rxjs";
 import { FormErrorComponent } from "../../shared/forms/form-error/form-error.component";
 import { LoginService } from "../login.service";
 
 @Component({
-  selector: "gt-login-fido2",
-  templateUrl: "./login-fido2.component.html",
-  styleUrls: ["./login-fido2.component.scss"],
+  selector: "gt-login-webauthn",
+  templateUrl: "./login-webauthn.component.html",
+  styleUrls: ["./login-webauthn.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
@@ -20,7 +21,7 @@ import { LoginService } from "../login.service";
     RouterLink,
   ],
 })
-export class LoginFido2Component implements OnInit {
+export class LoginWebAuthnComponent implements OnInit {
   useTOTP = false; //this.loginService.useTOTP;
   // error$ = this.loginService.error$;
   authInProg = false; //this.loginService.authInProg;
@@ -32,11 +33,11 @@ export class LoginFido2Component implements OnInit {
   }
 
   ngOnInit() {
-    // this.loginService.authenticateFIDO2().subscribe();
+    lastValueFrom(this.loginService.webAuthnAuthenticate());
   }
 
   retryAuth() {
-    // this.loginService.authenticateFIDO2().subscribe();
+    lastValueFrom(this.loginService.webAuthnAuthenticate());
   }
 
   toggleRemember(event: boolean) {

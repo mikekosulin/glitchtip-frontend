@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { lastValueFrom } from "rxjs";
 import { MultiFactorAuthService } from "./multi-factor-auth.service";
 import { TOTPComponent } from "./totp/totp.component";
-import { WebauthnComponent } from "./webauthn/webauthn.component";
+import { WebAuthnComponent } from "./webauthn/webauthn.component";
 
 @Component({
   selector: "gt-multi-factor-auth",
@@ -11,7 +11,7 @@ import { WebauthnComponent } from "./webauthn/webauthn.component";
   styleUrls: ["./multi-factor-auth.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [TOTPComponent, WebauthnComponent],
+  imports: [TOTPComponent, WebAuthnComponent],
 })
 export class MultiFactorAuthComponent implements OnInit {
   initialLoadComplete = this.service.initialLoadComplete;
