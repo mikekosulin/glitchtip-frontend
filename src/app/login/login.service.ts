@@ -37,11 +37,15 @@ const initialState: LoginState = {
   providedIn: "root",
 })
 export class LoginService extends StatefulService<LoginState> {
-  mfaAuthenticate = computed(() =>
-    this.state().authFlows?.find(
-      (authFlow) => authFlow.id === "mfa_authenticate",
-    ),
-  );
+  mfaAuthenticate = computed(() => {
+    let authMfaFlows = this.authService.mfaFlows();
+    const authFlows = this.state().authFlows;
+
+    if (authFlows) {
+      authMfaFlows = authMfaFlows.concat(authFlows);
+    }
+    return authMfaFlows.find((authFlow) => authFlow.id === "mfa_authenticate");
+  });
   hasWebAuthn = computed(
     () => this.mfaAuthenticate()?.types?.includes("webauthn") || false,
   );
@@ -73,6 +77,12 @@ export class LoginService extends StatefulService<LoginState> {
 
   reset() {
     this.state.set(initialState);
+  }
+
+  /** User initiated request to bail on MFA */
+  restartLogin() {
+    this.setState({ authFlows: null });
+    this.authService.restartLogin();
   }
 
   login(email: string, password: string) {

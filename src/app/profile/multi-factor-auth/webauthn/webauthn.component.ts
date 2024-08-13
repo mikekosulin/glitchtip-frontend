@@ -78,11 +78,11 @@ export class WebAuthnComponent {
     }
   }
   deleteWebAuthn(id: number) {
-    // this.service.dele(keyId, "FIDO2").subscribe();
+    lastValueFrom(this.service.deleteWebAuthn(id));
   }
   formatDate(lastUsed?: number) {
     if (lastUsed) {
-      const date = ((new Date(lastUsed) as any) * 1000) as unknown as Date;
+      const date = new Date(lastUsed * 1000);
       return date.toLocaleDateString();
     } else {
       return "Not yet used";

@@ -39,6 +39,7 @@ import { lastValueFrom, tap } from "rxjs";
   ],
 })
 export class LoginTotpComponent implements OnInit, AfterViewInit {
+  hasWebAuthn = this.loginService.hasWebAuthn;
   @ViewChild("input") input!: ElementRef;
   form = new FormGroup({
     code: new FormControl("", [
@@ -74,6 +75,10 @@ export class LoginTotpComponent implements OnInit, AfterViewInit {
 
   switchMethod() {
     this.loginService.switchMethod();
+  }
+
+  restartLogin() {
+    this.loginService.restartLogin();
   }
 
   onSubmit() {

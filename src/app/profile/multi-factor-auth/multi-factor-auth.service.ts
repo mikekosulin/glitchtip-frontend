@@ -105,7 +105,7 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
     return this.accountService.listAuthenticators().pipe(
       tap((resp) => {
         this.setState({
-          loading: false,
+          ...initialState,
           initialLoadComplete: true,
           authenticators: resp.data,
         });
@@ -176,6 +176,7 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
           setupTOTPStage: state.setupTOTPStage + 1,
         })),
       ),
+      exhaustMap(() => this.getAuthenticators()),
       catchError((err: AllAuthHttpErrorResponse) => {
         this.setState({
           loading: false,
@@ -252,6 +253,7 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
           tap(() => {
             this.clearState();
           }),
+          exhaustMap(() => this.getAuthenticators()),
         );
     }
     return EMPTY;
@@ -259,6 +261,8 @@ export class MultiFactorAuthService extends StatefulService<MFAState> {
 
   deleteWebAuthn(id: number) {
     this.setState({ loading: true, errors: [] });
-    return this.accountService.deleteWebAuthn([id]);
+    return this.accountService
+      .deleteWebAuthn([id])
+      .pipe(exhaustMap(() => this.getAuthenticators()));
   }
 }

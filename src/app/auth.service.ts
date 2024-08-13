@@ -1,11 +1,23 @@
-import { Injectable, effect, signal } from "@angular/core";
+import { Injectable, WritableSignal, effect, signal } from "@angular/core";
 import { HttpErrorResponse } from "@angular/common/http";
-import { EMPTY, catchError, exhaustMap, of, tap, throwError } from "rxjs";
+import {
+  EMPTY,
+  catchError,
+  exhaustMap,
+  lastValueFrom,
+  of,
+  tap,
+  throwError,
+} from "rxjs";
 import {
   get,
   parseRequestOptionsFromJSON,
 } from "@github/webauthn-json/browser-ponyfill";
 import { AuthenticationService } from "./api/allauth/authentication.service";
+import {
+  AllAuthLoginNotAuthResponse,
+  AuthFlow,
+} from "./api/allauth/allauth.interfaces";
 
 const initialIsAuthenticated = localStorage.getItem("isAuthenticated");
 
@@ -16,7 +28,7 @@ export class AuthService {
   readonly isAuthenticated = signal(
     initialIsAuthenticated ? initialIsAuthenticated === "true" : true,
   );
-  //   readonly redirectUrl: WritableSignal<string | null> = signal(null);
+  readonly mfaFlows: WritableSignal<AuthFlow[]> = signal([]);
 
   constructor(private authenticationService: AuthenticationService) {
     effect(() => {
@@ -33,6 +45,10 @@ export class AuthService {
       catchError((err: HttpErrorResponse) => {
         if (err.status === 401) {
           this.isAuthenticated.set(false);
+          const resp = err.error as AllAuthLoginNotAuthResponse;
+          if (resp.data.flows.find((flow) => flow.id === "mfa_authenticate")) {
+            this.mfaFlows.set(resp.data.flows);
+          }
           return of(err);
         }
         return throwError(() => new Error("Unable to check auth status"));
@@ -46,6 +62,11 @@ export class AuthService {
       .pipe(
         tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
       );
+  }
+
+  restartLogin() {
+    lastValueFrom(this.authenticationService.logout());
+    this.mfaFlows.set([]);
   }
 
   mfaAuthenticate(code: string) {
@@ -90,6 +111,7 @@ export class AuthService {
     return this.authenticationService.logout().pipe(
       catchError((err: HttpErrorResponse) => {
         this.isAuthenticated.set(false);
+        this.mfaFlows.set([]);
         if (err.status === 401) {
           return of(EMPTY);
         }

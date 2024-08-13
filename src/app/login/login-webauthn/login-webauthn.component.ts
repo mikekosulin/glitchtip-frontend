@@ -40,6 +40,10 @@ export class LoginWebAuthnComponent implements OnInit {
     lastValueFrom(this.loginService.webAuthnAuthenticate());
   }
 
+  restartLogin() {
+    this.loginService.restartLogin();
+  }
+
   toggleRemember(event: boolean) {
     // this.loginService.toggleRemember(event);
   }

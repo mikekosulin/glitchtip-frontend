@@ -56,7 +56,9 @@ export const routes: Routes = [
       (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
         inject(AuthService).isAuthenticated()
           ? true
-          : createUrlTreeFromSnapshot(next, ["/", "login"]),
+          : createUrlTreeFromSnapshot(next, ["/", "login"], {
+              next: state.url,
+            }),
     ],
     children: [
       {
