@@ -32,8 +32,8 @@ import { MatCardModule } from "@angular/material/card";
     MatTooltipModule,
     LoadingButtonComponent,
     MatProgressSpinnerModule,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class ProjectAlertsComponent implements OnInit, OnDestroy {
   @ViewChild("newAlert") newAlertRef?: AlertFormComponent;
@@ -54,7 +54,7 @@ export class ProjectAlertsComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertsService: ProjectAlertsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +101,7 @@ export class ProjectAlertsComponent implements OnInit, OnDestroy {
       quantity: number;
       uptime: boolean;
     },
-    alert: ProjectAlert
+    alert: ProjectAlert,
   ): void {
     if (alert.id) {
       this.alertsService.updateAlertProperties(
@@ -109,7 +109,7 @@ export class ProjectAlertsComponent implements OnInit, OnDestroy {
         event.quantity,
         event.uptime,
         alert.id,
-        alert.alertRecipients
+        alert.alertRecipients,
       );
     }
   }
