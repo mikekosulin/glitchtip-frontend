@@ -26,7 +26,7 @@ const initialIsAuthenticated = localStorage.getItem("isAuthenticated");
 })
 export class AuthService {
   readonly isAuthenticated = signal(
-    initialIsAuthenticated ? initialIsAuthenticated === "true" : true,
+    initialIsAuthenticated === "true" ? true : false,
   );
   readonly mfaFlows: WritableSignal<AuthFlow[]> = signal([]);
 
@@ -62,6 +62,10 @@ export class AuthService {
       .pipe(
         tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
       );
+  }
+
+  expireAuth() {
+    this.isAuthenticated.set(false);
   }
 
   restartLogin() {

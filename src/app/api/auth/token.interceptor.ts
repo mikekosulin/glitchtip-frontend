@@ -14,7 +14,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
           error.error.detail ===
             "Authentication credentials were not provided.")
       ) {
-        console.log(auth); // .expireAuth();
+        auth.expireAuth();
         return EMPTY;
       } else if (error.status === 0) {
         // Probably an aborted request
