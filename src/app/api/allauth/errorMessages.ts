@@ -12,6 +12,9 @@ const messageMap: ErrorCodes = {
   email_password_mismatch: {
     password: $localize`Unable to log in with provided credentials.`,
   },
+  enter_current_password: {
+    current_password: $localize`Your current password is incorrect.`,
+  },
 };
 
 /** Look up translated message if it exists, fallback to server message */
