@@ -1,11 +1,11 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import {
   Validators,
   ReactiveFormsModule,
   FormGroup,
   FormControl,
 } from "@angular/forms";
-import { RouterLink } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -24,6 +24,7 @@ import { SettingsService } from "../api/settings.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
 import { SocialApp } from "../api/user/user.interfaces";
 import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: "gt-login",
@@ -45,10 +46,10 @@ import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
     RouterLink,
   ],
 })
-export class LoginComponent extends StatefulComponent<
-  LoginState,
-  LoginService
-> {
+export class LoginComponent
+  extends StatefulComponent<LoginState, LoginService>
+  implements OnInit
+{
   formErrors = this.service.formErrors;
   loading = this.service.loading;
   requiresMFA = this.service.requiresMfa;
@@ -70,11 +71,23 @@ export class LoginComponent extends StatefulComponent<
     protected service: LoginService,
     private settings: SettingsService,
     private acceptService: AcceptInviteService,
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) {
     toObservable(service.fieldErrors).subscribe((fieldErrors) =>
       mapFormErrors(fieldErrors, this.form),
     );
     super(service);
+  }
+
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (params["socialLoginError"]) {
+        this.snackBar.open(
+          $localize`Unknown problem using Social Authentication`,
+        );
+      }
+    });
   }
 
   get email() {
