@@ -6,6 +6,7 @@ import {
   createUrlTreeFromSnapshot,
 } from "@angular/router";
 import { Injectable, inject } from "@angular/core";
+import { map } from "rxjs";
 import { LoggedInComponent } from "./logged-in.component";
 import { alreadyLoggedInGuard } from "./guards/already-logged-in.guard";
 import { OrganizationsService } from "./api/organizations/organizations.service";
@@ -54,13 +55,18 @@ export const routes: Routes = [
     component: LoggedInComponent,
     canActivate: [
       (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) =>
-        inject(AuthService).isAuthenticated()
-          ? true
-          : createUrlTreeFromSnapshot(
+        inject(AuthService).loggedInGuard$.pipe(
+          map((isLoggedIn) => {
+            if (isLoggedIn) {
+              return true;
+            }
+            return createUrlTreeFromSnapshot(
               next,
               ["/", "login"],
               state.url !== "/" ? { next: state.url } : {},
-            ),
+            );
+          }),
+        ),
     ],
     children: [
       {

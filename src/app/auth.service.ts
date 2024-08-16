@@ -3,8 +3,11 @@ import { HttpErrorResponse } from "@angular/common/http";
 import {
   EMPTY,
   catchError,
+  combineLatest,
   exhaustMap,
+  filter,
   lastValueFrom,
+  map,
   of,
   tap,
   throwError,
@@ -18,6 +21,7 @@ import {
   AllAuthLoginNotAuthResponse,
   AuthFlow,
 } from "./api/allauth/allauth.interfaces";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 const initialIsAuthenticated = localStorage.getItem("isAuthenticated");
 
@@ -25,10 +29,20 @@ const initialIsAuthenticated = localStorage.getItem("isAuthenticated");
   providedIn: "root",
 })
 export class AuthService {
-  readonly isAuthenticated = signal(
-    initialIsAuthenticated === "true" ? true : false,
-  );
+  readonly isAuthenticated = signal(initialIsAuthenticated === "true");
+  readonly initialized = signal(false);
   readonly mfaFlows: WritableSignal<AuthFlow[]> = signal([]);
+  /**
+   * Emit isAuthenticated immediately when true or else after initialized is set
+   * This ensures social auth checks are done during login without delaying logged in users
+   */
+  loggedInGuard$ = combineLatest([
+    toObservable(this.isAuthenticated),
+    toObservable(this.initialized),
+  ]).pipe(
+    filter(([isLoggedIn, initialized]) => isLoggedIn || initialized),
+    map(([isLoggedIn]) => isLoggedIn),
+  );
 
   constructor(private authenticationService: AuthenticationService) {
     effect(() => {
@@ -41,7 +55,10 @@ export class AuthService {
 
   checkServerAuthStatus() {
     return this.authenticationService.getAuthenticationStatus().pipe(
-      tap((resp) => this.isAuthenticated.set(resp.meta.is_authenticated)),
+      tap((resp) => {
+        this.isAuthenticated.set(resp.meta.is_authenticated);
+        this.initialized.set(true);
+      }),
       catchError((err: HttpErrorResponse) => {
         if (err.status === 401) {
           this.isAuthenticated.set(false);
@@ -49,8 +66,10 @@ export class AuthService {
           if (resp.data.flows.find((flow) => flow.id === "mfa_authenticate")) {
             this.mfaFlows.set(resp.data.flows);
           }
+          this.initialized.set(true);
           return of(err);
         }
+        this.initialized.set(true);
         return throwError(() => new Error("Unable to check auth status"));
       }),
     );
