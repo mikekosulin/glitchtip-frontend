@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
+
+import { lastValueFrom } from "rxjs";
 import { MultiFactorAuthService } from "./multi-factor-auth.service";
-import { Fido2Component } from "./fido2/fido2.component";
 import { TOTPComponent } from "./totp/totp.component";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { WebAuthnComponent } from "./webauthn/webauthn.component";
 
 @Component({
   selector: "gt-multi-factor-auth",
@@ -10,13 +11,13 @@ import { NgIf, AsyncPipe } from "@angular/common";
   styleUrls: ["./multi-factor-auth.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgIf, TOTPComponent, Fido2Component, AsyncPipe],
+  imports: [TOTPComponent, WebAuthnComponent],
 })
 export class MultiFactorAuthComponent implements OnInit {
-  initialLoad$ = this.service.initialLoad$;
+  initialLoadComplete = this.service.initialLoadComplete;
   constructor(private service: MultiFactorAuthService) {}
 
   ngOnInit() {
-    this.service.getUserKeys().subscribe();
+    lastValueFrom(this.service.getAuthenticators());
   }
 }

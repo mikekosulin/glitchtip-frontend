@@ -13,7 +13,7 @@ import {
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
-import { NgFor, NgIf } from "@angular/common";
+
 import { MatFormFieldModule } from "@angular/material/form-field";
 
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
@@ -30,13 +30,11 @@ import { slugRegex } from "src/app/shared/validators";
     MatDialogModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    NgFor,
     MatInputModule,
     SlugifyDirective,
-    NgIf,
     LoadingButtonComponent,
-    MatButtonModule,
-  ],
+    MatButtonModule
+],
 })
 export class NewTeamComponent {
   loading = false;

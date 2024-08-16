@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import {
-  UntypedFormGroup,
+  FormGroup,
   UntypedFormArray,
-  UntypedFormControl,
+  FormControl,
   Validators,
   UntypedFormBuilder,
   ReactiveFormsModule,
@@ -12,7 +12,7 @@ import { AuthTokensService, AuthTokensState } from "../auth-tokens.service";
 import { StatefulBaseComponent } from "src/app/shared/stateful-service/stateful-base.component";
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
 import { MatInputModule } from "@angular/material/input";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
@@ -32,11 +32,9 @@ import { MatCardModule } from "@angular/material/card";
     MatIconModule,
     MatDividerModule,
     MatFormFieldModule,
-    NgIf,
     ReactiveFormsModule,
     MatInputModule,
     MatCheckboxModule,
-    NgFor,
     LoadingButtonComponent,
     AsyncPipe,
   ],
@@ -52,7 +50,7 @@ export class NewTokenComponent
   createErrorLabel$ = this.service.createErrorLabel$;
   createErrorScopes$ = this.service.createErrorScopes$;
 
-  form: UntypedFormGroup;
+  form: FormGroup;
   scopeOptions: string[] = [
     "project:read",
     "project:write",
@@ -77,30 +75,28 @@ export class NewTokenComponent
   }
 
   get label() {
-    return this.form.controls.label as UntypedFormControl;
+    return this.form.controls.label as FormControl;
   }
 
   constructor(
     protected service: AuthTokensService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
   ) {
     super(service);
     this.form = this.fb.group({
-      label: new UntypedFormControl("", [Validators.required]),
+      label: new FormControl("", [Validators.required]),
       scopes: new UntypedFormArray([]),
     });
 
     /* Set scopeOptions to scopes FormArray **/
-    this.scopeOptions.forEach(() =>
-      this.scopes.push(new UntypedFormControl(false))
-    );
+    this.scopeOptions.forEach(() => this.scopes.push(new FormControl(false)));
   }
 
   ngOnInit(): void {
     this.scopes.valueChanges.subscribe((values: boolean[]) => {
       if (this.selectAllCheckbox) {
         this.selectAllCheckbox.checked = values.every(
-          (value) => value === true
+          (value) => value === true,
         );
         this.selectAllCheckbox.indeterminate =
           !this.selectAllCheckbox.checked &&
@@ -140,7 +136,7 @@ export class NewTokenComponent
   validateScopes() {
     /* Check to see if at least one scope is selected before submitting **/
     const valueSelected = this.scopes.value.find(
-      (value: boolean) => value === true
+      (value: boolean) => value === true,
     );
     if (!valueSelected) {
       this.scopes.setErrors({
@@ -164,7 +160,7 @@ export class NewTokenComponent
       const label = this.label.value;
       const selectedScopes = this.form.value.scopes
         .map((checked: boolean, index: number) =>
-          checked ? this.scopeOptions[index] : null
+          checked ? this.scopeOptions[index] : null,
         )
         .filter((selected: string) => selected !== null);
       this.service.createAuthToken(label, selectedScopes);

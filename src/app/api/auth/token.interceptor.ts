@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { EMPTY, throwError } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { AuthService } from "./auth.service";
+import { AuthService } from "src/app/auth.service";
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
@@ -22,6 +22,6 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
         return EMPTY;
       }
       return throwError(() => error);
-    })
+    }),
   );
 };

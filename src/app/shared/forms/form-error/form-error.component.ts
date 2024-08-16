@@ -1,15 +1,20 @@
-import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import {
+  Component,
+  ChangeDetectionStrategy,
+  input,
+  Input,
+} from "@angular/core";
+
 import { MatInputModule } from "@angular/material/input";
-import { ServerError } from "../../django.interfaces";
 
 @Component({
   standalone: true,
   selector: "gt-form-error",
-  imports: [CommonModule, MatInputModule],
+  imports: [MatInputModule],
   templateUrl: "./form-error.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormErrorComponent {
-  @Input() error: ServerError | null | undefined = null;
+  errors = input<string[]>();
+  @Input() error: any; // Do not use
 }

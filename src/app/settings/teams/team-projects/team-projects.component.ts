@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { UntypedFormControl, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
 import { TeamsService } from "src/app/api/teams/teams.service";
@@ -11,7 +11,7 @@ import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-team-projects",
@@ -19,12 +19,10 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
   styleUrls: ["./team-projects.component.scss"],
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    NgFor,
     MatOptionModule,
     MatDividerModule,
     RouterLink,
@@ -38,16 +36,16 @@ export class TeamProjectsComponent implements OnInit {
   projectsNotOnTeam$ = this.projectsService.projectsNotOnTeam$;
   loading$ = this.projectsService.addRemoveLoading$;
   errors$ = this.projectsService.errors$;
-  project = new UntypedFormControl();
+  project = new FormControl();
   teamSlug$ = this.route.paramMap.pipe(
-    map((params) => params.get("team-slug"))
+    map((params) => params.get("team-slug")),
   );
   orgSlug$ = this.route.paramMap.pipe(map((params) => params.get("org-slug")));
 
   constructor(
     private projectsService: ProjectSettingsService,
     private teamsService: TeamsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +56,7 @@ export class TeamProjectsComponent implements OnInit {
             this.projectsService.retrieveProjectsOnTeam(orgSlug, teamSlug);
             this.projectsService.retrieveProjectsNotOnTeam(orgSlug, teamSlug);
           }
-        })
+        }),
       )
       .subscribe();
   }
@@ -72,10 +70,10 @@ export class TeamProjectsComponent implements OnInit {
             this.projectsService.addProjectToTeam(
               orgSlug,
               teamSlug,
-              projectSlug
+              projectSlug,
             );
           }
-        })
+        }),
       )
       .toPromise();
   }
@@ -88,10 +86,10 @@ export class TeamProjectsComponent implements OnInit {
             this.projectsService.removeProjectFromTeam(
               orgSlug,
               teamSlug,
-              projectSlug
+              projectSlug,
             );
           }
-        })
+        }),
       )
       .subscribe(() => this.project.reset());
   }

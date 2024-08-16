@@ -6,7 +6,6 @@ import { tap, map, catchError, exhaustMap } from "rxjs/operators";
 import { StatefulService } from "src/app/shared/stateful-service/stateful-service";
 import { User, UserOptions } from "./user.interfaces";
 import { UserAPIService } from "./user-api.service";
-import { SocialAuthAPIService } from "../social-auth/social-auth-api.service";
 
 interface UserState {
   user: User | null;
@@ -28,24 +27,23 @@ const initialState: UserState = {
 export class UserService extends StatefulService<UserState> {
   readonly userDetails$ = this.state.pipe(map((state) => state.user));
   readonly userDeleteError$ = this.state.pipe(
-    map((state) => state.userDeleteError)
+    map((state) => state.userDeleteError),
   );
   readonly userDeleteLoading$ = this.state.pipe(
-    map((state) => state.userDeleteLoading)
+    map((state) => state.userDeleteLoading),
   );
   readonly disconnectLoading$ = this.state.pipe(
-    map((state) => state.disconnectLoading)
+    map((state) => state.disconnectLoading),
   );
   private readonly getUserDetailsAction = new Subject();
 
   readonly activeUserEmail$ = this.userDetails$.pipe(
-    map((userDetails) => userDetails?.email)
+    map((userDetails) => userDetails?.email),
   );
 
   constructor(
     private snackBar: MatSnackBar,
     private userAPIService: UserAPIService,
-    private socialAuthAPIService: SocialAuthAPIService
   ) {
     super(initialState);
     this.getUserDetailsAction
@@ -69,9 +67,9 @@ export class UserService extends StatefulService<UserState> {
                 }
               }
             }),
-            catchError(() => EMPTY)
-          )
-        )
+            catchError(() => EMPTY),
+          ),
+        ),
       )
       .subscribe();
   }
@@ -87,11 +85,11 @@ export class UserService extends StatefulService<UserState> {
       catchError((err) => {
         if (err instanceof HttpErrorResponse) {
           this.setUserDeleteError(
-            err.error?.message ? err.error?.message : "Unable to delete user"
+            err.error?.message ? err.error?.message : "Unable to delete user",
           );
         }
         return EMPTY;
-      })
+      }),
     );
   }
 
@@ -101,31 +99,8 @@ export class UserService extends StatefulService<UserState> {
         tap((resp) => {
           this.setUserDetails(resp);
           this.snackBar.open("Preferences have been updated");
-        })
-      )
-    );
-  }
-
-  disconnectSocialAccount(id: number, account: string, provider: string) {
-    this.setDisconnectLoadingStart(id);
-    lastValueFrom(
-      this.socialAuthAPIService.disconnect(account, provider).pipe(
-        tap(() => {
-          this.setDisconnectLoadingEnd();
-          this.getUserDetails();
-          this.snackBar.open(
-            "You have successfully disconnected your social auth account"
-          );
         }),
-        catchError((err: HttpErrorResponse) => {
-          this.setDisconnectLoadingEnd();
-          if (Array.isArray(err.error) && err.error.length) {
-            this.snackBar.open(err.error[0]);
-          }
-          return EMPTY;
-        })
       ),
-      { defaultValue: null }
     );
   }
 
@@ -141,14 +116,6 @@ export class UserService extends StatefulService<UserState> {
     this.setState({
       userDeleteLoading: true,
     });
-  }
-
-  private setDisconnectLoadingStart(loading: number) {
-    this.setState({ disconnectLoading: loading });
-  }
-
-  private setDisconnectLoadingEnd() {
-    this.setState({ disconnectLoading: null });
   }
 
   private setUserDetails(user: User) {

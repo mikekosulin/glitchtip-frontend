@@ -10,7 +10,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, NgFor, AsyncPipe, DecimalPipe } from "@angular/common";
+import { AsyncPipe, DecimalPipe } from "@angular/common";
 
 @Component({
   selector: "gt-payment",
@@ -19,16 +19,14 @@ import { NgIf, NgFor, AsyncPipe, DecimalPipe } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
-    NgFor,
     MatCardModule,
     MatIconModule,
     LoadingButtonComponent,
     MatDividerModule,
     EventInfoComponent,
     AsyncPipe,
-    DecimalPipe,
-  ],
+    DecimalPipe
+],
 })
 export class PaymentComponent implements OnInit {
   productOptions$ = this.subscriptionService.formattedProductOptions;

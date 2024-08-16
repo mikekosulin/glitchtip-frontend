@@ -18,7 +18,7 @@ describe("Create New Project", () => {
     cy.get("#create-project-submit").click();
     cy.get("[data-cy='project-name-error-required']");
     cy.get("input[formcontrolname=name]").type(
-      "While having too many characters in a project name would be rare, this test ensures that the server error field works."
+      "While having too many characters in a project name would be rare, this test ensures that the server error field works.",
     );
     cy.get("#create-project-submit").click();
     cy.get("[data-cy=project-name-error-length]");
@@ -29,7 +29,7 @@ describe("Create New Project", () => {
     cy.contains("Create a New Project");
     cy.get("#create-team-from-projects").click();
     cy.contains(
-      "Your team slug can only consist of letters, numbers, underscores and/or hyphens."
+      "Your team slug can only consist of letters, numbers, underscores and/or hyphens.",
     );
     cy.get("input[formcontrolname=slug]").type(newTeam.slug);
     cy.get("#create-team-submit").click();
@@ -69,7 +69,7 @@ describe("Edit and Delete a project", () => {
     cy.get("input[formcontrolname=name]")
       .clear()
       .type(
-        "While having too many characters in a project name would be rare, this test ensures that the server error field works."
+        "While having too many characters in a project name would be rare, this test ensures that the server error field works.",
       );
     cy.get("#update-project-name").click();
     cy.get("[data-cy='project-name-error-length']");
@@ -95,7 +95,7 @@ describe("Edit and Delete a project", () => {
     cy.contains("Your project has been sucessfully deleted");
     cy.url().should(
       "eq",
-      `http://localhost:4200/${organization.slug}/settings/projects`
+      `http://localhost:4200/${organization.slug}/settings/projects`,
     );
   });
 });
@@ -132,7 +132,7 @@ describe("Add and edit alerts", () => {
     cy.get("#create-new-alert").click();
     cy.get("[data-cy=error-check]").click();
     cy.contains(
-      "Please select events or uptime monitor triggers for your alert."
+      "Please select events or uptime monitor triggers for your alert.",
     );
     cy.get("[data-cy=uptime-check]").click();
     cy.get("button").contains("submit").click();

@@ -1,11 +1,10 @@
 <div class="wrapper {{ source }}">
-  <ng-container *ngIf="loading; else notLoading">
+  @if (loading) {
     <mat-spinner diameter="24"></mat-spinner>
-  </ng-container>
-  <ng-template #notLoading>
+  } @else {
     <svg>
       <use [attr.xlink:href]="getProviderSvgName(provider)"></use>
     </svg>
     <span class="text">{{ text }}</span>
-  </ng-template>
+  }
 </div>

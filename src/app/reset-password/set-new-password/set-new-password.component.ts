@@ -1,19 +1,28 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
-import { ActivatedRoute, RouterLink } from "@angular/router";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
   Validators,
   ReactiveFormsModule,
+  FormGroup,
+  FormControl,
 } from "@angular/forms";
-import { map } from "rxjs/operators";
-import { ResetPasswordService } from "src/app/api/reset-password/reset-password.service";
-import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
-import { InputMatcherDirective } from "../../shared/input-matcher.directive";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, AsyncPipe } from "@angular/common";
+
 import { MatCardModule } from "@angular/material/card";
+import { lastValueFrom } from "rxjs";
+import { exhaustMap, map, tap } from "rxjs/operators";
+import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
+import { InputMatcherDirective } from "../../shared/input-matcher.directive";
+import {
+  ResetPasswordService,
+  ResetPasswordState,
+} from "../reset-password.service";
+import { mapFormErrors } from "src/app/shared/forms/form.utils";
+import { FormErrorComponent } from "src/app/shared/forms/form-error/form-error.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { StatefulComponent } from "src/app/shared/stateful-service/signal-state.component";
 
 @Component({
   selector: "gt-set-new-password",
@@ -24,59 +33,73 @@ import { MatCardModule } from "@angular/material/card";
   imports: [
     MatCardModule,
     ReactiveFormsModule,
-    NgIf,
+    FormErrorComponent,
     MatFormFieldModule,
     MatInputModule,
     InputMatcherDirective,
     LoadingButtonComponent,
-    RouterLink,
-    AsyncPipe,
-  ],
+    RouterLink
+],
 })
-export class SetNewPasswordComponent {
+export class SetNewPasswordComponent extends StatefulComponent<
+  ResetPasswordState,
+  ResetPasswordService
+> {
   params$ = this.activatedRoute.params.pipe(
-    map((params) => ({ uid: params.uidb64, token: params.token }))
+    map((params) => ({ key: params.key })),
   );
-  setNewPasswordError$ = this.resetService.setNewPasswordError$;
-  setnewPasswordLoading$ = this.resetService.setNewPasswordLoading$;
-  form = new UntypedFormGroup({
-    new_password1: new UntypedFormControl("", [
+  formErrors = this.service.formErrors;
+  success = this.service.success;
+  loading = this.service.loading;
+  form = new FormGroup({
+    password: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
-    new_password2: new UntypedFormControl("", [
+    password2: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
   });
 
-  get new_password1() {
-    return this.form.get("new_password1");
+  get password() {
+    return this.form.get("password");
   }
 
-  get new_password2() {
-    return this.form.get("new_password2");
+  get password2() {
+    return this.form.get("password2");
   }
 
   constructor(
+    private router: Router,
     private activatedRoute: ActivatedRoute,
-    private resetService: ResetPasswordService
-  ) {}
+    protected service: ResetPasswordService,
+    private snackBar: MatSnackBar,
+  ) {
+    toObservable(service.fieldErrors).subscribe((fieldErrors) =>
+      mapFormErrors(fieldErrors, this.form),
+    );
+    super(service);
+  }
 
   onSubmit() {
     if (this.form.valid) {
-      this.params$
-        .pipe(
-          map((params) => {
-            this.resetService.setNewPassword(
-              this.form.value.new_password1,
-              this.form.value.new_password2,
-              params.uid,
-              params.token
-            );
-          })
-        )
-        .subscribe();
+      lastValueFrom(
+        this.params$.pipe(
+          exhaustMap((params) =>
+            this.service
+              .resetPassword(params.key, this.form.value.password!)
+              .pipe(
+                tap((resp) => {
+                  if (resp && resp.status === 401) {
+                    this.snackBar.open("Your password has been changed.");
+                    this.router.navigate(["/login"]);
+                  }
+                }),
+              ),
+          ),
+        ),
+      );
     }
   }
 }

@@ -1,16 +1,4 @@
-import {
-  KeyValue,
-  NgIf,
-  NgClass,
-  NgFor,
-  NgSwitch,
-  NgSwitchCase,
-  NgSwitchDefault,
-  AsyncPipe,
-  JsonPipe,
-  DatePipe,
-  KeyValuePipe,
-} from "@angular/common";
+import { KeyValue, NgClass, AsyncPipe, JsonPipe, DatePipe, KeyValuePipe } from "@angular/common";
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -31,20 +19,15 @@ import { MatDividerModule } from "@angular/material/divider";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatDividerModule,
     NgClass,
     MatButtonModule,
     MatIconModule,
-    NgFor,
-    NgSwitch,
-    NgSwitchCase,
-    NgSwitchDefault,
     AsyncPipe,
     JsonPipe,
     DatePipe,
-    KeyValuePipe,
-  ],
+    KeyValuePipe
+],
 })
 export class EntryBreadcrumbsComponent implements AfterViewInit {
   @ViewChild("breadBox") breadBox?: ElementRef;

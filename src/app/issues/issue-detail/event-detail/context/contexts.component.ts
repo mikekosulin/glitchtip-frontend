@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { IssueDetailService } from "../../issue-detail.service";
 import { MatIconModule } from "@angular/material/icon";
-import { NgFor, NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-contexts",
@@ -9,7 +9,7 @@ import { NgFor, NgIf, AsyncPipe } from "@angular/common";
   styleUrls: ["./contexts.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgFor, NgIf, MatIconModule, AsyncPipe],
+  imports: [MatIconModule, AsyncPipe],
 })
 export class ContextsComponent implements OnInit {
   specialContexts$ = this.issueDetailService.specialContexts$;

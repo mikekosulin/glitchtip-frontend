@@ -5,7 +5,7 @@ import { exhaustMap, map } from "rxjs/operators";
 import { EMPTY } from "rxjs";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, NgFor, NgStyle, AsyncPipe } from "@angular/common";
+import { NgStyle, AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-issue-detail-tags",
@@ -13,7 +13,7 @@ import { NgIf, NgFor, NgStyle, AsyncPipe } from "@angular/common";
   styleUrls: ["./issue-detail-tags.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgIf, MatCardModule, NgFor, NgStyle, MatTooltipModule, AsyncPipe],
+  imports: [MatCardModule, NgStyle, MatTooltipModule, AsyncPipe],
 })
 export class IssueDetailTagsComponent implements OnInit {
   tags$ = this.issueService.tags$;

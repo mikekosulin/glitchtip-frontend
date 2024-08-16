@@ -12,22 +12,20 @@ import { ProjectCardComponent } from "../../shared/project-card/project-card.com
 import { EmptyProjectsComponent } from "../../shared/project-card/empty-projects/empty-projects.component";
 import { RouterLink } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
-import { NgIf, NgFor, AsyncPipe, DatePipe } from "@angular/common";
+import { AsyncPipe, DatePipe } from "@angular/common";
 
 @Component({
   templateUrl: "./projects.component.html",
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatButtonModule,
     RouterLink,
     EmptyProjectsComponent,
-    NgFor,
     ProjectCardComponent,
     AsyncPipe,
-    DatePipe,
-  ],
+    DatePipe
+],
 })
 export class ProjectsComponent implements OnInit, OnDestroy {
   subscription?: Subscription;

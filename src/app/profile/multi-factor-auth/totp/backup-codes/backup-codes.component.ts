@@ -1,18 +1,19 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 import {
-  UntypedFormControl,
-  UntypedFormGroup,
+  FormControl,
+  FormGroup,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { take } from "rxjs/operators";
-import { MultiFactorAuthService } from "../../multi-factor-auth.service";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { FormErrorComponent } from "../../../../shared/forms/form-error/form-error.component";
 import { MatButtonModule } from "@angular/material/button";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { MatSnackBar } from "@angular/material/snack-bar";
+
+import { MultiFactorAuthService } from "../../multi-factor-auth.service";
+import { FormErrorComponent } from "../../../../shared/forms/form-error/form-error.component";
+import { lastValueFrom } from "rxjs";
+import { toObservable } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "gt-backup-codes",
@@ -21,64 +22,61 @@ import { NgIf, AsyncPipe } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatButtonModule,
     ReactiveFormsModule,
     FormErrorComponent,
     MatFormFieldModule,
     MatInputModule,
-    AsyncPipe,
   ],
 })
 export class BackupCodesComponent {
-  TOTPKey$ = this.service.TOTPKey$;
-  error$ = this.service.serverError$;
-  copiedCodes$ = this.service.copiedCodes$;
-  regenCodes$ = this.service.regenCodes$;
-  backupCodeForm = new UntypedFormGroup({
-    backupCode: new UntypedFormControl("", [
+  TOTPAuthenticator = this.service.TOTPAuthenticator;
+  error = this.service.error;
+  copiedCodes = this.service.copiedCodes;
+  regenCodes = this.service.regenCodes;
+  backupCodeForm = new FormGroup({
+    backupCode: new FormControl("", [
       Validators.required,
-      Validators.minLength(16),
-      Validators.maxLength(16),
+      Validators.minLength(8),
+      Validators.maxLength(8),
     ]),
   });
 
   constructor(
     private service: MultiFactorAuthService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+  ) {
+    toObservable(this.error).subscribe((error) =>
+      this.backupCode?.setErrors({ serverError: [error] }),
+    );
+  }
 
   get backupCode() {
     return this.backupCodeForm.get("backupCode");
   }
 
   startRegenCodes() {
-    this.service.setRegenCodes();
+    lastValueFrom(this.service.regenerateRecoveryCodes());
   }
 
   copyCodes() {
-    this.service.backupCodes$.pipe(take(1)).subscribe((codes) => {
-      if (codes) {
-        navigator.clipboard.writeText(codes.join("\n"));
-        this.service.setCopiedCodes();
-        this.snackBar.open("Backup codes copied to clipboard.");
-      }
-    });
+    const codes = this.service.codes();
+    if (codes) {
+      navigator.clipboard.writeText(codes.join("\n"));
+      this.service.setCopiedCodes();
+      this.snackBar.open("Backup codes copied to clipboard.");
+    }
   }
 
   downloadCodes() {
-    this.service.backupCodes$.pipe(take(1)).subscribe((codes) => {
-      if (codes) {
-        this.download("glitchtip-backup.txt", codes.join("\n"));
-        this.service.setCopiedCodes();
-      }
-    });
+    this.download("glitchtip-backup.txt", this.service.codes().join("\n"));
+    this.service.setCopiedCodes();
   }
 
   verifyBackupCode() {
     const code = this.backupCodeForm.get("backupCode")?.value;
     if (this.backupCodeForm.valid && code) {
-      this.service.verifyBackupCode(code).subscribe();
+      lastValueFrom(this.service.setRecoveryCodes(code));
     }
   }
 
@@ -86,7 +84,7 @@ export class BackupCodesComponent {
     const element = document.createElement("a");
     element.setAttribute(
       "href",
-      "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+      "data:text/plain;charset=utf-8," + encodeURIComponent(text),
     );
     element.setAttribute("download", filename);
 

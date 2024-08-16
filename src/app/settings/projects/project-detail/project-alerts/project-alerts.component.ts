@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { LoadingButtonComponent } from "../../../../shared/loading-button/loading-button.component";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatIconModule } from "@angular/material/icon";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
@@ -27,9 +27,7 @@ import { MatCardModule } from "@angular/material/card";
     MatButtonModule,
     MatDialogModule,
     MatDividerModule,
-    NgIf,
     AlertFormComponent,
-    NgFor,
     MatIconModule,
     MatTooltipModule,
     LoadingButtonComponent,
@@ -56,7 +54,7 @@ export class ProjectAlertsComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertsService: ProjectAlertsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -103,7 +101,7 @@ export class ProjectAlertsComponent implements OnInit, OnDestroy {
       quantity: number;
       uptime: boolean;
     },
-    alert: ProjectAlert
+    alert: ProjectAlert,
   ): void {
     if (alert.id) {
       this.alertsService.updateAlertProperties(
@@ -111,7 +109,7 @@ export class ProjectAlertsComponent implements OnInit, OnDestroy {
         event.quantity,
         event.uptime,
         alert.id,
-        alert.alertRecipients
+        alert.alertRecipients,
       );
     }
   }

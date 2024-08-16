@@ -1,27 +1,29 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
   Validators,
   ReactiveFormsModule,
+  FormGroup,
+  FormControl,
 } from "@angular/forms";
-import { ActivatedRoute, RouterLink } from "@angular/router";
-import { tap } from "rxjs/operators";
-import { LoginService } from "./login.service";
-import { AuthService } from "../api/auth/auth.service";
-import { GlitchTipOAuthService } from "../api/oauth/oauth.service";
+import { RouterLink } from "@angular/router";
+import { MatButtonModule } from "@angular/material/button";
+import { MatInputModule } from "@angular/material/input";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { AsyncPipe } from "@angular/common";
+import { MatCardModule } from "@angular/material/card";
+import { lastValueFrom } from "rxjs";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
+import { LoginWebAuthnComponent } from "./login-webauthn/login-webauthn.component";
+import { LoginTotpComponent } from "./login-totp/login-totp.component";
+import { LoadingButtonComponent } from "../shared/loading-button/loading-button.component";
+import { mapFormErrors } from "../shared/forms/form.utils";
+import { StatefulComponent } from "../shared/stateful-service/signal-state.component";
+import { LoginService, LoginState } from "./login.service";
 import { SettingsService } from "../api/settings.service";
 import { AcceptInviteService } from "../api/accept/accept-invite.service";
 import { SocialApp } from "../api/user/user.interfaces";
 import { AuthSvgComponent } from "../shared/auth-svg/auth-svg.component";
-import { MatButtonModule } from "@angular/material/button";
-import { MatInputModule } from "@angular/material/input";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { FormErrorComponent } from "../shared/forms/form-error/form-error.component";
-import { LoginFido2Component } from "./login-fido2/login-fido2.component";
-import { LoginTotpComponent } from "./login-totp/login-totp.component";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
-import { MatCardModule } from "@angular/material/card";
 
 @Component({
   selector: "gt-login",
@@ -29,30 +31,32 @@ import { MatCardModule } from "@angular/material/card";
   styleUrls: ["./login.component.scss"],
   standalone: true,
   imports: [
+    AsyncPipe,
     MatCardModule,
-    NgIf,
     LoginTotpComponent,
-    LoginFido2Component,
+    LoginWebAuthnComponent,
+    LoadingButtonComponent,
     ReactiveFormsModule,
     FormErrorComponent,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    NgFor,
     AuthSvgComponent,
     RouterLink,
-    AsyncPipe,
   ],
 })
-export class LoginComponent implements OnInit {
-  loading$ = this.loginService.loading$;
-  error$ = this.loginService.error$;
-  requiresMFA$ = this.loginService.requiresMFA$;
-  hasFido2$ = this.loginService.hasFIDO2$;
-  useTOTP$ = this.loginService.useTOTP$;
-  form = new UntypedFormGroup({
-    email: new UntypedFormControl("", [Validators.required, Validators.email]),
-    password: new UntypedFormControl("", [
+export class LoginComponent extends StatefulComponent<
+  LoginState,
+  LoginService
+> {
+  formErrors = this.service.formErrors;
+  loading = this.service.loading;
+  requiresMFA = this.service.requiresMfa;
+  hasWebAuthn = this.service.hasWebAuthn;
+  preferTOTP = this.service.preferTOTP;
+  form = new FormGroup({
+    email: new FormControl("", [Validators.required, Validators.email]),
+    password: new FormControl("", [
       Validators.required,
       Validators.minLength(8),
     ]),
@@ -63,31 +67,14 @@ export class LoginComponent implements OnInit {
   acceptInfo$ = this.acceptService.acceptInfo$;
 
   constructor(
-    private loginService: LoginService,
-    private oauthService: GlitchTipOAuthService,
+    protected service: LoginService,
     private settings: SettingsService,
     private acceptService: AcceptInviteService,
-    private authService: AuthService,
-    private route: ActivatedRoute
-  ) {}
-
-  ngOnInit() {
-    this.acceptInfo$
-      .pipe(
-        tap((acceptInfo) => {
-          if (acceptInfo) {
-            this.form.patchValue({ email: acceptInfo.orgUser.email });
-          }
-        })
-      )
-      .subscribe();
-    this.error$.subscribe((error) => {
-      if (error?.email) {
-        this.email?.setErrors({ serverError: error.email });
-      } else if (error?.password) {
-        this.password?.setErrors({ serverError: error.password });
-      }
-    });
+  ) {
+    toObservable(service.fieldErrors).subscribe((fieldErrors) =>
+      mapFormErrors(fieldErrors, this.form),
+    );
+    super(service);
   }
 
   get email() {
@@ -99,18 +86,14 @@ export class LoginComponent implements OnInit {
   }
 
   onSocialApp(socialApp: SocialApp) {
-    this.oauthService.initOAuthLogin(socialApp);
+    this.service.socialLogin(socialApp.provider);
   }
 
   onSubmit() {
     if (this.form.valid) {
-      const nextUrl = this.route.snapshot.queryParamMap.get("next");
-      if (nextUrl) {
-        this.authService.setRedirectUrl(nextUrl);
-      }
-      this.loginService
-        .login(this.form.value.email, this.form.value.password)
-        .subscribe();
+      lastValueFrom(
+        this.service.login(this.form.value.email!, this.form.value.password!),
+      );
     }
   }
 }

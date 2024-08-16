@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
+  FormGroup,
+  FormControl,
   Validators,
   FormGroupDirective,
   AbstractControl,
@@ -16,7 +16,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { LoadingButtonComponent } from "../../shared/loading-button/loading-button.component";
 import { MatChipsModule } from "@angular/material/chips";
-import { NgFor, NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 
@@ -28,8 +28,6 @@ import { MatCardModule } from "@angular/material/card";
   imports: [
     MatCardModule,
     MatDividerModule,
-    NgFor,
-    NgIf,
     MatChipsModule,
     LoadingButtonComponent,
     MatProgressSpinnerModule,
@@ -67,19 +65,19 @@ export class ManageEmailsComponent implements OnInit {
     this.emailAddresses$.pipe(
       map((emails) => {
         const matchedEmail = emails.find(
-          (email) => email.email === control.value
+          (email) => email.email === control.value,
         );
         return matchedEmail ? { matchesExistingValidator: true } : null;
       }),
-      first()
+      first(),
     );
 
   // tslint:disable:member-ordering
-  form = new UntypedFormGroup({
-    email_address: new UntypedFormControl(
+  form = new FormGroup({
+    email_address: new FormControl(
       "",
       [Validators.email, Validators.required],
-      this.matchesExistingValidator
+      this.matchesExistingValidator,
     ),
   });
 
@@ -97,7 +95,7 @@ export class ManageEmailsComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.emailService.addEmailAddress(this.form.value.email_address);
+      this.emailService.addEmailAddress(this.form.value.email_address!);
     }
   }
 }

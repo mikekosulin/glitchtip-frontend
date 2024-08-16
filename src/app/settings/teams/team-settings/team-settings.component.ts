@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import {
-  UntypedFormControl,
+  FormControl,
   Validators,
-  UntypedFormGroup,
+  FormGroup,
   ReactiveFormsModule,
 } from "@angular/forms";
 import { TeamsService } from "src/app/api/teams/teams.service";
@@ -14,7 +14,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "gt-team-settings",
@@ -23,7 +23,6 @@ import { NgIf, AsyncPipe } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatDividerModule,
     MatFormFieldModule,
@@ -37,17 +36,17 @@ export class TeamSettingsComponent implements OnInit {
   team$ = this.teamsService.team$;
   loading$ = this.teamsService.loading$;
   errors$ = this.teamsService.errors$;
-  form = new UntypedFormGroup({
-    slug: new UntypedFormControl("", [Validators.required]),
+  form = new FormGroup({
+    slug: new FormControl("", [Validators.required]),
   });
   routeSlugs$ = this.route.paramMap.pipe(
-    map((params) => [params.get("org-slug"), params.get("team-slug")])
+    map((params) => [params.get("org-slug"), params.get("team-slug")]),
   );
 
   constructor(
     private teamsService: TeamsService,
     private organizationsService: OrganizationsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +57,7 @@ export class TeamSettingsComponent implements OnInit {
             this.teamsService.retrieveSingleTeam(orgSlug, teamSlug);
             this.form.patchValue({ slug: teamSlug });
           }
-        })
+        }),
       )
       .subscribe();
   }
@@ -71,12 +70,12 @@ export class TeamSettingsComponent implements OnInit {
         map(([orgSlug, teamSlug]) => {
           if (orgSlug && teamSlug) {
             this.teamsService
-              .updateTeamSlug(orgSlug, teamSlug, newSlug)
+              .updateTeamSlug(orgSlug, teamSlug, newSlug!)
               .subscribe((resp) => {
                 this.organizationsService.updateTeam(resp.id, resp.slug);
               });
           }
-        })
+        }),
       )
       .toPromise();
   }
@@ -90,10 +89,10 @@ export class TeamSettingsComponent implements OnInit {
               this.teamsService
                 .deleteTeam(orgSlug, teamSlug)
                 .subscribe(() =>
-                  this.organizationsService.deleteTeam(teamSlug)
+                  this.organizationsService.deleteTeam(teamSlug),
                 );
             }
-          })
+          }),
         )
         .toPromise();
     }

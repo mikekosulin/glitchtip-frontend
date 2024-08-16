@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 import { MatSelectChange } from "@angular/material/select";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { combineLatest, EMPTY } from "rxjs";
@@ -46,21 +46,21 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
   paginator$ = this.service.paginator$;
   orgSlug$ = this.route.paramMap.pipe(map((params) => params.get("org-slug")));
   displayedColumns = ["name-and-project", "avgDuration"];
-  sortForm = new UntypedFormGroup({
-    sort: new UntypedFormControl({
+  sortForm = new FormGroup({
+    sort: new FormControl({
       value: "",
       disabled: true,
     }),
   });
-  dateForm = new UntypedFormGroup({
-    startDate: new UntypedFormControl(""),
-    endDate: new UntypedFormControl(""),
+  dateForm = new FormGroup({
+    startDate: new FormControl(""),
+    endDate: new FormControl(""),
   });
-  environmentForm = new UntypedFormGroup({
-    environment: new UntypedFormControl({ value: "" }),
+  environmentForm = new FormGroup({
+    environment: new FormControl({ value: "", disabled: true }),
   });
-  searchForm = new UntypedFormGroup({
-    query: new UntypedFormControl(""),
+  searchForm = new FormGroup({
+    query: new FormControl(""),
   });
 
   sorts = [
@@ -83,7 +83,7 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
     this.organizationsService.activeOrganizationProjects$;
 
   projectsFromParams$ = this.route.queryParams.pipe(
-    map((params) => normalizeProjectParams(params.project))
+    map((params) => normalizeProjectParams(params.project)),
   );
 
   appliedProjectCount$ = this.projectsFromParams$.pipe(
@@ -92,7 +92,7 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
         return projects.length;
       }
       return 0;
-    })
+    }),
   );
 
   organizationEnvironments$ = combineLatest([
@@ -101,8 +101,8 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
     this.projectEnvironmentsService.visibleEnvironments$,
   ]).pipe(
     map(([appliedProjectCount, orgEnvironments, projectEnvironments]) =>
-      appliedProjectCount !== 1 ? orgEnvironments : projectEnvironments
-    )
+      appliedProjectCount !== 1 ? orgEnvironments : projectEnvironments,
+    ),
   );
 
   constructor(
@@ -110,7 +110,7 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
     protected service: PerformanceService,
     private projectEnvironmentsService: ProjectEnvironmentsService,
     protected router: Router,
-    protected route: ActivatedRoute
+    protected route: ActivatedRoute,
   ) {
     combineLatest([this.orgSlug$, this.route.queryParamMap])
       .pipe(
@@ -125,19 +125,19 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
               params.get("end"),
               params.get("sort"),
               params.get("environment"),
-              params.get("query")
+              params.get("query"),
             );
           }
           return EMPTY;
         }),
-        takeUntilDestroyed()
+        takeUntilDestroyed(),
       )
       .subscribe();
 
     this.organizationEnvironments$.subscribe((environments) =>
       environments.length === 0
         ? this.environmentForm.controls.environment.disable()
-        : this.environmentForm.controls.environment.enable()
+        : this.environmentForm.controls.environment.enable(),
     );
 
     this.transactionGroupsDisplay$
@@ -145,7 +145,7 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
       .subscribe((groups) =>
         groups.length === 0
           ? this.sortForm.controls.sort.disable()
-          : this.sortForm.controls.sort.enable()
+          : this.sortForm.controls.sort.enable(),
       );
 
     this.orgSlug$
@@ -153,12 +153,12 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
         switchMap((orgSlug) => {
           if (orgSlug) {
             return this.organizationsService.getOrganizationEnvironments(
-              orgSlug
+              orgSlug,
             );
           }
           return EMPTY;
         }),
-        takeUntilDestroyed()
+        takeUntilDestroyed(),
       )
       .subscribe();
 
@@ -167,23 +167,23 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
       this.route.queryParamMap.pipe(
         map((params) => params.getAll("project")[0]),
         filter((project) => !!project),
-        distinctUntilChanged()
+        distinctUntilChanged(),
       ),
       this.organizationsService.activeOrganizationProjects$,
     ]).pipe(
       switchMap(([orgSlug, projectId, orgProjects]) => {
         const projectSlug = orgProjects?.find(
-          (orgProject) => orgProject.id.toString() === projectId
+          (orgProject) => orgProject.id.toString() === projectId,
         )?.slug;
         if (orgSlug && projectSlug) {
           return this.projectEnvironmentsService.retrieveEnvironmentsWithProperties(
             orgSlug,
-            projectSlug
+            projectSlug,
           );
         }
         return EMPTY;
       }),
-      takeUntilDestroyed()
+      takeUntilDestroyed(),
     );
 
     combineLatest([
@@ -204,7 +204,7 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
               queryParamsHandling: "merge",
             });
           }
-        })
+        }),
       )
       .subscribe();
   }
@@ -248,8 +248,8 @@ export class TransactionGroupsComponent implements OnInit, OnDestroy {
         sort: sort !== undefined ? sort : "-avg_duration",
       });
       this.dateForm.setValue({
-        startDate: start ? new Date(start.replace("Z", "")) : null,
-        endDate: end ? new Date(end.replace("Z", "")) : null,
+        startDate: (start ? new Date(start.replace("Z", "")) : null) as any,
+        endDate: (end ? new Date(end.replace("Z", "")) : null) as any,
       });
       this.searchForm.setValue({
         query: query !== undefined ? query : "",

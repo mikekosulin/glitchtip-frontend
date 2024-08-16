@@ -3,7 +3,7 @@
     "target": "http://localhost:8000",
     "secure": false
   },
-  "/rest-auth": {
+  "/accounts": {
     "target": "http://localhost:8000",
     "secure": false
   },

@@ -6,13 +6,13 @@ import { OrganizationsService } from "src/app/api/organizations/organizations.se
 import { Member } from "src/app/api/organizations/organizations.interface";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { UserService } from "src/app/api/user/user.service";
-import { UntypedFormControl, ReactiveFormsModule } from "@angular/forms";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { LoadingButtonComponent } from "../../../shared/loading-button/loading-button.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatOptionModule } from "@angular/material/core";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatCardModule } from "@angular/material/card";
 
 @Component({
@@ -22,11 +22,9 @@ import { MatCardModule } from "@angular/material/card";
   standalone: true,
   imports: [
     MatCardModule,
-    NgIf,
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
-    NgFor,
     MatOptionModule,
     MatDividerModule,
     RouterLink,
@@ -39,7 +37,7 @@ export class TeamMembersComponent implements OnInit {
   filteredAddTeamMembers$ = this.organizationsService.filteredAddTeamMembers$;
   userTeamRole$ = this.teamsService.userTeamRole$;
 
-  member = new UntypedFormControl();
+  member = new FormControl();
   orgSlug = "";
   teamSlug = "";
   addMemberError = "";
@@ -52,7 +50,7 @@ export class TeamMembersComponent implements OnInit {
     private organizationsService: OrganizationsService,
     public route: ActivatedRoute,
     private snackBar: MatSnackBar,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
   ngOnInit() {
@@ -64,7 +62,7 @@ export class TeamMembersComponent implements OnInit {
           this.teamSlug = teamSlug;
           this.orgSlug = orgSlug;
           return { orgSlug, teamSlug };
-        })
+        }),
       )
       .subscribe(({ orgSlug, teamSlug }) => {
         if (orgSlug && teamSlug) {
@@ -91,7 +89,7 @@ export class TeamMembersComponent implements OnInit {
         (err) => {
           this.loading = false;
           this.addMemberError = `${err.statusText}: ${err.status}`;
-        }
+        },
       );
   }
 
@@ -103,13 +101,13 @@ export class TeamMembersComponent implements OnInit {
         (resp) => {
           this.selectedTeamMember = null;
           this.snackBar.open(
-            `${memberEmail} has been removed from #${resp.slug}`
+            `${memberEmail} has been removed from #${resp.slug}`,
           );
         },
         (err) => {
           this.selectedTeamMember = null;
           this.removeMemberError = `${err.statusText}: ${err.status}`;
-        }
+        },
       );
   }
 }

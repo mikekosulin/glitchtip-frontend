@@ -3,13 +3,7 @@ import { IssueDetailService } from "../../issue-detail.service";
 import { EntryDataComponent } from "../../../../shared/entry-data/entry-data.component";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatDividerModule } from "@angular/material/divider";
-import {
-  NgIf,
-  NgFor,
-  AsyncPipe,
-  JsonPipe,
-  KeyValuePipe,
-} from "@angular/common";
+import { AsyncPipe, JsonPipe, KeyValuePipe } from "@angular/common";
 
 @Component({
   selector: "gt-entry-csp",
@@ -18,15 +12,13 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatDividerModule,
     MatButtonToggleModule,
-    NgFor,
     EntryDataComponent,
     AsyncPipe,
     JsonPipe,
-    KeyValuePipe,
-  ],
+    KeyValuePipe
+],
 })
 export class EntryCSPComponent {
   eventEntryCSP$ = this.issueService.eventEntryCSP$;

@@ -13,14 +13,7 @@ import { ContextsComponent } from "./context/contexts.component";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
-import {
-  NgIf,
-  NgFor,
-  AsyncPipe,
-  JsonPipe,
-  DatePipe,
-  KeyValuePipe,
-} from "@angular/common";
+import { AsyncPipe, JsonPipe, DatePipe, KeyValuePipe } from "@angular/common";
 
 @Component({
   selector: "gt-event-detail",
@@ -29,13 +22,11 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatButtonModule,
     RouterLink,
     MatIconModule,
     MatDividerModule,
     ContextsComponent,
-    NgFor,
     EntryMessageComponent,
     EntryExceptionComponent,
     EntryCSPComponent,
@@ -45,8 +36,8 @@ import {
     AsyncPipe,
     JsonPipe,
     DatePipe,
-    KeyValuePipe,
-  ],
+    KeyValuePipe
+],
 })
 export class EventDetailComponent implements OnInit {
   event$ = this.issueService.event$;

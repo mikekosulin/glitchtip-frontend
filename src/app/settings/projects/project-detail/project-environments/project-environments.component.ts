@@ -3,7 +3,7 @@ import { ProjectEnvironment } from "src/app/api/organizations/organizations.inte
 import { ProjectEnvironmentsService } from "./project-environments.service";
 import { LoadingButtonComponent } from "../../../../shared/loading-button/loading-button.component";
 import { MatListModule } from "@angular/material/list";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatCardModule } from "@angular/material/card";
 
@@ -16,12 +16,10 @@ import { MatCardModule } from "@angular/material/card";
   imports: [
     MatCardModule,
     MatDividerModule,
-    NgIf,
-    NgFor,
     MatListModule,
     LoadingButtonComponent,
-    AsyncPipe,
-  ],
+    AsyncPipe
+],
 })
 export class ProjectEnvironmentsComponent implements OnDestroy {
   initialLoad$ = this.environmentsService.initialLoad$;

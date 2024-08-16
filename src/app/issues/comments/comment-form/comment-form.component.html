@@ -7,9 +7,9 @@
     <mat-label>{{ comment ? "Update Comment" : "Comment" }}</mat-label>
     <textarea matInput formControlName="text" required></textarea>
     <mat-hint>Markdown supported</mat-hint>
-    <mat-error *ngIf="commentFormText?.errors?.required">
-      Enter comment text.
-    </mat-error>
+    @if (commentFormText.errors?.required) {
+      <mat-error> Enter comment text. </mat-error>
+    }
   </mat-form-field>
   <div class="buttons">
     <gt-loading-button
@@ -19,12 +19,13 @@
       [buttonText]="comment ? 'Update Comment' : 'Submit Comment'"
     >
     </gt-loading-button>
-    <button
-      *ngIf="comment"
-      class="cancel-button"
-      (click)="emitCancelUpdate()"
-      mat-stroked-button
-      >Cancel</button
-    >
+    @if (comment) {
+      <button
+        class="cancel-button"
+        (click)="emitCancelUpdate()"
+        mat-stroked-button
+        >Cancel</button
+      >
+    }
   </div>
 </form>

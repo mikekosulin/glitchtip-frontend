@@ -3,13 +3,9 @@ import {
   ActivatedRouteSnapshot,
   createUrlTreeFromSnapshot,
 } from "@angular/router";
-import { map } from "rxjs";
-import { AuthService } from "../api/auth/auth.service";
+import { AuthService } from "../auth.service";
 
-export const alreadyLoggedInGuard = (next: ActivatedRouteSnapshot) => {
-  return inject(AuthService).isLoggedIn.pipe(
-    map((isLoggedIn) =>
-      isLoggedIn ? createUrlTreeFromSnapshot(next, ["/"]) : true
-    )
-  );
-};
+export const alreadyLoggedInGuard = (next: ActivatedRouteSnapshot) =>
+  inject(AuthService).isAuthenticated()
+    ? createUrlTreeFromSnapshot(next, ["/"])
+    : true;

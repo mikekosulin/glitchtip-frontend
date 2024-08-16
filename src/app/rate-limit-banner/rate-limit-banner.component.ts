@@ -4,7 +4,7 @@ import { map } from "rxjs/operators";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { RouterLink } from "@angular/router";
 
 @Component({
@@ -15,9 +15,8 @@ import { RouterLink } from "@angular/router";
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    RouterLink,
-    NgIf,
-  ],
+    RouterLink
+],
   templateUrl: "./rate-limit-banner.component.html",
   styleUrls: ["./rate-limit-banner.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,

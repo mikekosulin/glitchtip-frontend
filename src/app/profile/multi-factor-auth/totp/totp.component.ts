@@ -7,24 +7,25 @@ import {
   OnDestroy,
 } from "@angular/core";
 import {
-  UntypedFormControl,
-  UntypedFormGroup,
+  FormControl,
+  FormGroup,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
-import * as QRCode from "qrcode";
-import { combineLatest } from "rxjs";
-import { delay, filter, tap } from "rxjs/operators";
-import { MultiFactorAuthService } from "../multi-factor-auth.service";
+import QRCode from "qrcode";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatButtonModule } from "@angular/material/button";
+
+import { MatDividerModule } from "@angular/material/divider";
+import { MatCardModule } from "@angular/material/card";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { MultiFactorAuthService } from "../multi-factor-auth.service";
 import { FormErrorComponent } from "../../../shared/forms/form-error/form-error.component";
 import { ToDoItemComponent } from "../../../shared/to-do-item/to-do-item.component";
 import { BackupCodesComponent } from "./backup-codes/backup-codes.component";
-import { MatButtonModule } from "@angular/material/button";
-import { NgIf, AsyncPipe } from "@angular/common";
-import { MatDividerModule } from "@angular/material/divider";
-import { MatCardModule } from "@angular/material/card";
+import { mapFormErrors } from "src/app/shared/forms/form.utils";
+import { lastValueFrom } from "rxjs";
 
 @Component({
   selector: "gt-totp",
@@ -35,7 +36,6 @@ import { MatCardModule } from "@angular/material/card";
   imports: [
     MatCardModule,
     MatDividerModule,
-    NgIf,
     MatButtonModule,
     BackupCodesComponent,
     ToDoItemComponent,
@@ -43,38 +43,39 @@ import { MatCardModule } from "@angular/material/card";
     FormErrorComponent,
     MatFormFieldModule,
     MatInputModule,
-    AsyncPipe,
   ],
 })
 export class TOTPComponent implements OnInit, OnDestroy {
   @ViewChild("canvas", { static: false }) canvas: ElementRef | undefined;
-  TOTPKey$ = this.service.TOTPKey$;
-  TOTP$ = this.service.totp$;
-  step$ = this.service.setupTOTPStage$;
-  error$ = this.service.serverError$;
-  copiedCodes$ = this.service.copiedCodes$;
-  codeForm = new UntypedFormGroup({
-    code: new UntypedFormControl("", [
+  TOTPAuthenticator = this.service.TOTPAuthenticator;
+  totp = this.service.totp;
+  totp$ = toObservable(this.totp);
+  step = this.service.setupTOTPStage;
+  formErrors = this.service.formErrors;
+  codeForm = new FormGroup({
+    code: new FormControl("", [
       Validators.required,
       Validators.minLength(6),
       Validators.maxLength(6),
     ]),
   });
 
-  constructor(private service: MultiFactorAuthService) {}
+  constructor(private service: MultiFactorAuthService) {
+    toObservable(service.fieldErrors).subscribe((fieldErrors) =>
+      mapFormErrors(fieldErrors, this.codeForm),
+    );
+  }
 
   get code() {
     return this.codeForm.get("code");
   }
 
   ngOnInit() {
-    combineLatest([this.service.totp$, this.step$])
-      .pipe(
-        filter(([totp, step]) => step === 3 && totp !== null),
-        delay(0),
-        tap(([totp, _]) => this.generateQRCode(totp!.provisioning_uri))
-      )
-      .subscribe();
+    this.totp$.subscribe((totp) => {
+      if (totp) {
+        this.generateQRCode(totp.totpUrl);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -92,17 +93,18 @@ export class TOTPComponent implements OnInit, OnDestroy {
   enableTOTP() {
     if (this.codeForm.valid) {
       const code = this.code;
-      if (code) {
-        this.service.enableTOTP(code.value).pipe().subscribe();
+      if (code?.value) {
+        lastValueFrom(this.service.activateTOTP(code.value));
       }
     }
   }
 
-  deleteKey(keyId: number) {
-    this.service.deleteKey(keyId, "TOTP").subscribe();
+  deactivateTOTP() {
+    lastValueFrom(this.service.deactivateTOTP());
   }
 
-  getStepIsDone(step: number, currentStep: number) {
+  getStepIsDone(step: number) {
+    const currentStep = this.step();
     if (currentStep < step) {
       return "false";
     } else if (currentStep === step) {

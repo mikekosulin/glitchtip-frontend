@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from "@angular/core";
 import { MatDialogRef, MatDialogModule } from "@angular/material/dialog";
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
+  FormGroup,
+  FormControl,
   Validators,
   ReactiveFormsModule,
 } from "@angular/forms";
@@ -47,20 +47,20 @@ export class NewRecipientComponent implements OnInit {
     { viewValue: "Google Chat", value: "googlechat" },
   ];
 
-  recipientForm = new UntypedFormGroup({
-    recipientType: new UntypedFormControl("", [Validators.required]),
-    url: new UntypedFormControl(""),
+  recipientForm = new FormGroup({
+    recipientType: new FormControl("", [Validators.required]),
+    url: new FormControl(""),
   });
 
-  recipientType = this.recipientForm.get("recipientType") as UntypedFormControl;
-  url = this.recipientForm.get("url") as UntypedFormControl;
+  recipientType = this.recipientForm.get("recipientType") as FormControl;
+  url = this.recipientForm.get("url") as FormControl;
 
   constructor(
     public dialogRef: MatDialogRef<NewRecipientComponent>,
-    private alertsService: ProjectAlertsService
+    private alertsService: ProjectAlertsService,
   ) {
     this.recipientDialogOpen$.subscribe(
-      (resp) => !resp && this.dialogRef.close()
+      (resp) => !resp && this.dialogRef.close(),
     );
   }
 
@@ -80,9 +80,7 @@ export class NewRecipientComponent implements OnInit {
         this.url.setValue("");
       } else if (type == "googlechat") {
         this.url.setValue("https://chat.googleapis.com/v1/spaces/");
-        this.url.setValidators([
-          Validators.required,
-        ]);
+        this.url.setValidators([Validators.required]);
       }
       this.url.updateValueAndValidity();
     });
@@ -94,7 +92,7 @@ export class NewRecipientComponent implements OnInit {
 
   selectOptions(
     recipientOptions: { viewValue: string; value: string }[],
-    hideEmailOption?: boolean | null
+    hideEmailOption?: boolean | null,
   ): { viewValue: string; value: string }[] {
     return hideEmailOption
       ? this.recipientOptions.filter((option) => option.value !== "email")
@@ -103,7 +101,7 @@ export class NewRecipientComponent implements OnInit {
 
   onSubmit() {
     if (this.recipientForm.valid) {
-      this.alertsService.addAlertRecipient(this.recipientForm.value);
+      this.alertsService.addAlertRecipient(this.recipientForm.value as any);
     }
   }
 }

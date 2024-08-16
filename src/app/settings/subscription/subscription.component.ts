@@ -13,7 +13,7 @@ import { PaymentComponent } from "./payment/payment.component";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatCardModule } from "@angular/material/card";
-import { NgIf, AsyncPipe, CurrencyPipe, DatePipe } from "@angular/common";
+import { AsyncPipe, CurrencyPipe, DatePipe } from "@angular/common";
 
 interface Percentages {
   total: number;
@@ -30,7 +30,6 @@ interface Percentages {
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    NgIf,
     MatCardModule,
     MatDialogModule,
     RouterLink,
@@ -40,8 +39,8 @@ interface Percentages {
     MatProgressSpinnerModule,
     AsyncPipe,
     CurrencyPipe,
-    DatePipe,
-  ],
+    DatePipe
+],
 })
 export class SubscriptionComponent implements OnDestroy {
   fromStripe$ = this.service.fromStripe$;

@@ -1,4 +1,4 @@
-import { NgIf, NgFor, KeyValuePipe } from "@angular/common";
+import { KeyValuePipe } from "@angular/common";
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 import { MatDividerModule } from "@angular/material/divider";
 import { JsonArrayOrObject, Json } from "src/app/interface-primitives";
@@ -12,7 +12,7 @@ import { PrismDirective } from "src/app/prismjs/prism.directive";
   styleUrls: ["./frame-expanded.component.scss"],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [NgIf, PrismDirective, NgFor, MatDividerModule, KeyValuePipe],
+  imports: [PrismDirective, MatDividerModule, KeyValuePipe],
 })
 export class FrameExpandedComponent {
   @Input() lineNo?: string | number | null;
