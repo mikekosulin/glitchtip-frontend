@@ -81,11 +81,6 @@
         <source>To continue, you must either log in to your existing account, or create a new one.</source>
       </segment>
     </unit>
-    <unit id="3961541970784414950">
-      <segment>
-        <source>There was an error connecting to your social authentication provider.</source>
-      </segment>
-    </unit>
     <unit id="1095247315180807956">
       <segment>
         <source>New to GlitchTip?</source>
@@ -226,9 +221,9 @@
         <source>or</source>
       </segment>
     </unit>
-    <unit id="315190807015121967">
+    <unit id="2152994175880724805">
       <segment>
-        <source>Code must be of length 6 or 16</source>
+        <source>Code must be of length 6, 8, or 16</source>
       </segment>
     </unit>
     <unit id="6972105223770675605">
@@ -907,9 +902,9 @@
         <source>This organization has a subscription to GlitchTip, but the payment is past due.</source>
       </segment>
     </unit>
-    <unit id="2405706490874342359">
+    <unit id="9153853260021860021">
       <segment>
-        <source> If you ever lose access to your codes, you can recover your account with your <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">backup codes</pc>. </source>
+        <source>If you ever lose access to your codes, you can recover your account with your <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">backup codes</pc>.</source>
       </segment>
     </unit>
     <unit id="5279770905523465379">
@@ -1174,7 +1169,7 @@
     </unit>
     <unit id="7276967761111129879">
       <segment>
-        <source>URL may not be more than <ph id="0" equiv="INTERPOLATION" disp="{{ formUrl.errors?.maxlength.requiredLength }}"/> characters</source>
+        <source>URL may not be more than <ph id="0" equiv="INTERPOLATION" disp="{{ formUrl.errors.maxlength.requiredLength }}"/> characters</source>
       </segment>
     </unit>
     <unit id="6164834099500157112">
@@ -1250,6 +1245,123 @@
     <unit id="960665565485640516">
       <segment>
         <source>Something went wrong</source>
+      </segment>
+    </unit>
+    <unit id="1017066204420437090">
+      <segment>
+        <source>Set New Password</source>
+      </segment>
+    </unit>
+    <unit id="1431416938026210429">
+      <segment>
+        <source>Password</source>
+      </segment>
+    </unit>
+    <unit id="1538995058317034003">
+      <segment>
+        <source>Device activation was unsuccessful.</source>
+      </segment>
+    </unit>
+    <unit id="187187500641108332">
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ backupCode?.errors?.serverError }}"/>
+        </source>
+      </segment>
+    </unit>
+    <unit id="2167241020391967059">
+      <segment>
+        <source>Download or copy a list of backup codes. If you ever lose your phone, each of these recovery codes can be used one time to regain access to your account. <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Print them out or save them someplace safe.</pc></source>
+      </segment>
+    </unit>
+    <unit id="2617201451708142937">
+      <segment>
+        <source>Enter one of the backup codes to confirm that you have saved them:</source>
+      </segment>
+    </unit>
+    <unit id="305233477996347721">
+      <segment>
+        <source>Code must be 8 digits</source>
+      </segment>
+    </unit>
+    <unit id="3099741642167775297">
+      <segment>
+        <source>Download</source>
+      </segment>
+    </unit>
+    <unit id="3677197196283475273">
+      <segment>
+        <source>You have successfully disconnected your social auth account</source>
+      </segment>
+    </unit>
+    <unit id="3782563238994348625">
+      <segment>
+        <source>Confirm password</source>
+      </segment>
+    </unit>
+    <unit id="4169468477304015472">
+      <segment>
+        <source>If you have an account with GlitchTip, an email has been sent</source>
+      </segment>
+    </unit>
+    <unit id="4323470180912194028">
+      <segment>
+        <source>Copy</source>
+      </segment>
+    </unit>
+    <unit id="4622788799334711424">
+      <segment>
+        <source>If you have lost your backup codes you can generate new ones, invalidating all previous codes. <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Print out these new codes or save them someplace safe.</pc></source>
+      </segment>
+    </unit>
+    <unit id="4663796819689603423">
+      <segment>
+        <source>Regenerate backup codes</source>
+      </segment>
+    </unit>
+    <unit id="6359908116364527838">
+      <segment>
+        <source>Project Alerts</source>
+      </segment>
+    </unit>
+    <unit id="6373761293150491680">
+      <segment>
+        <source>Return to initial login page</source>
+      </segment>
+    </unit>
+    <unit id="6430072333383968514">
+      <segment>
+        <source>Regenerate codes</source>
+      </segment>
+    </unit>
+    <unit id="7308123627289097296">
+      <segment>
+        <source>Unknown problem using Social Authentication</source>
+      </segment>
+    </unit>
+    <unit id="7704379049286251361">
+      <segment>
+        <source>Your current password is incorrect.</source>
+      </segment>
+    </unit>
+    <unit id="7808756054397155068">
+      <segment>
+        <source>Reset</source>
+      </segment>
+    </unit>
+    <unit id="8434191191397593923">
+      <segment>
+        <source>Your account has no password set up.</source>
+      </segment>
+    </unit>
+    <unit id="8489391551429309663">
+      <segment>
+        <source>Your security key has been registered.</source>
+      </segment>
+    </unit>
+    <unit id="9053544882734151327">
+      <segment>
+        <source>Provide a name for your device to complete registration.</source>
       </segment>
     </unit>
   </file>

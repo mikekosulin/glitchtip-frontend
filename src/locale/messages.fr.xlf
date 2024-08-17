@@ -97,12 +97,6 @@
         <target>Pour continuer, vous devez soit vous connecter avec votre compte existant, soit en créer un nouveau.</target>
       </segment>
     </unit>
-    <unit id="3961541970784414950">
-      <segment state="translated">
-        <source>There was an error connecting to your social authentication provider.</source>
-        <target>Une erreur s&apos;est produite lors de la connexion à votre fournisseur d&apos;authentification sociale.</target>
-      </segment>
-    </unit>
     <unit id="1095247315180807956">
       <segment state="translated">
         <source>New to GlitchTip?</source>
@@ -271,9 +265,9 @@
         <target>ou</target>
       </segment>
     </unit>
-    <unit id="315190807015121967">
-      <segment state="translated">
-        <source>Code must be of length 6 or 16</source>
+    <unit id="2152994175880724805">
+      <segment state="initial">
+        <source>Code must be of length 6, 8, or 16</source>
         <target>Le code doit avoir une longueur de 6 ou 16</target>
       </segment>
     </unit>
@@ -1087,10 +1081,10 @@
         <target>Other Teams</target>
       </segment>
     </unit>
-    <unit id="2405706490874342359">
+    <unit id="9153853260021860021">
       <segment state="initial">
-        <source> If you ever lose access to your codes, you can recover your account with your <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">backup codes</pc>. </source>
-        <target> If you ever lose access to your codes, you can recover your account with your <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">backup codes</pc>. </target>
+        <source>If you ever lose access to your codes, you can recover your account with your <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">backup codes</pc>.</source>
+        <target>If you ever lose access to your codes, you can recover your account with your <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">backup codes</pc>.</target>
       </segment>
     </unit>
     <unit id="8951128623878467862">
@@ -1479,8 +1473,8 @@
     </unit>
     <unit id="7276967761111129879">
       <segment state="initial">
-        <source>URL may not be more than <ph id="0" equiv="INTERPOLATION" disp="{{ formUrl.errors?.maxlength.requiredLength }}"/> characters</source>
-        <target>URL may not be more than <ph id="0" equiv="INTERPOLATION" disp="{{ formUrl.errors?.maxlength.requiredLength }}"/> characters</target>
+        <source>URL may not be more than <ph id="0" equiv="INTERPOLATION" disp="{{ formUrl.errors.maxlength.requiredLength }}"/> characters</source>
+        <target>URL may not be more than <ph id="0" equiv="INTERPOLATION" disp="{{ formUrl.errors.maxlength.requiredLength }}"/> characters</target>
       </segment>
     </unit>
     <unit id="8797007391593964199">
@@ -1499,6 +1493,148 @@
       <segment state="initial">
         <source>If string isn&apos;t found in response body, the monitor will report as down</source>
         <target>If string isn&apos;t found in response body, the monitor will report as down</target>
+      </segment>
+    </unit>
+    <unit id="7704379049286251361">
+      <segment state="initial">
+        <source>Your current password is incorrect.</source>
+        <target>Your current password is incorrect.</target>
+      </segment>
+    </unit>
+    <unit id="6373761293150491680">
+      <segment state="initial">
+        <source>Return to initial login page</source>
+        <target>Return to initial login page</target>
+      </segment>
+    </unit>
+    <unit id="7308123627289097296">
+      <segment state="initial">
+        <source>Unknown problem using Social Authentication</source>
+        <target>Unknown problem using Social Authentication</target>
+      </segment>
+    </unit>
+    <unit id="1538995058317034003">
+      <segment state="initial">
+        <source>Device activation was unsuccessful.</source>
+        <target>Device activation was unsuccessful.</target>
+      </segment>
+    </unit>
+    <unit id="4663796819689603423">
+      <segment state="initial">
+        <source>Regenerate backup codes</source>
+        <target>Regenerate backup codes</target>
+      </segment>
+    </unit>
+    <unit id="4622788799334711424">
+      <segment state="initial">
+        <source>If you have lost your backup codes you can generate new ones, invalidating all previous codes. <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Print out these new codes or save them someplace safe.</pc></source>
+        <target>If you have lost your backup codes you can generate new ones, invalidating all previous codes. <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Print out these new codes or save them someplace safe.</pc></target>
+      </segment>
+    </unit>
+    <unit id="6430072333383968514">
+      <segment state="initial">
+        <source>Regenerate codes</source>
+        <target>Regenerate codes</target>
+      </segment>
+    </unit>
+    <unit id="2167241020391967059">
+      <segment state="initial">
+        <source>Download or copy a list of backup codes. If you ever lose your phone, each of these recovery codes can be used one time to regain access to your account. <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Print them out or save them someplace safe.</pc></source>
+        <target>Download or copy a list of backup codes. If you ever lose your phone, each of these recovery codes can be used one time to regain access to your account. <pc id="0" equivStart="START_TAG_STRONG" equivEnd="CLOSE_TAG_STRONG" type="other" dispStart="&lt;strong&gt;" dispEnd="&lt;/strong&gt;">Print them out or save them someplace safe.</pc></target>
+      </segment>
+    </unit>
+    <unit id="3099741642167775297">
+      <segment state="initial">
+        <source>Download</source>
+        <target>Download</target>
+      </segment>
+    </unit>
+    <unit id="4323470180912194028">
+      <segment state="initial">
+        <source>Copy</source>
+        <target>Copy</target>
+      </segment>
+    </unit>
+    <unit id="2617201451708142937">
+      <segment state="initial">
+        <source>Enter one of the backup codes to confirm that you have saved them:</source>
+        <target>Enter one of the backup codes to confirm that you have saved them:</target>
+      </segment>
+    </unit>
+    <unit id="305233477996347721">
+      <segment state="initial">
+        <source>Code must be 8 digits</source>
+        <target>Code must be 8 digits</target>
+      </segment>
+    </unit>
+    <unit id="187187500641108332">
+      <segment state="initial">
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ backupCode?.errors?.serverError }}"/>
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ backupCode?.errors?.serverError }}"/>
+        </target>
+      </segment>
+    </unit>
+    <unit id="9053544882734151327">
+      <segment state="initial">
+        <source>Provide a name for your device to complete registration.</source>
+        <target>Provide a name for your device to complete registration.</target>
+      </segment>
+    </unit>
+    <unit id="8489391551429309663">
+      <segment state="initial">
+        <source>Your security key has been registered.</source>
+        <target>Your security key has been registered.</target>
+      </segment>
+    </unit>
+    <unit id="3677197196283475273">
+      <segment state="initial">
+        <source>You have successfully disconnected your social auth account</source>
+        <target>You have successfully disconnected your social auth account</target>
+      </segment>
+    </unit>
+    <unit id="8434191191397593923">
+      <segment state="initial">
+        <source>Your account has no password set up.</source>
+        <target>Your account has no password set up.</target>
+      </segment>
+    </unit>
+    <unit id="1431416938026210429">
+      <segment state="initial">
+        <source>Password</source>
+        <target>Password</target>
+      </segment>
+    </unit>
+    <unit id="3782563238994348625">
+      <segment state="initial">
+        <source>Confirm password</source>
+        <target>Confirm password</target>
+      </segment>
+    </unit>
+    <unit id="4169468477304015472">
+      <segment state="initial">
+        <source>If you have an account with GlitchTip, an email has been sent</source>
+        <target>If you have an account with GlitchTip, an email has been sent</target>
+      </segment>
+    </unit>
+    <unit id="7808756054397155068">
+      <segment state="initial">
+        <source>Reset</source>
+        <target>Reset</target>
+      </segment>
+    </unit>
+    <unit id="1017066204420437090">
+      <segment state="initial">
+        <source>Set New Password</source>
+        <target>Set New Password</target>
+      </segment>
+    </unit>
+    <unit id="6359908116364527838">
+      <segment state="initial">
+        <source>Project Alerts</source>
+        <target>Project Alerts</target>
       </segment>
     </unit>
   </file>
