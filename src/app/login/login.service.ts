@@ -154,6 +154,15 @@ export class LoginService extends StatefulService<LoginState> {
           this.redirect();
         }
       }),
+      catchError((err: AllAuthHttpErrorResponse) => {
+        this.setState({
+          errors: handleAllAuthErrorResponse(err),
+        });
+        if ([400, 500].includes(err.status)) {
+          return of(undefined);
+        }
+        return throwError(() => err);
+      }),
     );
   }
 }
