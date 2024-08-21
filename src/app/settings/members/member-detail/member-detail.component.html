@@ -112,7 +112,7 @@
                     <gt-loading-button
                       buttonText="Transfer Ownership"
                       [loading]="(transferOrgOwnershipLoading$ | async) === true"
-                      (click)="transferOrgOwnership()"
+                      (buttonClick)="transferOrgOwnership()"
                       >
                       Change Password
                     </gt-loading-button>

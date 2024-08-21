@@ -27,10 +27,10 @@
           </p>
           <gt-loading-button
             buttonText="Select"
-          [loading]="
-            (subscriptionCreationLoadingId$ | async) === product.prices[0].id
-          "
-            (click)="onSubmit(product.prices[0])"
+            [loading]="
+              (subscriptionCreationLoadingId$ | async) === product.prices[0].id
+            "
+            (buttonClick)="onSubmit(product.prices[0])"
           ></gt-loading-button>
         </mat-card-content>
       </mat-card>

@@ -43,11 +43,11 @@
                     <gt-loading-button
                       class="resend-invite"
                       [loading]="member.loadingResendInvite"
-                [buttonText]="
-                  member.sentResendInvite ? 'Invite Resent' : 'Resend Invite'
-                "
+                      [buttonText]="
+                        member.sentResendInvite ? 'Invite Resent' : 'Resend Invite'
+                      "
                       [disabled]="member.sentResendInvite"
-                      (click)="resendInvite(member)"
+                      (buttonClick)="resendInvite(member)"
                       >
                     </gt-loading-button>
                   }

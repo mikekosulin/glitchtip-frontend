@@ -42,7 +42,7 @@
                     buttonText="Leave Team"
                     buttonStyle="stroked"
                     [loading]="(loading$ | async)?.removeTeamMember === yourTeam.slug"
-                    (click)="leaveTeam(yourTeam.slug)"
+                    (buttonClick)="leaveTeam(yourTeam.slug)"
                     id="leave-team"
                   ></gt-loading-button>
                 </li>
@@ -97,7 +97,7 @@
                           buttonText="Join Team"
                           buttonStyle="stroked"
                           [loading]="(loading$ | async)?.addTeamMember === otherTeam.slug"
-                          (click)="joinTeam(otherTeam.slug)"
+                          (buttonClick)="joinTeam(otherTeam.slug)"
                           id="leave-team"
                         ></gt-loading-button>
                       </li>

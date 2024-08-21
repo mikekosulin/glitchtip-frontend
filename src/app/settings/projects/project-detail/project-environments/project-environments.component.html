@@ -20,7 +20,7 @@
                       {{ environment.name }}
                     </span>
                     <gt-loading-button
-                      (click)="toggleHidden(environment)"
+                      (buttonClick)="toggleHidden(environment)"
                       [loading]="
                         environment.id === (toggleHiddenloading$ | async)
                       "

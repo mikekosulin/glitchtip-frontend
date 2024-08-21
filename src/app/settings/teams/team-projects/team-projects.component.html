@@ -55,10 +55,10 @@
                   <gt-loading-button
                     buttonText="Remove"
                     buttonStyle="stroked"
-            [loading]="
-              project.slug === (loading$ | async)?.removeProjectFromTeam
-            "
-                    (click)="removeProject(project.slug)"
+                    [loading]="
+                      project.slug === (loading$ | async)?.removeProjectFromTeam
+                    "
+                    (buttonClick)="removeProject(project.slug)"
                     id="remove-team-member"
                   ></gt-loading-button>
                 </li>

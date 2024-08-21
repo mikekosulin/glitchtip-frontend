@@ -34,10 +34,10 @@
             @if (!email.isVerified) {
               <gt-loading-button
                 buttonText="Resend confirmation"
-            [loading]="
-              (loadingStates$ | async)?.resendConfirmation === email.email
-            "
-                (click)="resendConfirmation(email.email)"
+                [loading]="
+                  (loadingStates$ | async)?.resendConfirmation === email.email
+                "
+                (buttonClick)="resendConfirmation(email.email)"
                 buttonStyle="stroked"
               ></gt-loading-button>
             }
@@ -45,7 +45,7 @@
               <gt-loading-button
                 buttonText="Make primary"
                 [loading]="(loadingStates$ | async)?.makePrimary === email.email"
-                (click)="makePrimary(email.email)"
+                (buttonClick)="makePrimary(email.email)"
                 buttonStyle="stroked"
               ></gt-loading-button>
             }

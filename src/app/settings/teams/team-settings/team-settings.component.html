@@ -50,7 +50,7 @@
               <gt-loading-button
                 buttonText="Delete Team"
                 [loading]="(loading$ | async)?.deleteTeam"
-                (click)="deleteTeam()"
+                (buttonClick)="deleteTeam()"
                 >
               </gt-loading-button>
             </mat-card-content>

@@ -147,7 +147,7 @@
                   <div>
                     <p i18n
                       >By deleting your project, you will lose all associated data. This
-          cannot be undone.</p
+                      cannot be undone.</p
                       >
                       @if (deleteError) {
                         <mat-error>{{ deleteError }}</mat-error>
@@ -156,7 +156,7 @@
                     <gt-loading-button
                       buttonText="Delete Project"
                       [loading]="deleteLoading"
-                      (click)="deleteProject()"
+                      (buttonClick)="deleteProject()"
                       id="delete-project"
                       >
                     </gt-loading-button>

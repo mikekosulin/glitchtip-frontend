@@ -6,6 +6,7 @@
 @if (buttonStyle === 'flat') {
   <button
     [class.full-width]="fullWidth"
+    (click)="buttonClick.emit()"
     mat-flat-button
     color="primary"
     [disabled]="loading || disabled"
@@ -19,6 +20,7 @@
 @if (buttonStyle === 'basic') {
   <button
     [class.full-width]="fullWidth"
+    (click)="buttonClick.emit()"
     mat-button
     color="primary"
     [disabled]="loading || disabled"

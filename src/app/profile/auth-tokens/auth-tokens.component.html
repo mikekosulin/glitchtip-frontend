@@ -39,7 +39,7 @@
                       [value]="authToken.token"
                     ></gt-copy-input>
                     <gt-loading-button
-                      (click)="deleteAuthToken(authToken.id)"
+                      (buttonClick)="deleteAuthToken(authToken.id)"
                       [loading]="authToken.id === (deleteLoading$ | async)"
                       buttonText="Delete"
                       buttonStyle="stroked"

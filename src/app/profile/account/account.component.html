@@ -30,7 +30,7 @@
           data-test
           buttonText="Delete User Account"
           [loading]="(userDeleteLoading$ | async) === true"
-          (click)="deleteUser()"
+          (buttonClick)="deleteUser()"
           id="delete-user"
           >
         </gt-loading-button>

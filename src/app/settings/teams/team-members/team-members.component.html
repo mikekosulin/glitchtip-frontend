@@ -51,7 +51,7 @@
                 buttonText="Remove"
                 buttonStyle="stroked"
                 [loading]="selectedTeamMember === teamMember.id"
-                (click)="removeTeamMember(teamMember.id, teamMember.email)"
+                (buttonClick)="removeTeamMember(teamMember.id, teamMember.email)"
                 id="remove-team-member"
               ></gt-loading-button>
             </li>

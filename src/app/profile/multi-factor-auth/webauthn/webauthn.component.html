@@ -23,7 +23,7 @@
       <gt-form-error [error]="error"></gt-form-error>
     </div>
     }
-    <gt-loading-button buttonText="Set up new device" [loading]="false" (click)="activateWebAuthn()"
+    <gt-loading-button buttonText="Set up new device" [loading]="false" (buttonClick)="activateWebAuthn()"
       [disabled]="hasTOTP() === undefined" buttonStyle="flat"></gt-loading-button>
     }
     @if (stage() === 2) {

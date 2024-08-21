@@ -113,7 +113,7 @@
             <gt-loading-button
               buttonText="submit"
               [loading]="(newAlertLoading$ | async) === true"
-              (click)="submitCreateAlert()"
+              (buttonClick)="submitCreateAlert()"
               i18n
               >Submit</gt-loading-button
             >
@@ -151,7 +151,7 @@
               <gt-loading-button
                 [buttonText]="'Remove Alert ' + (i + 1)"
                 buttonStyle="stroked"
-                (click)="removeAlert(alert.id)"
+                (buttonClick)="removeAlert(alert.id)"
                 [loading]="(removeAlertLoading$ | async) === alert.id"
               >
               </gt-loading-button>
