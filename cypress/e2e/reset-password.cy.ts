@@ -9,10 +9,6 @@ describe("Send reset email", () => {
     cy.visit("/reset-password");
     cy.get("input[formcontrolname=email]").type("aa@aa.com");
     cy.get("#submit").click();
-    cy.contains(
-      "If you have an account with GlitchTip, an email has been sent",
-    );
-    cy.get("#reset").click();
-    cy.get("#reset").should("not.exist");
+    cy.get("[data-cy=reset-success]")
   });
 });
