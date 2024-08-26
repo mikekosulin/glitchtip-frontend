@@ -12,7 +12,6 @@ import {
   reduceParamErrors,
 } from "../api/allauth/errorMessages";
 import { StatefulService } from "../shared/stateful-service/signal-state.service";
-import { UserService } from "../api/user/user.service";
 
 export interface ResetPasswordState extends APIState {
   errors: AllAuthError[];
@@ -42,7 +41,6 @@ export class ResetPasswordService extends StatefulService<ResetPasswordState> {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private userService: UserService,
   ) {
     super(initialState);
   }
@@ -52,7 +50,6 @@ export class ResetPasswordService extends StatefulService<ResetPasswordState> {
     return this.authenticationService.requestPassword(email).pipe(
       tap(() => {
         this.state.set({ ...initialState, success: true });
-        this.userService.getUserDetails();
       }),
       catchError((err: AllAuthHttpErrorResponse) => {
         this.setState({
