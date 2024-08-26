@@ -26,8 +26,8 @@ import { AuthService } from "src/app/auth.service";
     MatDividerModule,
     MatFormFieldModule,
     LoadingButtonComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class AccountComponent implements OnDestroy {
   userDeleteLoading$ = this.userService.userDeleteLoading$;
@@ -45,9 +45,12 @@ export class AccountComponent implements OnDestroy {
       )
     ) {
       lastValueFrom(
-        this.userService
-          .deleteUser()
-          .pipe(tap(() => console.log(this.authService))), // .removeAuth())),
+        this.userService.deleteUser().pipe(
+          tap(() => {
+            this.authService.expireAuth();
+            window.location.href = "/login";
+          }),
+        ),
         { defaultValue: null },
       );
     }

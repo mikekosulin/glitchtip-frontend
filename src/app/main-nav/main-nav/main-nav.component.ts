@@ -11,7 +11,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatListModule } from "@angular/material/list";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatButtonModule } from "@angular/material/button";
-import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { RouterLink, RouterLinkActive } from "@angular/router";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { AsyncPipe } from "@angular/common";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -35,8 +35,8 @@ import { toObservable } from "@angular/core/rxjs-interop";
     RouterLinkActive,
     MatCardModule,
     MobileNavToolbarComponent,
-    AsyncPipe
-],
+    AsyncPipe,
+  ],
 })
 export class MainNavComponent {
   activeOrganizationLoaded = false;
@@ -81,7 +81,6 @@ export class MainNavComponent {
     private auth: AuthService,
     private settingsService: SettingsService,
     private userService: UserService,
-    private router: Router,
   ) {
     this.organizationsService.activeOrganizationLoaded$.subscribe(
       (loaded) => (this.activeOrganizationLoaded = loaded),
@@ -94,7 +93,7 @@ export class MainNavComponent {
 
   logout() {
     firstValueFrom(
-      this.auth.logout().pipe(tap(() => this.router.navigate(["/login"]))),
+      this.auth.logout().pipe(tap(() => (window.location.href = "/login"))),
     );
   }
 
