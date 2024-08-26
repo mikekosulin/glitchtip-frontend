@@ -31,7 +31,6 @@ const initialIsAuthenticated = localStorage.getItem("isAuthenticated");
 export class AuthService {
   readonly isAuthenticated = signal(initialIsAuthenticated === "true");
   readonly initialized = signal(false);
-  readonly redirectURL = signal("");
   readonly mfaFlows: WritableSignal<AuthFlow[]> = signal([]);
   /**
    * Emit isAuthenticated immediately when true or else after initialized is set
