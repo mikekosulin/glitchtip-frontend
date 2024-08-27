@@ -1613,18 +1613,6 @@
         <target>Confirm password</target>
       </segment>
     </unit>
-    <unit id="4169468477304015472">
-      <segment state="initial">
-        <source>If you have an account with GlitchTip, an email has been sent</source>
-        <target>If you have an account with GlitchTip, an email has been sent</target>
-      </segment>
-    </unit>
-    <unit id="7808756054397155068">
-      <segment state="initial">
-        <source>Reset</source>
-        <target>Reset</target>
-      </segment>
-    </unit>
     <unit id="1017066204420437090">
       <segment state="initial">
         <source>Set New Password</source>
@@ -1635,6 +1623,78 @@
       <segment state="initial">
         <source>Project Alerts</source>
         <target>Project Alerts</target>
+      </segment>
+    </unit>
+    <unit id="8222747160094057941">
+      <segment state="initial">
+        <source>If you have an account with GlitchTip, an email has been sent to the email address you provided.</source>
+        <target>If you have an account with GlitchTip, an email has been sent to the email address you provided.</target>
+      </segment>
+    </unit>
+    <unit id="3084686770297988088">
+      <segment state="initial">
+        <source>Return to login</source>
+        <target>Return to login</target>
+      </segment>
+    </unit>
+    <unit id="5966633327405012171">
+      <segment state="initial">
+        <source> If an <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;tooltip&quot; matTooltip=&quot;An event is every occurrence of the same error (aka: issue) in your application.&quot; &gt;" dispEnd="&lt;/span &gt;">event</pc> happens</source>
+        <target> If an <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;tooltip&quot; matTooltip=&quot;An event is every occurrence of the same error (aka: issue) in your application.&quot; &gt;" dispEnd="&lt;/span &gt;">event</pc> happens</target>
+      </segment>
+    </unit>
+    <unit id="3595833482001508466">
+      <segment state="initial">
+        <source><ph id="0" equiv="INTERPOLATION" disp="{{ projectFormQuantity.value | i18nPlural: timesI18nMapping }}"/> in</source>
+        <target><ph id="0" equiv="INTERPOLATION" disp="{{ projectFormQuantity.value | i18nPlural: timesI18nMapping }}"/> in</target>
+      </segment>
+    </unit>
+    <unit id="2045774391739296209">
+      <segment state="initial">
+        <source>Timespan</source>
+        <target>Timespan</target>
+      </segment>
+    </unit>
+    <unit id="2582356557395842562">
+      <segment state="initial">
+        <source>Enter an integer greater than 0.</source>
+        <target>Enter an integer greater than 0.</target>
+      </segment>
+    </unit>
+    <unit id="5718859187781924335">
+      <segment state="initial">
+        <source>in <ph id="0" equiv="INTERPOLATION" disp="{{ projectFormTimespan.value | i18nPlural: minutesI18nMapping }}"/>, send an alert.</source>
+        <target>in <ph id="0" equiv="INTERPOLATION" disp="{{ projectFormTimespan.value | i18nPlural: minutesI18nMapping }}"/>, send an alert.</target>
+      </segment>
+    </unit>
+    <unit id="2342149656142683501">
+      <segment state="initial">
+        <source>If an uptime monitor is triggered.</source>
+        <target>If an uptime monitor is triggered.</target>
+      </segment>
+    </unit>
+    <unit id="3695251475145999588">
+      <segment state="initial">
+        <source>time</source>
+        <target>time</target>
+      </segment>
+    </unit>
+    <unit id="7074388989229825051">
+      <segment state="initial">
+        <source>times</source>
+        <target>times</target>
+      </segment>
+    </unit>
+    <unit id="5405071297219936776">
+      <segment state="initial">
+        <source>minute</source>
+        <target>minute</target>
+      </segment>
+    </unit>
+    <unit id="982745398054129955">
+      <segment state="initial">
+        <source>minutes</source>
+        <target>minutes</target>
       </segment>
     </unit>
   </file>

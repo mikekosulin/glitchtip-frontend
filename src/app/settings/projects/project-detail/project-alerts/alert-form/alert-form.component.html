@@ -15,12 +15,14 @@
       [checked]="projectFormErrorAlert.value"
       (change)="toggleErrorAlerts()"
     >
-      <span class="mat-body-1">
-        If&nbsp;an&nbsp;<span
+      <span class="mat-body-1" i18n>
+        If an
+        <span
           class="tooltip"
           matTooltip="An event is every occurrence of the same error (aka: issue) in your application."
           >event</span
-        >&nbsp;happens&nbsp;</span
+        >
+        happens</span
       >
     </mat-checkbox>
     <mat-form-field floatLabel="always" appearance="outline">
@@ -43,15 +45,11 @@
         </mat-error>
       }
     </mat-form-field>
-    <span
-      >time
-      @if (projectFormQuantity.value !== 1) {
-        <span>s</span>
-      }
-      &nbsp;in</span
+    <span i18n
+      >{{ projectFormQuantity.value | i18nPlural: timesI18nMapping }} in</span
     >
     <mat-form-field floatLabel="always" appearance="outline">
-      <mat-label>Timespan</mat-label>
+      <mat-label i18n>Timespan</mat-label>
       <input
         matInput
         min="0"
@@ -65,21 +63,17 @@
       />
       @if (projectFormTimespan.errors) {
         <mat-error>
-          <span>Enter an integer greater than 0.</span>
+          <span i18n>Enter an integer greater than 0.</span>
         </mat-error>
       }
     </mat-form-field>
-    <span
-      >minute
-      @if (projectFormTimespan.value !== 1) {
-        <span>s</span>
-      }
-      ,&nbsp;send&nbsp;an&nbsp;email.</span
+    <span i18n
+      >in {{ projectFormTimespan.value | i18nPlural: minutesI18nMapping }}, send
+      an alert.</span
     >
-
     <div class="uptime-option" formGroupName="optionsGroup">
       <mat-checkbox data-cy="uptime-check" formControlName="uptime"
-        ><span class="mat-body-1"
+        ><span class="mat-body-1" i18n
           >If an uptime monitor is triggered.</span
         ></mat-checkbox
       >

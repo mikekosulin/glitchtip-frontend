@@ -1,3 +1,4 @@
+import { I18nPluralPipe } from '@angular/common';
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import {
   FormGroup,
@@ -45,6 +46,7 @@ export const selectionRequiredValidator: ValidatorFn = (
   styleUrls: ["./alert-form.component.scss"],
   standalone: true,
   imports: [
+    I18nPluralPipe,
     ReactiveFormsModule,
     MatCheckboxModule,
     MatTooltipModule,
@@ -65,6 +67,16 @@ export class AlertFormComponent implements OnInit {
     uptime: boolean;
   }>();
   @Input() newAlert: boolean | undefined = false;
+
+  timesI18nMapping = {
+    '=1': $localize `time`,
+    'other': $localize `times`
+  };
+
+  minutesI18nMapping = {
+    '=1': $localize `minute`,
+    'other': $localize `minutes`
+  }
 
   intervalValidators = [
     Validators.min(0),

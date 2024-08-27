@@ -1299,11 +1299,6 @@
         <source>Confirm password</source>
       </segment>
     </unit>
-    <unit id="4169468477304015472">
-      <segment>
-        <source>If you have an account with GlitchTip, an email has been sent</source>
-      </segment>
-    </unit>
     <unit id="4323470180912194028">
       <segment>
         <source>Copy</source>
@@ -1344,11 +1339,6 @@
         <source>Your current password is incorrect.</source>
       </segment>
     </unit>
-    <unit id="7808756054397155068">
-      <segment>
-        <source>Reset</source>
-      </segment>
-    </unit>
     <unit id="8434191191397593923">
       <segment>
         <source>Your account has no password set up.</source>
@@ -1362,6 +1352,66 @@
     <unit id="9053544882734151327">
       <segment>
         <source>Provide a name for your device to complete registration.</source>
+      </segment>
+    </unit>
+    <unit id="2045774391739296209">
+      <segment>
+        <source>Timespan</source>
+      </segment>
+    </unit>
+    <unit id="2342149656142683501">
+      <segment>
+        <source>If an uptime monitor is triggered.</source>
+      </segment>
+    </unit>
+    <unit id="2582356557395842562">
+      <segment>
+        <source>Enter an integer greater than 0.</source>
+      </segment>
+    </unit>
+    <unit id="3084686770297988088">
+      <segment>
+        <source>Return to login</source>
+      </segment>
+    </unit>
+    <unit id="3595833482001508466">
+      <segment>
+        <source><ph id="0" equiv="INTERPOLATION" disp="{{ projectFormQuantity.value | i18nPlural: timesI18nMapping }}"/> in</source>
+      </segment>
+    </unit>
+    <unit id="3695251475145999588">
+      <segment>
+        <source>time</source>
+      </segment>
+    </unit>
+    <unit id="5405071297219936776">
+      <segment>
+        <source>minute</source>
+      </segment>
+    </unit>
+    <unit id="5718859187781924335">
+      <segment>
+        <source>in <ph id="0" equiv="INTERPOLATION" disp="{{ projectFormTimespan.value | i18nPlural: minutesI18nMapping }}"/>, send an alert.</source>
+      </segment>
+    </unit>
+    <unit id="5966633327405012171">
+      <segment>
+        <source> If an <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;tooltip&quot; matTooltip=&quot;An event is every occurrence of the same error (aka: issue) in your application.&quot; &gt;" dispEnd="&lt;/span &gt;">event</pc> happens</source>
+      </segment>
+    </unit>
+    <unit id="7074388989229825051">
+      <segment>
+        <source>times</source>
+      </segment>
+    </unit>
+    <unit id="8222747160094057941">
+      <segment>
+        <source>If you have an account with GlitchTip, an email has been sent to the email address you provided.</source>
+      </segment>
+    </unit>
+    <unit id="982745398054129955">
+      <segment>
+        <source>minutes</source>
       </segment>
     </unit>
   </file>
