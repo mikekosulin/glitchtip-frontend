@@ -112,7 +112,7 @@ export class MonitorFormComponent implements OnInit {
 
   formInterval = new FormControl<number>(defaultInterval, {
     nonNullable: true,
-    validators: [Validators.required, Validators.min(1), Validators.max(86399)],
+    validators: [Validators.required, Validators.min(1), Validators.max(32767)],
   });
 
   formTimeout = new FormControl<number | null>(null, [
