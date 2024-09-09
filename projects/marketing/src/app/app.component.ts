@@ -4,7 +4,7 @@ import { LinksService } from "./links.service";
 import { MatToolbar } from "@angular/material/toolbar";
 
 @Component({
-  selector: "app-root",
+  selector: "mkt-root",
   standalone: true,
   imports: [RouterOutlet, RouterLink, MatToolbar],
   templateUrl: "./app.component.html",

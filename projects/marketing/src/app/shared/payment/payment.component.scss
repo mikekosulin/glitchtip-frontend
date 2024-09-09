@@ -1,0 +1,49 @@
+.plans {
+  margin: 20px 2px;
+}
+
+.tab-label {
+  opacity: 1;
+}
+
+.tab-label-header {
+  margin-bottom: 0;
+  font-weight: 500;
+}
+.mat-tab-label-content {
+  flex-direction: column;
+}
+
+.card-spacing-container {
+  padding-top: 16px;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+mat-tab-group ::ng-deep {
+  .mat-tab-labels {
+    justify-content: center;
+  }
+  .mat-tab-label .mat-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+    .value-props {
+      flex: 1;
+      margin-bottom: 15px;
+
+      li {
+        margin: 2px 0;
+        line-height: 1.2;
+      }
+    }
+  }
+}
+
+h2.mat-headline-4 {
+  margin: 0px 0 20px;
+}

@@ -232,9 +232,15 @@
               }
             ],
             "styles": ["projects/marketing/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["./src/assets/styles", ""]
+            },
             "scripts": [],
             "server": "projects/marketing/src/main.server.ts",
-            "prerender": true,
+            "prerender": {
+              "discoverRoutes": true,
+              "routesFile": "projects/marketing/routes.txt"
+            },
             "ssr": {
               "entry": "projects/marketing/server.ts"
             }

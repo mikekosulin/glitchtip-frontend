@@ -1,11 +1,11 @@
 @use '@angular/material' as mat;
 @import 'prismjs/themes/prism.css';
-// $font-path: '../fonts';
+$font-path: '../../../src/assets/fonts';
 @import '../../../src/assets/styles/themes';
 @import '../../../src/assets/styles/variables';
 @import '../../../src/assets/styles/font-files';
 @import '../../../src/assets/styles/resets';
-// @import './app/shared/payment/_payment.component.scss';
+@import './app/shared/payment/_payment.component.scss';
 
 // Common styles for Angular Material. Included so that we only have to load a
 // single CSS file for Angular Material in our app.
