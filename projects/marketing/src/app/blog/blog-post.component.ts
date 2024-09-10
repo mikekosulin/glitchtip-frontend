@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MatCard, MatCardContent } from "@angular/material/card";
 import { ActivatedRoute } from "@angular/router";
 import { MarkdownComponent } from "ngx-markdown";
@@ -11,7 +11,7 @@ import { MarkdownComponent } from "ngx-markdown";
   templateUrl: "./blog-post.component.html",
   styleUrl: "./blog-post.component.scss",
 })
-export class BlogPostComponent {
+export class BlogPostComponent implements OnInit {
   cleanedMarkdown: string | null = null;
   title: string | null = null;
   constructor(

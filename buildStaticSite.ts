@@ -8,7 +8,6 @@ const routesFile = path.join(__dirname, "projects/marketing/routes.txt");
 const blogIndexFile = path.join(blogDir, "blogIndex.json");
 const rssFeedFile = path.join(blogDir, "rss.xml");
 
-// Utility function to extract the frontmatter (metadata) from a markdown file
 function extractFrontmatter(content: string): { [key: string]: string } {
   const frontmatterRegex = /^---\s*([\s\S]*?)\s*---/;
   const match = frontmatterRegex.exec(content);
@@ -17,9 +16,11 @@ function extractFrontmatter(content: string): { [key: string]: string } {
     const frontmatter = match[1];
     return frontmatter.split("\n").reduce(
       (acc, line) => {
-        const [key, value] = line.split(":").map((part) => part.trim());
+        const [key, ...valueParts] = line.split(":");
+        const value = valueParts.join(":").trim();
+
         if (key && value) {
-          acc[key] = value.replace(/^['"]|['"]$/g, ""); // Remove quotes around the value
+          acc[key.trim()] = value.replace(/^['"]|['"]$/g, ""); // Remove surrounding quotes from value
         }
         return acc;
       },
@@ -46,7 +47,12 @@ function extractDateFromFilename(filename: string): Date | null {
 function generateRoutesIndexAndRSS(): void {
   const files: string[] = glob.sync(`${blogDir}/**/*.md`);
   const routes: string[] = [];
-  const blogIndex: { title: string; route: string; date: string }[] = [];
+  const blogIndex: {
+    title: string;
+    route: string;
+    date: string;
+    description: string;
+  }[] = [];
   let rssItems: string[] = [];
 
   files.forEach((file) => {
@@ -68,6 +74,7 @@ function generateRoutesIndexAndRSS(): void {
         title: frontmatter.title,
         route: url,
         date: formattedDate,
+        description: frontmatter.description,
       });
 
       // Generate RSS item

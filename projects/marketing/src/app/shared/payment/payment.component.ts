@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewChecked, Input } from "@angular/core";
-import { MatTab, MatTabGroup } from "@angular/material/tabs";
+import { MatTabGroup, MatTabsModule } from "@angular/material/tabs";
 import { LinksService } from "../../links.service";
 import { environment } from "src/environments/environment";
 import {
@@ -23,8 +23,7 @@ import { AsyncPipe, DecimalPipe } from "@angular/common";
   imports: [
     AsyncPipe,
     DecimalPipe,
-    MatTabGroup,
-    MatTab,
+    MatTabsModule,
     MatCard,
     MatCardContent,
     MatCardTitle,

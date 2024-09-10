@@ -10,11 +10,13 @@ import {
 import { RouterLink } from "@angular/router";
 import { PaymentComponent } from "./shared/payment/payment.component";
 import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   selector: "marketing-home",
   standalone: true,
   imports: [
+    MatButtonModule,
     MatCard,
     MatCardContent,
     MatLabel,
