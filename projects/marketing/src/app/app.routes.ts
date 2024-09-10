@@ -12,6 +12,11 @@ export const routes: Routes = [
       import("./pricing/pricing.component").then((m) => m.PricingComponent),
   },
   {
+    path: "legal/:slug",
+    loadComponent: () =>
+      import("./legal/legal.component").then((m) => m.LegalComponent),
+  },
+  {
     path: "blog",
     loadChildren: () => import("./blog/routes"),
     title: "Blog",
@@ -20,5 +25,10 @@ export const routes: Routes = [
     path: "documentation",
     loadChildren: () => import("./documentation/routes"),
     title: "Documentation",
+  },
+  {
+    path: "sdkdocs",
+    loadChildren: () => import("./sdkdocs/routes"),
+    title: "Sentry SDK Documentation",
   },
 ];

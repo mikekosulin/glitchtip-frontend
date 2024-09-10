@@ -6,7 +6,6 @@ import { MatCardModule } from "@angular/material/card";
 @Component({
   standalone: true,
   imports: [RouterLink, MatCardModule],
-  selector: "mkt-documentation-index",
   templateUrl: "./documentation-index.component.html",
   styleUrls: ["./documentation-index.component.scss"],
 })

@@ -229,6 +229,11 @@
               {
                 "glob": "**/*",
                 "input": "projects/marketing/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/sdk-docs",
+                "output": "static/sdk-docs"
               }
             ],
             "styles": ["projects/marketing/src/styles.scss"],
