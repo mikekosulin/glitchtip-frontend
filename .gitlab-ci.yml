@@ -110,7 +110,7 @@ upload-sourcemaps:
 deploy-staging:
   stage: deploy
   image:
-    name: alpine/helm:3.15.1
+    name: alpine/helm:3.15
     entrypoint: [""]
   # needs: ["build-docker", "test-e2e"]
   script:
@@ -124,3 +124,17 @@ deploy-staging:
       - master
     variables:
       - $CI_COMMIT_REF_PROTECTED
+
+pages:
+  stage: deploy
+  script:
+    - npm ci --cache .npm --prefer-offline --force
+    - npm run build-static
+    - npm run build-marketing
+    - mv dist/marketing/browser public
+    - cp 404.html public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - marketing
