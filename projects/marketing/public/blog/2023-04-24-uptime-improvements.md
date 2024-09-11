@@ -5,7 +5,7 @@ author: David Burke
 published: true
 ---
 
-# Improving our Uptime Monitoring Tool
+## Improving our Uptime Monitoring Tool
 
 We wanted GlitchTip’s uptime monitoring feature to support more configuration options around timeouts and check intervals, while providing excellent performance for both small and large instances.
 
@@ -32,12 +32,12 @@ We wanted GlitchTip’s uptime monitoring feature to support more configuration 
     </picture>
 </div>
 
-## Goals
+### Goals
 
 - Fast and batched queries – we want to ensure PostgreSQL is used as efficiently as possible. We need to batch both database reads and especially writes.
 - Allow to-the-second precision on timeout and check intervals. If you want your site checked exactly every 62 seconds – we should do that. If you want it checked every 1 second with 60 second timeouts, we need to support that, too.
 
-## Tracking monitor state
+### Tracking monitor state
 
 In prior versions of GlitchTip, we would check for the previous uptime “check” to determine if we need to run another. If the interval was 60 seconds and the last check was >= 60 seconds ago, it would run another check. This solution is simple but limited. It can’t support timeout values that are higher than intervals without saving the state of a started check. Saving state means PostgreSQL writes, which we want as few of as possible. Joining the monitor and monitor check tables also carries a minor performance penalty.
 
