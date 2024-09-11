@@ -7,6 +7,7 @@ const blogDir = path.join(__dirname, "projects/marketing/public/blog");
 const routesFile = path.join(__dirname, "projects/marketing/routes.txt");
 const blogIndexFile = path.join(blogDir, "blogIndex.json");
 const rssFeedFile = path.join(blogDir, "rss.xml");
+const domain = "https://glitchtip.com";
 
 function extractFrontmatter(content: string): { [key: string]: string } {
   const frontmatterRegex = /^---\s*([\s\S]*?)\s*---/;
@@ -81,8 +82,9 @@ function generateRoutesIndexAndRSS(): void {
       rssItems.push(`
         <item>
           <title>${frontmatter.title}</title>
-          <link>${url}</link>
+          <link>${domain}${url}</link>
           <pubDate>${date.toUTCString()}</pubDate>
+          <guid>${url}</guid>
         </item>
       `);
     }
@@ -98,12 +100,13 @@ function generateRoutesIndexAndRSS(): void {
 
   // Generate and write the RSS feed
   const rssFeed = `
-    <rss version="2.0">
+    <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
       <channel>
         <title>GlichTip Blog</title>
-        <link>https://glitchtip.com/blog</link>
+        <link>${domain}/blog</link>
         <description>GlitchTip open source error monitoring</description>
         ${rssItems.join("\n")}
+        <atom:link href="${domain}/blog/rss.xml" rel="self" type="application/rss+xml" />
       </channel>
     </rss>
   `;
