@@ -306,7 +306,7 @@ You may add Social Accounts in Django Admin at `/admin/socialaccount/socialapp/`
 - [NextCloud](https://docs.allauth.org/en/latest/socialaccount/providers/nextcloud.html)
 - [OpenID Connect](https://docs.allauth.org/en/latest/socialaccount/providers/openid_connect.html)
 
-The callback endpoint URL has to be set on `/auth/<provider name>` where `<provider name>` is a name of the login provider. For example `https://example.com/auth/github`.
+The callback endpoint URL has to be set on `/accounts/<provider name>/login/callback/` where `<provider name>` is a name of the login provider. For example `https://example.com/accounts/github/login/callback/`.
 
 #### Configuring OpenID Connect based SSO
 
