@@ -3,9 +3,7 @@
 </dt>
 
 @if (answer) {
-<dd class="mat-body-1">{{ answer }}</dd>
+  <dd class="mat-body-1">{{ answer }}</dd>
 } @else {
-<ng-template #useChildren>
   <dd class="mat-body-1"><ng-content></ng-content></dd>
-</ng-template>
 }
