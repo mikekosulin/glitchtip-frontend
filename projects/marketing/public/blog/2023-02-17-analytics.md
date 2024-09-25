@@ -36,14 +36,14 @@ Our software is primarily distributed through [DockerHub](https://hub.docker.com
 
 Our source code can be tracked on [OpenHub](https://www.openhub.net/p/glitchtip).
 
-# How is GlitchTip funded?
+## How is GlitchTip funded?
 
 - app.glitchtip.com offers a free service and is hosted by my company, Burke Software.
 - $167/month in donations including micro-donations on [LiberaPay](https://en.liberapay.com/GlitchTip).
 
 At this time, we don't raise enough money to hire employees who work on GlitchTip.
 
-## What's next
+### What's next
 
 This is where you, a current or potential GlitchTip user, come in. We need:
 
