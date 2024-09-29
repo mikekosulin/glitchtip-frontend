@@ -6,7 +6,7 @@ Not sure which? Elestio and Pikapods both support GlitchTip via a revenue share 
 
 ### System Requirements
 
-GlitchTip requires PostgreSQL (13+), Redis, a web service, and a worker service.
+GlitchTip requires PostgreSQL (13+), Redis/Valkey, a web service, and a worker service.
 
 - Recommended system requirements: 1GB RAM, x86 or arm64 CPU
 - Minimum system requirements: 512MB RAM + swap
@@ -93,7 +93,7 @@ See [Configuration](https://glitchtip.com/documentation/install#configuration) f
 
 ### [Redis](documentation/install#redis)
 
-GlitchTip requires Redis for sending notification, managing events, and more. Go to https://cloud.digitalocean.com/databases/ and create a new redis database. For almost all size instances, the 1 GB RAM | 1 vCPU instance is sufficient. Enter your redis database's name in the glitchtip-redis section. Let's assume it's named "glitchtip-redis". Both "name" and "cluster_name" must be the same value.
+GlitchTip requires Redis/Valkey for sending notification, managing events, and more. Go to https://cloud.digitalocean.com/databases/ and create a new redis database. For almost all size instances, the 1 GB RAM | 1 vCPU instance is sufficient. Enter your redis database's name in the glitchtip-redis section. Let's assume it's named "glitchtip-redis". Both "name" and "cluster_name" must be the same value.
 
 ```
 - name: glitchtip-redis
@@ -201,7 +201,7 @@ Optional environment variables:
 - `GLITCHTIP_MAX_EVENT_LIFE_DAYS` (Default 90) Events and associated data older than this will be deleted.
 - `GLITCHTIP_MAX_TRANSACTION_EVENT_LIFE_DAYS` (Default to max event life days) Transaction events older than this will be deleted.
 - `GLITCHTIP_MAX_FILE_LIFE_DAYS` (Defaults to 2 \* max event life days) Files older than this will be deleted. Files with any reference to a recent event are excluded. For example, a year old file that is used for an active release with event data, will not be deleted.
-- `REDIS_URL` Set redis host explicitly. Example: `redis://:password@host:port/database`. You may also set them separately with `REDIS_HOST`, `REDIS_PORT`, `REDIS_DATABASE`, and `REDIS_PASSWORD`.
+- `REDIS_URL` Set redis/valkey host explicitly. Example: `redis://:password@host:port/database`. You may also set them separately with `REDIS_HOST`, `REDIS_PORT`, `REDIS_DATABASE`, and `REDIS_PASSWORD`.
 - `DATABASE_URL` Set PostgreSQL connect string. PostgreSQL 11 and above are supported.
 - `CELERY_BROKER_URL` set celery broker url explicitly. Defaults to `REDIS_URL`
 - `CACHE_URL` use alternative cache backend for django, defaults to `REDIS_URL`
@@ -226,7 +226,7 @@ See [more information](https://docs.celeryq.dev/en/stable/django/first-steps-wit
 
 ### [Advanced settings for cache and celery](documentation/install#advanced-settings-for-cache-and-celery)
 
-By default, redis is used for the celery broker and cache. It's possible to use cache (and thus redis) for sessions, but is disabled by default in favor of PostgreSQL. At this time, redis data is important to be available but is not necessarily worth backing up.
+By default, redis/valkey is used for the celery broker and cache. It's possible to use cache (and thus redis) for sessions, but is disabled by default in favor of PostgreSQL. At this time, redis data is important to be available but is not necessarily worth backing up.
 
 - `SESSION_ENGINE` Controls where Django stores session data [See Django documentation](https://docs.djangoproject.com/en/4.0/ref/settings/#std-setting-SESSION_ENGINE). To make this use redis, set to `"django.contrib.sessions.backends.cache"`.
 - `SESSION_COOKIE_AGE` The age of session cookies, in seconds. Defaults to [Django default](https://docs.djangoproject.com/en/4.0/ref/settings/#std-setting-SESSION_COOKIE_AGE)
