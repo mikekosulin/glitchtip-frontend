@@ -4,6 +4,8 @@ import * as path from "path";
 import { format } from "date-fns";
 
 const blogDir = path.join(__dirname, "projects/marketing/public/blog");
+const documentationDir = path.join(__dirname, "projects/marketing/public/documentation");
+const legalDir = path.join(__dirname, "projects/marketing/public/legal");
 const routesFile = path.join(__dirname, "projects/marketing/routes.txt");
 const blogIndexFile = path.join(blogDir, "blogIndex.json");
 const rssFeedFile = path.join(blogDir, "rss.xml");
@@ -44,9 +46,20 @@ function extractDateFromFilename(filename: string): Date | null {
   return null;
 }
 
+// Helper function to generate route paths from a directory
+function generateRoutesFromDirectory(baseDir: string, routePrefix: string): string[] {
+  const files: string[] = glob.sync(`${baseDir}/**/*.md`);
+  return files.map((file) =>
+    file
+      .replace(baseDir, routePrefix) // Replace base directory path with the route prefix
+      .replace(/\.md$/, "")
+      .replace(/\\/g, "/") // Normalize Windows paths
+  );
+}
+
 // Function to generate routes.txt, blogIndex.json, and rss.xml
 function generateRoutesIndexAndRSS(): void {
-  const files: string[] = glob.sync(`${blogDir}/**/*.md`);
+  const blogFiles: string[] = glob.sync(`${blogDir}/**/*.md`);
   const routes: string[] = [];
   const blogIndex: {
     title: string;
@@ -56,7 +69,7 @@ function generateRoutesIndexAndRSS(): void {
   }[] = [];
   let rssItems: string[] = [];
 
-  files.forEach((file) => {
+  blogFiles.forEach((file) => {
     const content = fs.readFileSync(file, "utf-8");
     const frontmatter = extractFrontmatter(content);
     const date = extractDateFromFilename(file);
@@ -84,11 +97,16 @@ function generateRoutesIndexAndRSS(): void {
           <title>${frontmatter.title}</title>
           <link>${domain}${url}</link>
           <pubDate>${date.toUTCString()}</pubDate>
-          <guid>${url}</guid>
+          <guid isPermaLink="false">${url}</guid>
         </item>
       `);
     }
   });
+
+  // Add documentation and legal routes
+  const documentationRoutes = generateRoutesFromDirectory(documentationDir, "/documentation");
+  const legalRoutes = generateRoutesFromDirectory(legalDir, "/legal");
+  routes.push(...documentationRoutes, ...legalRoutes);
 
   // Write the routes.txt file
   fs.writeFileSync(routesFile, routes.join("\n"), "utf-8");
@@ -102,11 +120,11 @@ function generateRoutesIndexAndRSS(): void {
   const rssFeed = `
     <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
       <channel>
-        <title>GlichTip Blog</title>
+        <title>GlitchTip Blog</title>
         <link>${domain}/blog</link>
         <description>GlitchTip open source error monitoring</description>
-        ${rssItems.join("\n")}
         <atom:link href="${domain}/blog/rss.xml" rel="self" type="application/rss+xml" />
+        ${rssItems.join("\n")}
       </channel>
     </rss>
   `;
@@ -117,3 +135,4 @@ function generateRoutesIndexAndRSS(): void {
 
 // Run the function to generate the files
 generateRoutesIndexAndRSS();
+
