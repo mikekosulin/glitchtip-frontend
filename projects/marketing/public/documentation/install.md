@@ -15,7 +15,7 @@ Disk usage varies on usage and event size. As a rough guide, a 1 million event p
 
 For best performance, use a proxy or load balancer that supports request buffering and handles chunked Transfer-Encoding, such as nginx.
 
-## [Docker Compose](documentation/install#docker-compose)
+## Docker Compose
 
 Docker Compose is a simple way to run GlitchTip on a single server.
 
@@ -26,7 +26,7 @@ Docker Compose is a simple way to run GlitchTip on a single server.
 
 It's highly recommended configuring SSL next. Use nginx or preferred solution.
 
-### [Recommended nginx and SSL solution](documentation/install#recommended-nginx-and-ssl-solution)
+### Recommended nginx and SSL solution
 
 - Install nginx. Ex: `sudo apt install nginx`.
 - (on Debian/Ubuntu) edit `/etc/nginx/sites-enabled/default` for example:
@@ -51,7 +51,7 @@ This configuration will direct glitchtip.example.com to port 8000 (the default G
 
 Install and run certbot. Follow [instructions](https://certbot.eff.org/instructions).
 
-#### [Apache2 Alternative](documentation/install#apache2-alternative)
+#### Apache2 Alternative
 
 - Install mods header, proxy, proxy_http (`a2enmod`)
 - Setup the proxy part in the vhost
@@ -64,14 +64,14 @@ Install and run certbot. Follow [instructions](https://certbot.eff.org/instructi
         RequestHeader set "X-Forwarded-SSL" expr=%{HTTPS}
 ```
 
-### [Upgrading](documentation/install#upgrading)
+### Upgrading
 
 1. Pull latest docker image `docker-compose pull`
 1. Restart `docker-compose stop` and `docker-compose up -d`
 
 Database migrations will automatically happen.
 
-## [DigitalOcean App Platform](documentation/install#digitalocean-app-platform)
+## DigitalOcean App Platform
 
 Get started by clicking here. Note this is a referral link and is a great way to help fund GlitchTip.
 
@@ -81,17 +81,17 @@ Get started by clicking here. Note this is a referral link and is a great way to
 
 Leave environment variables blank and click next. Pick the basic or pro plan. One 512 MB RAM | 1 vCPU is fine to start with. Click Launch. Now copy [app-platform.yaml](https://gitlab.com/glitchtip/glitchtip/-/blob/master/app-platform.yaml) to your local computer. Edit the following
 
-### [Name and region](documentation/install#name-and-region)
+### Name and region
 
 This can be anything. We default to "glitchtip" and "nyc".
 
-### [Environment Variables](documentation/install#environment-variables)
+### Environment Variables
 
 At a minimum, set the `SECRET_KEY` to a random string of letters.
 
 See [Configuration](https://glitchtip.com/documentation/install#configuration) for more information.
 
-### [Redis](documentation/install#redis)
+### Redis
 
 GlitchTip requires Redis/Valkey for sending notification, managing events, and more. Go to https://cloud.digitalocean.com/databases/ and create a new redis database. For almost all size instances, the 1 GB RAM | 1 vCPU instance is sufficient. Enter your redis database's name in the glitchtip-redis section. Let's assume it's named "glitchtip-redis". Both "name" and "cluster_name" must be the same value.
 
@@ -104,7 +104,7 @@ GlitchTip requires Redis/Valkey for sending notification, managing events, and m
 
 Ensure the environment variable "REDIS_URL" uses the same name. If you didn't name your redis instance "glitchtip-redis" then make sure to update it.
 
-### [Deploying](documentation/install#deploying)
+### Deploying
 
 You'll need to install [doctl](https://www.digitalocean.com/docs/apis-clis/doctl/how-to/install/) and log in.
 
@@ -114,17 +114,17 @@ Now apply your app-platform.yaml spec with `doctl apps update 11111111-1111-1111
 
 After deployment, you should be able to visit the app URL and start using GlitchTip!
 
-### [Production considerations](documentation/install#production-considerations)
+### Production considerations
 
 If you intend to use GlitchTip in production, consider upgrading your Postgres database to a production instance. In the web interface, go to Manage Components, glitchtip-db, Upgrade to a managed database.
 
 If you haven't already, you'll need to set up email via environment variables.
 
-### [Upgrading GlitchTip](documentation/install#upgrading-glitchtip)
+### Upgrading GlitchTip
 
 By default, the docker image tag is "latest". Click Deploy to upgrade to the latest GlitchTip docker image.
 
-## [PikaPods](documentation/install#pikapods)
+## PikaPods
 
 <a href="https://www.pikapods.com/pods?run=glitchtip">
 <img src="https://www.pikapods.com/static/run-button.svg" alt="Run on PikaPods" style="width:200px;"/>
@@ -134,7 +134,7 @@ PikaPods is an affordable and managed hosting provider aimed at running open sou
 
 Sign up and run GlitchTip on PikaPods [here](https://www.pikapods.com/pods?run=glitchtip). Set the required environment variables including `EMAIL_URL`. If you don't need email, you may set it to `consolemail://` and email will output to logs. See configuration [docs](https://glitchtip.com/documentation/install#configuration).
 
-## [Elestio](documentation/install#elestio)
+## Elestio
 
 <a href="https://elest.io/open-source/glitchtip">
 <img src="https://github.com/elestio-examples/glitchtip/raw/main/deploy-on-elestio.png" alt="Run on Elestio" style="width:200px;"/>
@@ -150,7 +150,7 @@ Elestio, by default, will configure and upgrade GlitchTip for you. Larger or com
 
 See configuration [docs](https://glitchtip.com/documentation/install#configuration).
 
-## [Helm](documentation/install#helm)
+## Helm
 
 Installing GlitchTip with Helm for Kubernetes is a good option for high throughput sites and users who are very comfortable using Kubernetes.
 
@@ -167,7 +167,7 @@ For postgresql, we recommend an externally managed database and providing only t
 
 For high availability, production servers we recommend using multiple Kubernetes Nodes, an ingress and/or load balancer, a pod disruption budget, anti-affinity, and a managed PostgreSQL high availability database.
 
-## [Installing Without Docker](documentation/install#installing-without-docker)
+## Installing Without Docker
 
 This method is not recommended and assumes the reader knows how to deploy Django, Celery, SSL, and a web server. It requires manual upgrades.
 
@@ -183,7 +183,7 @@ This method is not recommended and assumes the reader knows how to deploy Django
 
 To upgrade, follow the same steps with the latest version tag. Include migrating the database and collectstatic.
 
-# [Configuration](documentation/install#configuration)
+# Configuration
 
 Required environment variables:
 
@@ -209,7 +209,7 @@ Optional environment variables:
 - `ENABLE_USER_REGISTRATION` (Default True) When True, any user will be able to register. When False, user self-signup is disabled after the first user is registered. Subsequent users must be created by a superuser on the backend and organization invitations may only be sent to existing users.
 - `ENABLE_ORGANIZATION_CREATION` (Default False) When False, only superusers will be able to create new organizations after the first. When True, any user can create a new organization.
 
-### [Server configuration](documentation/install#server-configuration)
+### Server configuration
 
 Scaling GlitchTip? Review these uWSGI (web server) and Celery (worker) environment variables.
 
@@ -224,7 +224,7 @@ See [more information](https://uwsgi-docs.readthedocs.io/en/latest/Configuration
 
 See [more information](https://docs.celeryq.dev/en/stable/django/first-steps-with-django.html) on Celery configuration.
 
-### [Advanced settings for cache and celery](documentation/install#advanced-settings-for-cache-and-celery)
+### Advanced settings for cache and celery
 
 By default, redis/valkey is used for the celery broker and cache. It's possible to use cache (and thus redis) for sessions, but is disabled by default in favor of PostgreSQL. At this time, redis data is important to be available but is not necessarily worth backing up.
 
@@ -242,7 +242,7 @@ If using Redis Sentinel, additional settings are required. `REDIS_URL` will not 
 
 Other Celery broker and cache types may work but are not tested. Consider submitting a merge request to add support for your preferred solution.
 
-### [File storage](documentation/install#file-storage)
+### File storage
 
 Storage is necessary to enable file uploads, such as sourcemaps. GlitchTip can support both local storage and remote storage via [django-storages](https://django-storages.readthedocs.io/en/latest/).
 
@@ -281,11 +281,11 @@ GlitchTip maps environment variables to django-storages configuration. If you fi
 
 For local storage with Docker, use a volume. Refer to Kubernetes or Docker Compose documentation on creating volumes. In the future, docker-compose examples with volumes will be provided by default.
 
-### [Search Language](documentation/install#search-language)
+### Search Language
 
 GlitchTip uses PostgreSQL full-text search. It will use the default PostgreSQL "text_search_config". In most cases there is no need to modify this. However, you may wish to change it as described [here](https://www.postgresql.org/docs/13/textsearch-configuration.html). This only affects search terms, it does not affect the site language. For example, if your preferred reading language is French and your code and user base uses English, you should pick English.
 
-## [Django Admin](documentation/install#django-admin)
+## Django Admin
 
 Django Admin is not necessary for most users. However, if you'd like the ability to fully manage users beyond what our frontend offers, it may be useful. To enable, create a superuser via the Django command
 
@@ -293,7 +293,7 @@ Django Admin is not necessary for most users. However, if you'd like the ability
 
 Then go to `/admin/` and log in.
 
-### [Social Authentication (OAuth)](documentation/install#social-authentication-oauth)
+### Social Authentication (OAuth)
 
 You may add Social Accounts in Django Admin at `/admin/socialaccount/socialapp/`. GlitchTip supports the following providers though django-allauth:
 
