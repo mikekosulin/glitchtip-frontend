@@ -32,7 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideMarkdown({
       // Necessary so attributes don't get scrubbed from html elements
-      sanitize: SecurityContext.NONE,
+      sanitize: SecurityContext.STYLE,
     }),
     provideClientHydration(),
   ],
