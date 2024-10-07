@@ -1,7 +1,8 @@
 <header>
   <mat-toolbar color="transparent">
     <a [routerLink]="['']">
-      <img class="logo" src="../assets/logo-again.svg" alt="GlitchTip" /></a>
+      <img class="logo" src="../assets/logo-again.svg" alt="GlitchTip"
+    /></a>
     <div>
       <a [routerLink]="['pricing']">Pricing</a>
       <a [routerLink]="['blog']">Blog</a>
@@ -58,6 +59,11 @@
         <li>
           <a href="mailto:info@burkesoftware.com?Subject=Moving to GlitchTip">
             Email
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['blog', 'rss.xml']" target="_blank">
+            RSS Feed
           </a>
         </li>
       </ul>
