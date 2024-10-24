@@ -1,0 +1,39 @@
+{
+  "name": "glitchtip-frontend",
+  "dockerComposeFile": "docker-compose.dev.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/dhoeric/features/hadolint:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "codezombiech.gitignore",
+        "eamodio.gitlens",
+        "exiasr.hadolint",
+        "ms-azuretools.vscode-docker",
+        "oderwat.indent-rainbow",
+        "pkief.material-icon-theme",
+        "shardulm94.trailing-spaces",
+        "streetsidesoftware.code-spell-checker",
+        "usernamehw.errorlens",
+        "yzhang.markdown-all-in-one"
+      ]
+    },
+    "settings": {
+      "editor.formatOnSave": true,
+      "files.insertFinalNewline": true,
+      "files.trimTrailingWhitespace": true,
+      "terminal.integrated.defaultProfile.linux": "zsh",
+      "terminal.integrated.profiles.linux": {
+        "zsh": {
+          "path": "/bin/zsh"
+        }
+      }
+    }
+  },
+  "forwardPorts": [],
+  "postCreateCommand": "npm i"
+  // "remoteUser": "root"
+}

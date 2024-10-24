@@ -1,0 +1,19 @@
+services:
+  app:
+    image: mcr.microsoft.com/vscode/devcontainers/typescript-node:0-20-bullseye
+    command: sleep infinity
+    environment:
+      API_URL: http://web:8000
+      FRONTEND_GLITCHTIP_VERSION: local
+    volumes:
+      - ../..:/workspaces:cached
+    ports:
+      - 4200:4200
+    networks:
+      - glitchtip-dev
+
+# run `docker network create glitchtip-dev`
+networks:
+  glitchtip-dev:
+    name: glitchtip-dev
+    external: true

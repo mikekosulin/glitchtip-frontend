@@ -35,6 +35,7 @@ test-e2e:
   variables:
     ENABLE_ORGANIZATION_CREATION: "true"
     CELERY_TASK_ALWAYS_EAGER: "true"
+    API_URL: "http://backend:8080"
   services:
     - postgres
     - name: registry.gitlab.com/glitchtip/glitchtip-backend:master
@@ -45,7 +46,7 @@ test-e2e:
     entrypoint: [""]
   script:
     - npm ci --force
-    - cp src/proxy.conf.ci.json src/proxy.conf.json
+    - cp src/proxy.conf.js src/proxy.conf.js
     - npm run e2e
   except:
     - tags
