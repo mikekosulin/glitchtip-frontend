@@ -29,7 +29,7 @@ After creating your account, the first step in getting GlitchTip up and running 
 
 ## Choose a subscription
 
-After you create an organization you will be prompted to choose a subscription option for it. This will determine how many errors you can track each month for that organization. Subscription limits are based on events. An event is when your app sends data to GlitchTip. So any issue (a single type of error) happening repeatedly will generate multiple events. Paid plans also allow you to reach out to the GlitchTip team for more detailed support.
+If you are using our hosted service, after you create an organization you will be prompted to choose a subscription option for it. This will determine how many errors you can track each month for that organization. Subscription limits are based on events. An event is when your app sends data to GlitchTip. So any issue (a single type of error) happening repeatedly will generate multiple events. Paid plans also allow you to reach out to the GlitchTip team for more detailed support.
 
 <div style="width: 800px; max-width: 100%; margin: 0 auto;">
     <picture>
